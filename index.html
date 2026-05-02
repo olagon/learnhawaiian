@@ -580,6 +580,23 @@
         .feature-text { font-size: 0.95rem; color: var(--ink-soft); padding-top: 0.4rem; }
         .feature-text strong { color: var(--ink); font-weight: 600; }
 
+        /* WELCOME STICKY FOOTER */
+        .welcome-footer {
+            position: sticky;
+            bottom: 0;
+            background: var(--surface);
+            padding: 1rem 1.5rem 1.25rem;
+            border-top: 1px solid var(--line-soft);
+            text-align: center;
+            box-shadow: 0 -8px 16px -10px rgba(0,0,0,0.08);
+        }
+        .welcome-footer .btn { width: 100%; }
+        .welcome-dismiss-hint {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+        }
+
         /* RATIONALE BOX */
         .rationale-box {
             background: var(--accent-soft);
@@ -1055,7 +1072,10 @@
                     <div class="feature-text"><strong>Stays on your device.</strong> Progress saves to cookies. No accounts. No tracking. No data leaves.</div>
                 </div>
             </div>
+        </div>
+        <div class="welcome-footer">
             <button class="btn" onclick="closeWelcome()">E hoʻomaka kākou</button>
+            <div class="welcome-dismiss-hint">Press Esc or click outside to skip</div>
         </div>
     </div>
 </div>
@@ -2075,9 +2095,22 @@ document.addEventListener('keydown', function(e) {
 // Click on goal ring opens stats already; allow Esc to close modals
 document.addEventListener('keydown', function(e) {
     if (e.key !== 'Escape') return;
-    if (!document.getElementById('statsModal').classList.contains('hidden')) closeStats();
+    if (!document.getElementById('welcomeModal').classList.contains('hidden')) closeWelcome();
+    else if (!document.getElementById('statsModal').classList.contains('hidden')) closeStats();
     else if (!document.getElementById('grammarModal').classList.contains('hidden')) closeGrammar();
     else if (!document.getElementById('confirmModal').classList.contains('hidden')) closeConfirm();
+});
+
+// Click on the dimmed background closes the modal
+document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+    overlay.addEventListener('click', function(e) {
+        if (e.target !== overlay) return; // only when clicking the backdrop, not the modal itself
+        const id = overlay.id;
+        if (id === 'welcomeModal') closeWelcome();
+        else if (id === 'statsModal') closeStats();
+        else if (id === 'grammarModal') closeGrammar();
+        else if (id === 'confirmModal') closeConfirm();
+    });
 });
 
 window.addEventListener('load', init);
