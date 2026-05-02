@@ -165,6 +165,37 @@
             [data-tip]::after, [data-tip]::before { display: none; }
         }
 
+        /* TOAST */
+        .toast {
+            position: fixed;
+            top: 5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-12px);
+            background: var(--ink);
+            color: var(--surface);
+            padding: 0.85rem 1.2rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+            max-width: 90vw;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        .toast.success .toast-icon { color: #6ee7b7; }
+        .toast.error .toast-icon { color: #fca5a5; }
+        .toast-icon { display: inline-flex; }
+        .toast-icon svg { width: 16px; height: 16px; }
+
         .pill {
             display: inline-flex;
             align-items: center;
@@ -201,6 +232,20 @@
         }
         .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
         .icon-btn svg { width: 18px; height: 18px; }
+        .icon-btn.signed-in { color: var(--success); border-color: var(--success); background: var(--success-soft); }
+        .icon-btn.signed-in:hover { color: var(--success); border-color: var(--success); }
+        .auth-dot {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            border: 1.5px solid var(--surface);
+            box-shadow: 0 0 0 1px var(--success);
+        }
+        #authBtn { position: relative; }
 
         /* DAILY GOAL RING */
         .goal-ring {
@@ -1030,7 +1075,9 @@
             <div class="goal-ring-text" id="goalRingText">0</div>
         </div>
         <button class="icon-btn hidden" id="authBtn" onclick="openAuth()" data-tip="Sign in to back up your progress and sync across devices. Optional." aria-label="Save progress">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+            <svg class="auth-icon-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+            <svg class="auth-icon-in hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 0 1 .5 8.972"/><path d="m9 15 2 2 4-4"/></svg>
+            <span class="auth-dot hidden" id="authDot"></span>
         </button>
         <button class="icon-btn" onclick="openGrammar()" data-tip="Open the grammar guide. Quick reference for nouns, verbs, and Hawaiian sentence structure." aria-label="Grammar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -1285,6 +1332,12 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden" role="status" aria-live="polite">
+    <span class="toast-icon" id="toastIcon"></span>
+    <span class="toast-text" id="toastText"></span>
 </div>
 
 <!-- AUTH MODAL -->
@@ -2397,6 +2450,11 @@ function showAuthSignedOutState() {
     document.getElementById('authBodySignedIn').classList.add('hidden');
     document.getElementById('authMessage').textContent = '';
     document.getElementById('authEmail').value = '';
+    // Reset the button if a previous cooldown is still running
+    if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
+    const btn = document.getElementById('authSendBtn');
+    btn.disabled = false;
+    btn.textContent = 'Email me a sign-in link';
 }
 
 function showAuthSignedInState() {
@@ -2422,13 +2480,34 @@ async function sendMagicLink() {
             options: { emailRedirectTo: window.location.origin + window.location.pathname }
         });
         if (error) throw error;
-        document.getElementById('authMessage').innerHTML = `Sign-in link sent to <strong>${email}</strong>. Check your inbox.`;
-        btn.textContent = 'Sent';
+        document.getElementById('authMessage').innerHTML = `Sign-in link sent to <strong>${email}</strong>. Check your inbox (and spam folder).`;
+        startResendCooldown();
     } catch (e) {
         document.getElementById('authMessage').textContent = 'Could not send link. ' + (e.message || '');
         btn.disabled = false;
         btn.textContent = 'Email me a sign-in link';
     }
+}
+
+// 30-second cooldown after a successful send before user can request another link.
+let resendTimer = null;
+function startResendCooldown() {
+    const btn = document.getElementById('authSendBtn');
+    let remaining = 30;
+    btn.disabled = true;
+    btn.textContent = `Resend in ${remaining}s`;
+    if (resendTimer) clearInterval(resendTimer);
+    resendTimer = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) {
+            clearInterval(resendTimer);
+            resendTimer = null;
+            btn.disabled = false;
+            btn.textContent = 'Resend sign-in link';
+        } else {
+            btn.textContent = `Resend in ${remaining}s`;
+        }
+    }, 1000);
 }
 
 async function signOut() {
@@ -2439,6 +2518,7 @@ async function signOut() {
 
 async function handleSignIn(user, firstTime) {
     currentUser = user;
+    setAuthIconState(true);
     const remote = await fetchRemoteState();
     const local = { progress: appState.progress, stats: extractStats() };
     if (firstTime && hasMeaningfulLocalProgress() && remote && hasMeaningfulRemoteProgress(remote)) {
@@ -2451,13 +2531,61 @@ async function handleSignIn(user, firstTime) {
     applyMergedState(merged);
     await pushRemoteState();
     showAuthSignedInState();
+    if (firstTime) showToast(`Signed in as ${user.email}. Your progress now syncs across devices.`, 'success', 5000);
 }
 
 function handleSignOut() {
     currentUser = null;
+    setAuthIconState(false);
     if (!document.getElementById('authModal').classList.contains('hidden')) {
         showAuthSignedOutState();
     }
+    showToast('Signed out. Your progress is still saved on this device.', 'success', 4000);
+}
+
+function setAuthIconState(signedIn) {
+    const btn = document.getElementById('authBtn');
+    if (!btn) return;
+    const iconOut = btn.querySelector('.auth-icon-out');
+    const iconIn = btn.querySelector('.auth-icon-in');
+    const dot = document.getElementById('authDot');
+    if (signedIn) {
+        btn.classList.add('signed-in');
+        iconOut.classList.add('hidden');
+        iconIn.classList.remove('hidden');
+        dot.classList.remove('hidden');
+        const email = currentUser ? currentUser.email : 'your account';
+        btn.setAttribute('data-tip', `Signed in as ${email}. Your progress is syncing across devices.`);
+        btn.setAttribute('aria-label', 'Signed in');
+    } else {
+        btn.classList.remove('signed-in');
+        iconOut.classList.remove('hidden');
+        iconIn.classList.add('hidden');
+        dot.classList.add('hidden');
+        btn.setAttribute('data-tip', 'Sign in to back up your progress and sync across devices. Optional.');
+        btn.setAttribute('aria-label', 'Save progress');
+    }
+}
+
+// ==========================================================================
+//  TOAST
+// ==========================================================================
+let toastTimer = null;
+function showToast(message, kind = 'success', durationMs = 4000) {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.className = 'toast ' + kind;
+    document.getElementById('toastText').textContent = message;
+    document.getElementById('toastIcon').innerHTML = kind === 'success'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    el.classList.remove('hidden');
+    requestAnimationFrame(() => el.classList.add('show'));
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.classList.add('hidden'), 220);
+    }, durationMs);
 }
 
 function hasMeaningfulLocalProgress() {
