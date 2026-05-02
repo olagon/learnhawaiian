@@ -916,6 +916,7 @@
             animation: shake 0.3s ease;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -935,6 +936,9 @@
             </svg>
             <div class="goal-ring-text" id="goalRingText">0</div>
         </div>
+        <button class="icon-btn hidden" id="authBtn" onclick="openAuth()" title="Sign in to sync" aria-label="Sign in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M3 12a9 9 0 0 1 18 0"/><path d="M12 3a9 9 0 0 1 0 18"/></svg>
+        </button>
         <button class="icon-btn" onclick="openGrammar()" title="Grammar guide" aria-label="Grammar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         </button>
@@ -1069,7 +1073,7 @@
                     <div class="feature-icon">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
                     </div>
-                    <div class="feature-text"><strong>Stays on your device.</strong> Progress saves to cookies. No accounts. No tracking. No data leaves.</div>
+                    <div class="feature-text"><strong>Yours to keep.</strong> Progress saves to your device by default. No tracking, no ads. Optional sign-in lets you carry your progress to other devices.</div>
                 </div>
             </div>
         </div>
@@ -1189,6 +1193,51 @@
     </div>
 </div>
 
+<!-- AUTH MODAL -->
+<div id="authModal" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 460px;">
+        <div class="modal-header">
+            <h2 id="authTitle">Sign in to sync</h2>
+            <button class="close-btn" onclick="closeAuth()" aria-label="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body" id="authBodySignedOut">
+            <p>Save your progress so it follows you across devices and survives clearing your cookies.</p>
+            <p style="font-size: 0.85rem; color: var(--ink-muted);">Optional. The app works the same without an account. We send a one-time link to your email so there's no password to remember.</p>
+            <div class="input-wrap" style="margin-top: 1rem;">
+                <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <button class="btn" id="authSendBtn" onclick="sendMagicLink()" style="margin-top: 0.75rem; width: 100%;">Email me a sign-in link</button>
+            <div id="authMessage" style="margin-top: 0.75rem; font-size: 0.9rem; color: var(--ink-soft); text-align: center;"></div>
+        </div>
+        <div class="modal-body hidden" id="authBodySignedIn">
+            <p>Signed in as <strong id="authEmailDisplay"></strong>.</p>
+            <p style="font-size: 0.85rem; color: var(--ink-muted);">Your progress syncs after every round. Your local progress stays on this device too as a backup.</p>
+            <div id="authSyncStatus" style="margin: 1rem 0; font-size: 0.85rem; color: var(--ink-muted); text-align: center;"></div>
+            <button class="btn btn-outline" onclick="signOut()" style="width: 100%;">Sign out (keep local progress)</button>
+        </div>
+    </div>
+</div>
+
+<!-- MERGE PREVIEW MODAL (first sign-in) -->
+<div id="mergeModal" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 460px;">
+        <div class="modal-header">
+            <h2>Combining your progress</h2>
+        </div>
+        <div class="modal-body">
+            <p>We found progress in two places. Here's what happens when you continue:</p>
+            <div id="mergePreview" style="background: var(--surface-warm); border-radius: var(--radius-sm); padding: 1rem; margin: 1rem 0; font-size: 0.95rem;"></div>
+            <p style="font-size: 0.85rem; color: var(--ink-muted);">Mastered words are kept on whichever side has them. For words at lower levels, the more recent attempt wins.</p>
+            <div class="button-row">
+                <button class="btn" onclick="confirmMerge()">Combine and continue</button>
+                <button class="btn btn-outline" onclick="cancelMerge()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // ==========================================================================
 //  COOKIE STORAGE  (no localStorage anywhere)
@@ -1289,16 +1338,28 @@ function daysBetween(dStr1, dStr2) {
 }
 
 // Compact progress encoding.
-// Format: "id1.lvl.round,id2.lvl.round,..." in base36
+// Format: "id.lvl.round.tDays,id.lvl.round.tDays,..." in base36
+// tDays = days since 2026-01-01 (saves bytes vs full timestamp).
+// Backward compatible with old "id.lvl.round" entries (t defaults to 0).
+const T_EPOCH = Date.UTC(2026, 0, 1); // Jan 1 2026 UTC
+function tToDays(ms) {
+    if (!ms) return 0;
+    return Math.max(0, Math.floor((ms - T_EPOCH) / 86400000));
+}
+function daysToT(days) {
+    if (!days) return 0;
+    return T_EPOCH + days * 86400000;
+}
+
 function encodeProgress(progress) {
     const parts = [];
     for (const id in progress) {
         const p = progress[id];
-        // skip never-touched (level 0 with no round info)
         if (!p || (p.l === 0 && (p.r === undefined || p.r === 0))) continue;
         const idB = parseInt(id, 10).toString(36);
         const rB = (p.r || 0).toString(36);
-        parts.push(`${idB}.${p.l}.${rB}`);
+        const tB = tToDays(p.t || 0).toString(36);
+        parts.push(`${idB}.${p.l}.${rB}.${tB}`);
     }
     return parts.join(',');
 }
@@ -1308,11 +1369,12 @@ function decodeProgress(str) {
     if (!str) return out;
     str.split(',').forEach(piece => {
         if (!piece) return;
-        const [idB, lB, rB] = piece.split('.');
+        const [idB, lB, rB, tB] = piece.split('.');
         const id = parseInt(idB, 36);
         const l = parseInt(lB, 10);
         const r = parseInt(rB || '0', 36);
-        if (!isNaN(id)) out[id] = { l: isNaN(l) ? 0 : l, r: isNaN(r) ? 0 : r };
+        const t = daysToT(parseInt(tB || '0', 36));
+        if (!isNaN(id)) out[id] = { l: isNaN(l) ? 0 : l, r: isNaN(r) ? 0 : r, t: t || 0 };
     });
     return out;
 }
@@ -1827,7 +1889,7 @@ function endRound() {
             missedCount++;
         }
 
-        appState.progress[r.id] = { l: next, r: cur };
+        appState.progress[r.id] = { l: next, r: cur, t: Date.now() };
     });
 
     // Round bonus XP
@@ -2110,8 +2172,284 @@ document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
         else if (id === 'statsModal') closeStats();
         else if (id === 'grammarModal') closeGrammar();
         else if (id === 'confirmModal') closeConfirm();
+        else if (id === 'authModal') closeAuth();
     });
 });
+
+// ==========================================================================
+//  OPTIONAL CLOUD SYNC  (Supabase)
+//  Fill in SUPABASE_URL and SUPABASE_ANON_KEY to enable. If empty, the
+//  auth UI stays hidden and the app behaves exactly as before.
+// ==========================================================================
+
+const SUPABASE_URL = '';      // e.g. 'https://xxxxx.supabase.co'
+const SUPABASE_ANON_KEY = ''; // public anon key from Supabase dashboard
+
+let sb = null;          // Supabase client (null if not configured)
+let currentUser = null; // logged-in user object or null
+let pendingSync = null; // throttled push timer
+let pendingMerge = null; // remote state waiting for user to confirm merge
+
+function cloudConfigured() {
+    return SUPABASE_URL && SUPABASE_ANON_KEY;
+}
+
+function initAuth() {
+    if (!cloudConfigured()) return;
+    if (!window.supabase || !window.supabase.createClient) return;
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    document.getElementById('authBtn').classList.remove('hidden');
+    sb.auth.getSession().then(({ data }) => {
+        if (data && data.session) handleSignIn(data.session.user, /*firstTime=*/false);
+    });
+    sb.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN' && session) handleSignIn(session.user, /*firstTime=*/true);
+        else if (event === 'SIGNED_OUT') handleSignOut();
+    });
+}
+
+function openAuth() {
+    if (!sb) return;
+    if (currentUser) showAuthSignedInState();
+    else showAuthSignedOutState();
+    document.getElementById('authModal').classList.remove('hidden');
+}
+
+function closeAuth() {
+    document.getElementById('authModal').classList.add('hidden');
+}
+
+function showAuthSignedOutState() {
+    document.getElementById('authBodySignedOut').classList.remove('hidden');
+    document.getElementById('authBodySignedIn').classList.add('hidden');
+    document.getElementById('authMessage').textContent = '';
+    document.getElementById('authEmail').value = '';
+}
+
+function showAuthSignedInState() {
+    document.getElementById('authBodySignedOut').classList.add('hidden');
+    document.getElementById('authBodySignedIn').classList.remove('hidden');
+    document.getElementById('authEmailDisplay').textContent = currentUser.email || 'your account';
+}
+
+async function sendMagicLink() {
+    if (!sb) return;
+    const email = document.getElementById('authEmail').value.trim();
+    if (!email || !email.includes('@')) {
+        document.getElementById('authMessage').textContent = 'Please enter a valid email.';
+        return;
+    }
+    const btn = document.getElementById('authSendBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    document.getElementById('authMessage').textContent = '';
+    try {
+        const { error } = await sb.auth.signInWithOtp({
+            email: email,
+            options: { emailRedirectTo: window.location.origin + window.location.pathname }
+        });
+        if (error) throw error;
+        document.getElementById('authMessage').innerHTML = `Sign-in link sent to <strong>${email}</strong>. Check your inbox.`;
+        btn.textContent = 'Sent';
+    } catch (e) {
+        document.getElementById('authMessage').textContent = 'Could not send link. ' + (e.message || '');
+        btn.disabled = false;
+        btn.textContent = 'Email me a sign-in link';
+    }
+}
+
+async function signOut() {
+    if (!sb) return;
+    await sb.auth.signOut();
+    closeAuth();
+}
+
+async function handleSignIn(user, firstTime) {
+    currentUser = user;
+    const remote = await fetchRemoteState();
+    const local = { progress: appState.progress, stats: extractStats() };
+    if (firstTime && hasMeaningfulLocalProgress() && remote && hasMeaningfulRemoteProgress(remote)) {
+        // Show merge preview before committing
+        pendingMerge = { remote, local };
+        showMergePreview(local, remote);
+        return;
+    }
+    const merged = mergeStates(local, remote || { progress: {}, stats: emptyStats() });
+    applyMergedState(merged);
+    await pushRemoteState();
+    showAuthSignedInState();
+}
+
+function handleSignOut() {
+    currentUser = null;
+    if (!document.getElementById('authModal').classList.contains('hidden')) {
+        showAuthSignedOutState();
+    }
+}
+
+function hasMeaningfulLocalProgress() {
+    return Object.values(appState.progress).some(p => p && p.l > 0);
+}
+
+function hasMeaningfulRemoteProgress(remote) {
+    return remote.progress && Object.values(remote.progress).some(p => p && p.l > 0);
+}
+
+function extractStats() {
+    return {
+        s: appState.streak,
+        lp: appState.lastPlayedDate,
+        tr: appState.totalRounds,
+        tx: appState.totalXP,
+        dx: appState.dailyXP,
+        dd: appState.dailyXPDate
+    };
+}
+
+function emptyStats() {
+    return { s: 0, lp: null, tr: 0, tx: 0, dx: 0, dd: null };
+}
+
+// ==========================================================================
+//  MERGE LOGIC
+//  - per-word: if either side has level 5 (mastered), keep the higher level.
+//  - otherwise: whichever side has the higher timestamp `t` wins.
+//  - missing on one side: take the other.
+//  - stats: max() for streak/totals; sum() for daily XP if same day.
+// ==========================================================================
+function mergeStates(local, remote) {
+    const out = { progress: {}, stats: {} };
+    const ids = new Set([...Object.keys(local.progress || {}), ...Object.keys(remote.progress || {})]);
+    ids.forEach(id => {
+        const a = (local.progress || {})[id];
+        const b = (remote.progress || {})[id];
+        out.progress[id] = mergeWord(a, b);
+    });
+    // Stats
+    const ls = local.stats || emptyStats();
+    const rs = remote.stats || emptyStats();
+    out.stats.s = Math.max(ls.s || 0, rs.s || 0);
+    out.stats.lp = (ls.lp && (!rs.lp || ls.lp > rs.lp)) ? ls.lp : (rs.lp || null);
+    out.stats.tr = Math.max(ls.tr || 0, rs.tr || 0);
+    out.stats.tx = Math.max(ls.tx || 0, rs.tx || 0);
+    // Daily XP: if same date, max (avoid double-counting if both devices saved the same round)
+    if (ls.dd && rs.dd && ls.dd === rs.dd) {
+        out.stats.dx = Math.max(ls.dx || 0, rs.dx || 0);
+        out.stats.dd = ls.dd;
+    } else {
+        // Different days: use the more recent date's XP
+        if ((ls.dd || '') > (rs.dd || '')) { out.stats.dx = ls.dx || 0; out.stats.dd = ls.dd; }
+        else { out.stats.dx = rs.dx || 0; out.stats.dd = rs.dd || null; }
+    }
+    return out;
+}
+
+function mergeWord(a, b) {
+    if (!a) return b;
+    if (!b) return a;
+    // Mastered-sticky: never demote level 5 unless the other side ALSO saw level 5 and is more recent
+    const aMastered = a.l === 5;
+    const bMastered = b.l === 5;
+    if (aMastered && !bMastered) return a;
+    if (bMastered && !aMastered) return b;
+    // Both same mastery state, or both lower: pick by timestamp
+    const at = a.t || 0;
+    const bt = b.t || 0;
+    if (at >= bt) return a;
+    return b;
+}
+
+function applyMergedState(merged) {
+    appState.progress = merged.progress;
+    if (merged.stats) {
+        appState.streak = merged.stats.s || 0;
+        appState.lastPlayedDate = merged.stats.lp || null;
+        appState.totalRounds = merged.stats.tr || 0;
+        appState.totalXP = merged.stats.tx || 0;
+        appState.dailyXP = merged.stats.dx || 0;
+        appState.dailyXPDate = merged.stats.dd || null;
+    }
+    saveProgress();
+    saveStats();
+    updateStreakUI();
+    updateHomeGoal();
+}
+
+// ==========================================================================
+//  REMOTE FETCH/PUSH
+// ==========================================================================
+async function fetchRemoteState() {
+    if (!sb || !currentUser) return null;
+    try {
+        const { data, error } = await sb.from('progress').select('data').eq('user_id', currentUser.id).maybeSingle();
+        if (error) { console.warn('fetchRemoteState', error); return null; }
+        if (!data) return null;
+        return data.data || null;
+    } catch (e) { console.warn(e); return null; }
+}
+
+async function pushRemoteState() {
+    if (!sb || !currentUser) return;
+    const payload = { progress: appState.progress, stats: extractStats() };
+    try {
+        await sb.from('progress').upsert({ user_id: currentUser.id, data: payload, updated_at: new Date().toISOString() });
+        const el = document.getElementById('authSyncStatus');
+        if (el) el.textContent = 'Synced ' + new Date().toLocaleTimeString();
+    } catch (e) { console.warn('pushRemoteState', e); }
+}
+
+// Throttled wrapper called after every saveProgress
+function scheduleRemotePush() {
+    if (!sb || !currentUser) return;
+    if (pendingSync) clearTimeout(pendingSync);
+    pendingSync = setTimeout(() => { pendingSync = null; pushRemoteState(); }, 1500);
+}
+
+// Hook into the existing saveProgress so cloud push happens after local save.
+const _saveProgressOriginal = saveProgress;
+saveProgress = function() {
+    _saveProgressOriginal.apply(this, arguments);
+    scheduleRemotePush();
+};
+const _saveStatsOriginal = saveStats;
+saveStats = function() {
+    _saveStatsOriginal.apply(this, arguments);
+    scheduleRemotePush();
+};
+
+// ==========================================================================
+//  MERGE PREVIEW UI
+// ==========================================================================
+function showMergePreview(local, remote) {
+    const localMastered = Object.values(local.progress || {}).filter(p => p && p.l === 5).length;
+    const remoteMastered = Object.values(remote.progress || {}).filter(p => p && p.l === 5).length;
+    const merged = mergeStates(local, remote);
+    const mergedMastered = Object.values(merged.progress || {}).filter(p => p && p.l === 5).length;
+    document.getElementById('mergePreview').innerHTML =
+        `<div>This device has <strong>${localMastered}</strong> mastered words.</div>` +
+        `<div>Your account has <strong>${remoteMastered}</strong> mastered words.</div>` +
+        `<div style="margin-top: 0.5rem;">After combining: <strong>${mergedMastered}</strong> mastered words.</div>`;
+    document.getElementById('mergeModal').classList.remove('hidden');
+}
+
+function confirmMerge() {
+    if (!pendingMerge) return;
+    const merged = mergeStates(pendingMerge.local, pendingMerge.remote);
+    applyMergedState(merged);
+    pushRemoteState();
+    pendingMerge = null;
+    document.getElementById('mergeModal').classList.add('hidden');
+    showAuthSignedInState();
+}
+
+function cancelMerge() {
+    pendingMerge = null;
+    document.getElementById('mergeModal').classList.add('hidden');
+    if (sb) sb.auth.signOut(); // back out of the sign-in
+}
+
+// Init auth after main init runs
+window.addEventListener('load', () => setTimeout(initAuth, 100));
 
 window.addEventListener('load', init);
 </script>
