@@ -340,6 +340,50 @@
         input[type="text"].wrong { border-color: var(--error); background: var(--error-soft); }
         input[type="text"].close { border-color: var(--warm); background: var(--warm-soft); }
 
+        /* GENERAL FORM INPUTS (email, etc) — used in modals */
+        input[type="email"],
+        input[type="password"],
+        input[type="url"],
+        input[type="search"] {
+            width: 100%;
+            padding: 0.75rem 0.95rem;
+            font-size: 1rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            background: var(--surface);
+            color: var(--ink);
+            border: 1.5px solid var(--line);
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            box-sizing: border-box;
+        }
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder,
+        input[type="url"]::placeholder,
+        input[type="search"]::placeholder {
+            color: var(--ink-muted);
+            font-weight: 400;
+        }
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        input[type="url"]:focus,
+        input[type="search"]:focus {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        /* Defeat the browser's blue/yellow autofill background */
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--ink);
+            -webkit-box-shadow: 0 0 0 1000px var(--surface) inset;
+            transition: background-color 5000s ease-in-out 0s;
+            caret-color: var(--ink);
+        }
+
         /* FEEDBACK */
         .feedback {
             min-height: 60px;
