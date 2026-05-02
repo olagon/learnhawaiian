@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#faf7f2">
+    <title>Privacy Policy — Master ʻŌlelo Hawaiʻi Vocabulary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #faf7f2;
+            --surface: #ffffff;
+            --ink: #1a1614;
+            --ink-soft: #4a4540;
+            --ink-muted: #8a8580;
+            --line: #e8e1d6;
+            --accent: #5e3a9e;
+            --font-display: 'Source Serif 4', Georgia, serif;
+            --font-body: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        html[data-theme="dark"] {
+            --bg: #15171c;
+            --surface: #1e2128;
+            --ink: #e8e6e1;
+            --ink-soft: #b3afa6;
+            --ink-muted: #7a7670;
+            --line: #2d3138;
+            --accent: #a98ce0;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+        main { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; }
+        h1 { font-family: var(--font-display); font-weight: 500; font-size: 2.2rem; margin: 0 0 0.5rem; line-height: 1.15; }
+        .lead { color: var(--ink-soft); font-size: 1.05rem; margin: 0 0 2rem; }
+        h2 { font-family: var(--font-display); font-weight: 500; font-size: 1.3rem; margin: 2.25rem 0 0.6rem; }
+        p { color: var(--ink-soft); margin: 0 0 1rem; }
+        a { color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+        a:hover { border-bottom-color: var(--accent); }
+        .nav-back { display: inline-block; margin-bottom: 2rem; font-size: 0.9rem; color: var(--ink-muted); }
+        .meta { font-size: 0.85rem; color: var(--ink-muted); margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+    </style>
+    <script>
+        (function(){try{var t=localStorage.getItem('hl_theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
+    </script>
+</head>
+<body>
+<main>
+    <a href="/" class="nav-back">← Back to ʻŌlelo Daily</a>
+    <h1>Privacy Policy</h1>
+    <p class="lead">The short version. We do not want your data. This is a learning app, not a data business.</p>
+
+    <h2>What we collect</h2>
+    <p>If you sign in, we store your email address and your vocabulary progress. That is it. We use them only to sync your progress across your devices.</p>
+    <p>If you do not sign in, we collect nothing personal. Your progress lives in your own browser.</p>
+    <p>The site uses basic analytics (Google Analytics) to count how many people visit and which pages they use. This is anonymous traffic data, not tied to you personally.</p>
+
+    <h2>What we do not do</h2>
+    <p>We do not sell your email or any other data. Ever.</p>
+    <p>We do not run ads.</p>
+    <p>We do not track you around the web.</p>
+    <p>We do not share your progress with anyone.</p>
+
+    <h2>When we might email you</h2>
+    <p>If we ship a major update to the app, we may send you one email about it. That is the only reason. No marketing, no newsletters, no upsells. You can reply asking us to remove your email at any time and we will.</p>
+
+    <h2>How your data is stored</h2>
+    <p>Local progress lives in your browser via localStorage and cookies. You can clear it any time using your browser's site data tools.</p>
+    <p>Cloud sync uses Supabase, a hosted database service. Each user can only access their own row, enforced by row-level security at the database level.</p>
+
+    <h2>If you want your data deleted</h2>
+    <p>Click "Reset all progress" in the stats panel to clear local data. To delete your synced cloud account, email <a href="mailto:olin.lagon@gmail.com">olin.lagon@gmail.com</a> and we will remove your row.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If anything here changes, we will update this page and note the change at the bottom. If the change affects you in a meaningful way, we will tell you directly.</p>
+
+    <p class="meta">Last updated: May 2, 2026.</p>
+</main>
+</body>
+</html>
