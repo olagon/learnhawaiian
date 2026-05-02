@@ -2057,8 +2057,12 @@ function buildRoundPool() {
         }
     });
 
-    // Shuffle each bucket
+    // Shuffle each bucket (random order within bucket)
     Object.keys(buckets).forEach(k => buckets[k] = shuffle(buckets[k]));
+
+    // For NEW words: sort by Tier ascending so essentials (Tier 1) come before
+    // common (Tier 2) before less-common (Tier 3). Random within the same tier.
+    buckets.new.sort((a, b) => (a.Tier || 3) - (b.Tier || 3));
 
     // Round composition target: 4 struggling, 2 growing, 1 mastery check, 4 new
     const target = { struggling: 4, growing: 2, mastered: 1, new: 4 };
@@ -2093,9 +2097,10 @@ function buildRoundPool() {
         safety++;
     }
 
-    // Last resort: pick any vocabulary word not yet used
+    // Last resort: pick any vocabulary word not yet used (still tier-biased)
     if (selected.length < ROUND_SIZE) {
         const leftovers = shuffle(vocabulary.filter(w => !used.has(w.ID)));
+        leftovers.sort((a, b) => (a.Tier || 3) - (b.Tier || 3));
         while (selected.length < ROUND_SIZE && leftovers.length > 0) {
             selected.push(leftovers.shift());
         }
