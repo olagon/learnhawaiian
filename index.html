@@ -122,6 +122,49 @@
             gap: 0.4rem;
         }
 
+        /* HOVER TOOLTIPS */
+        [data-tip] { position: relative; }
+        [data-tip]::after {
+            content: attr(data-tip);
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: var(--ink);
+            color: var(--surface);
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            line-height: 1.4;
+            width: max-content;
+            max-width: 220px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-4px);
+            transition: opacity 0.15s ease, transform 0.15s ease;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        [data-tip]::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            right: 14px;
+            border: 5px solid transparent;
+            border-bottom-color: var(--ink);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+            z-index: 100;
+        }
+        [data-tip]:hover::after, [data-tip]:hover::before {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        @media (hover: none) {
+            [data-tip]::after, [data-tip]::before { display: none; }
+        }
+
         .pill {
             display: inline-flex;
             align-items: center;
@@ -880,6 +923,12 @@
         }
         footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
         footer .footer-line { display: block; }
+        footer .footer-version {
+            margin-top: 0.4rem;
+            font-size: 0.7rem;
+            opacity: 0.6;
+            letter-spacing: 0.05em;
+        }
 
         /* RESPONSIVE */
         @media (max-width: 600px) {
@@ -925,21 +974,21 @@
         <span class="brand-name">Master ʻŌlelo Hawaiʻi Vocabulary</span>
     </a>
     <div class="header-actions">
-        <span class="pill streak-pill cold" id="streakPill" title="Daily streak">
+        <span class="pill streak-pill cold" id="streakPill" data-tip="Your daily streak. Play one round today to keep it alive.">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
             <span id="streakCount">0</span>
         </span>
-        <div class="goal-ring" id="goalRing" onclick="openStats()" title="Daily XP goal">
+        <div class="goal-ring" id="goalRing" onclick="openStats()" data-tip="Today's XP toward your daily goal. Click to see all your progress.">
             <svg viewBox="0 0 38 38">
                 <circle class="goal-ring-bg" cx="19" cy="19" r="16"/>
                 <circle class="goal-ring-fill" id="goalRingFill" cx="19" cy="19" r="16" stroke-dasharray="100.5" stroke-dashoffset="100.5"/>
             </svg>
             <div class="goal-ring-text" id="goalRingText">0</div>
         </div>
-        <button class="icon-btn hidden" id="authBtn" onclick="openAuth()" title="Sign in to sync" aria-label="Sign in">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/><path d="M3 12a9 9 0 0 1 18 0"/><path d="M12 3a9 9 0 0 1 0 18"/></svg>
+        <button class="icon-btn hidden" id="authBtn" onclick="openAuth()" data-tip="Sign in to back up your progress and sync across devices. Optional." aria-label="Save progress">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
         </button>
-        <button class="icon-btn" onclick="openGrammar()" title="Grammar guide" aria-label="Grammar">
+        <button class="icon-btn" onclick="openGrammar()" data-tip="Open the grammar guide. Quick reference for nouns, verbs, and Hawaiian sentence structure." aria-label="Grammar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         </button>
     </div>
@@ -1026,6 +1075,7 @@
 <footer>
     <span class="footer-line">Built with aloha by <a href="https://www.linkedin.com/in/olinlagon/" target="_blank" rel="noopener">Olin</a>. No ads. No tracking.</span>
     <span class="footer-line">© 2026 Olin Kealoha Lagon. Open source under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT License</a>.</span>
+    <span class="footer-line footer-version">v1.0</span>
 </footer>
 
 <!-- WELCOME MODAL -->
@@ -1240,12 +1290,25 @@
 
 <script>
 // ==========================================================================
-//  COOKIE STORAGE  (no localStorage anywhere)
+//  STORAGE  (localStorage preferred; cookies as fallback for old browsers
+//  and to auto-migrate progress saved before this version)
 // ==========================================================================
 
 const COOKIE_DAYS = 365;
-const MAX_CHUNK = 3500; // safe under typical 4KB cookie limit
+const MAX_CHUNK = 3500; // safe under typical 4KB cookie limit (fallback only)
 
+// Detect localStorage availability once. Returns false in private/incognito
+// modes that disable storage, or in obscure corporate browsers.
+let LS_AVAILABLE = (function() {
+    try {
+        const k = '__t__';
+        window.localStorage.setItem(k, k);
+        window.localStorage.removeItem(k);
+        return true;
+    } catch (e) { return false; }
+})();
+
+// ---- Cookie helpers (used as fallback and for one-time migration) ----
 function setCookie(name, value, days = COOKIE_DAYS) {
     const expires = new Date(Date.now() + days * 86400000).toUTCString();
     document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
@@ -1261,20 +1324,12 @@ function deleteCookie(name) {
 }
 
 function setLargeCookie(prefix, value, days = COOKIE_DAYS) {
-    // remove old chunks
     let i = 0;
-    while (getCookie(`${prefix}_${i}`) !== null) {
-        deleteCookie(`${prefix}_${i}`);
-        i++;
-    }
+    while (getCookie(`${prefix}_${i}`) !== null) { deleteCookie(`${prefix}_${i}`); i++; }
     deleteCookie(`${prefix}_n`);
-
     if (!value) return;
-
     const chunks = [];
-    for (let j = 0; j < value.length; j += MAX_CHUNK) {
-        chunks.push(value.slice(j, j + MAX_CHUNK));
-    }
+    for (let j = 0; j < value.length; j += MAX_CHUNK) chunks.push(value.slice(j, j + MAX_CHUNK));
     chunks.forEach((chunk, idx) => setCookie(`${prefix}_${idx}`, chunk, days));
     setCookie(`${prefix}_n`, chunks.length.toString(), days);
 }
@@ -1289,6 +1344,79 @@ function getLargeCookie(prefix) {
         result += part;
     }
     return result;
+}
+
+function clearCookieValue(prefix) {
+    deleteCookie(prefix);
+    let i = 0;
+    while (getCookie(`${prefix}_${i}`) !== null) { deleteCookie(`${prefix}_${i}`); i++; }
+    deleteCookie(`${prefix}_n`);
+}
+
+// ---- Unified storage layer (prefers localStorage, falls back to cookies) ----
+function setStored(key, value) {
+    if (LS_AVAILABLE) {
+        try { window.localStorage.setItem(key, value); return; }
+        catch (e) { LS_AVAILABLE = false; }
+    }
+    setCookie(key, value);
+}
+
+function getStored(key) {
+    if (LS_AVAILABLE) {
+        try { return window.localStorage.getItem(key); }
+        catch (e) { LS_AVAILABLE = false; }
+    }
+    return getCookie(key);
+}
+
+function setLargeStored(key, value) {
+    if (LS_AVAILABLE) {
+        try {
+            if (value) window.localStorage.setItem(key, value);
+            else window.localStorage.removeItem(key);
+            return;
+        } catch (e) { LS_AVAILABLE = false; }
+    }
+    setLargeCookie(key, value);
+}
+
+function getLargeStored(key) {
+    if (LS_AVAILABLE) {
+        try {
+            const v = window.localStorage.getItem(key);
+            if (v !== null) return v;
+        } catch (e) { LS_AVAILABLE = false; }
+    }
+    return getLargeCookie(key);
+}
+
+function clearStored(key) {
+    if (LS_AVAILABLE) {
+        try { window.localStorage.removeItem(key); }
+        catch (e) { LS_AVAILABLE = false; }
+    }
+    clearCookieValue(key);
+}
+
+// ---- One-time migration from cookies to localStorage ----
+function migrateFromCookies() {
+    if (!LS_AVAILABLE) return;
+    if (window.localStorage.getItem('hl_migrated')) return;
+    // Copy stats
+    const oldStats = getCookie('hl_stats');
+    if (oldStats && !window.localStorage.getItem('hl_stats')) {
+        try { window.localStorage.setItem('hl_stats', oldStats); } catch (e) {}
+    }
+    // Copy progress (chunked)
+    const oldProg = getLargeCookie('hl_prog');
+    if (oldProg && !window.localStorage.getItem('hl_prog')) {
+        try { window.localStorage.setItem('hl_prog', oldProg); } catch (e) {}
+    }
+    // Clear the now-redundant cookies to free up HTTP header space
+    if (oldStats) clearCookieValue('hl_stats');
+    if (oldProg) clearCookieValue('hl_prog');
+    try { window.localStorage.setItem('hl_migrated', '1'); } catch (e) {}
 }
 
 // ==========================================================================
@@ -1388,15 +1516,18 @@ function saveStats() {
         dx: appState.dailyXP,
         dd: appState.dailyXPDate
     };
-    setCookie('hl_stats', JSON.stringify(stats));
+    setStored('hl_stats', JSON.stringify(stats));
 }
 
 function saveProgress() {
-    setLargeCookie('hl_prog', encodeProgress(appState.progress));
+    setLargeStored('hl_prog', encodeProgress(appState.progress));
 }
 
 function loadFromCookies() {
-    const statsRaw = getCookie('hl_stats');
+    // One-time migration from cookies to localStorage on first load after upgrade
+    migrateFromCookies();
+
+    const statsRaw = getStored('hl_stats');
     if (statsRaw) {
         try {
             const s = JSON.parse(statsRaw);
@@ -1408,7 +1539,7 @@ function loadFromCookies() {
             appState.dailyXPDate = s.dd || null;
         } catch (e) { /* ignore */ }
     }
-    const progRaw = getLargeCookie('hl_prog');
+    const progRaw = getLargeStored('hl_prog');
     appState.progress = decodeProgress(progRaw);
 
     // Reset daily XP if it's a new day
@@ -1425,10 +1556,8 @@ function loadFromCookies() {
 }
 
 function resetAll() {
-    deleteCookie('hl_stats');
-    let i = 0;
-    while (getCookie(`hl_prog_${i}`) !== null) { deleteCookie(`hl_prog_${i}`); i++; }
-    deleteCookie('hl_prog_n');
+    clearStored('hl_stats');
+    clearStored('hl_prog');
     appState = {
         streak: 0, lastPlayedDate: null, totalRounds: 0, totalXP: 0,
         dailyXP: 0, dailyXPDate: todayStr(), progress: {}
@@ -2182,8 +2311,8 @@ document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
 //  auth UI stays hidden and the app behaves exactly as before.
 // ==========================================================================
 
-const SUPABASE_URL = '';      // e.g. 'https://xxxxx.supabase.co'
-const SUPABASE_ANON_KEY = ''; // public anon key from Supabase dashboard
+const SUPABASE_URL = 'https://quorikvqfcktvuanwssd.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_pEI36RyqAK0RxsxcChQqbw_7hNnqIYj';
 
 let sb = null;          // Supabase client (null if not configured)
 let currentUser = null; // logged-in user object or null

@@ -22,6 +22,12 @@ TODO.txt
 .env.local
 .env.*.local
 
+# Local secrets (Supabase, API keys, anything sensitive)
+secrets.local.txt
+*.secret
+*.secret.*
+secrets/
+
 # Old versions or experiments
 v1/
 v2/

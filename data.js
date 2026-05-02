@@ -3529,7 +3529,7 @@ const vocabularyData = [
  },
  {
    "ID": 589,
-   "Hawaiian": "Liliko‘i",
+   "Hawaiian": "Lilikoʻi",
    "English": "Passion fruit",
    "Type": "Kikino (Noun)"
  },
@@ -4303,7 +4303,7 @@ const vocabularyData = [
  },
  {
    "ID": 718,
-   "Hawaiian": "Nai‘a",
+   "Hawaiian": "Naiʻa",
    "English": "Dolphin (alt spelling)",
    "Type": "Kikino (Noun)"
  },
@@ -4573,7 +4573,7 @@ const vocabularyData = [
  },
  {
    "ID": 763,
-   "Hawaiian": "Pa‘i ʻai",
+   "Hawaiian": "Paʻi ʻai",
    "English": "Hard pounded taro",
    "Type": "Kikino (Noun)"
  },
@@ -7939,7 +7939,7 @@ const vocabularyData = [
  },
  {
    "ID": 1324,
-   "Hawaiian": "Ko‘a",
+   "Hawaiian": "Koʻa",
    "English": "Coral",
    "Type": "Kikino (Noun)"
  },
@@ -8287,7 +8287,7 @@ const vocabularyData = [
  },
  {
    "ID": 1382,
-   "Hawaiian": "Pa‘i ʻai paʻa",
+   "Hawaiian": "Paʻi ʻai paʻa",
    "English": "Hard pounded taro",
    "Type": "Kikino (Noun)"
  },
@@ -8455,7 +8455,7 @@ const vocabularyData = [
  },
  {
    "ID": 1410,
-   "Hawaiian": "Hoa pā‘ani",
+   "Hawaiian": "Hoa pāʻani",
    "English": "Playmate",
    "Type": "Kikino (Noun)"
  },
@@ -9133,7 +9133,7 @@ const vocabularyData = [
  },
  {
    "ID": 1523,
-   "Hawaiian": "Hāmare",
+   "Hawaiian": "Hāmale",
    "English": "Hammer",
    "Type": "Kikino (Noun)"
  },
@@ -9217,13 +9217,13 @@ const vocabularyData = [
  },
  {
    "ID": 1537,
-   "Hawaiian": "Pe‘a",
+   "Hawaiian": "Peʻa",
    "English": "Sail / Mat",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 1538,
-   "Hawaiian": "Lā‘au pā‘ani",
+   "Hawaiian": "Lāʻau pāʻani",
    "English": "Game stick / Toy stick",
    "Type": "Kikino (Noun)"
  },
@@ -11911,7 +11911,7 @@ const vocabularyData = [
  },
  {
    "ID": 1986,
-   "Hawaiian": "ʻOhia ʻai",
+   "Hawaiian": "ʻŌhiʻa ʻai",
    "English": "Mountain apple",
    "Type": "Kikino (Noun)"
  },
@@ -12703,7 +12703,7 @@ const vocabularyData = [
  },
  {
    "ID": 2118,
-   "Hawaiian": "Hāmare nui",
+   "Hawaiian": "Hāmale nui",
    "English": "Sledgehammer",
    "Type": "Kikino (Noun)"
  },
@@ -12973,7 +12973,7 @@ const vocabularyData = [
  },
  {
    "ID": 2163,
-   "Hawaiian": "Papa pā‘ani",
+   "Hawaiian": "Papa pāʻani",
    "English": "PE / Physical education class",
    "Type": "Kikino (Noun)"
  },
@@ -13927,61 +13927,61 @@ const vocabularyData = [
  },
  {
    "ID": 2322,
-   "Hawaiian": "Pā‘ani pōpōkihi",
+   "Hawaiian": "Pāʻani pōpōkihi",
    "English": "Volleyball game",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2323,
-   "Hawaiian": "Pā‘ani pōpōhili",
+   "Hawaiian": "Pāʻani pōpōhili",
    "English": "Basketball game",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2324,
-   "Hawaiian": "Pā‘ani pōpōuila",
+   "Hawaiian": "Pāʻani pōpōuila",
    "English": "Baseball game",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2325,
-   "Hawaiian": "Pā‘ani pōpō nui",
+   "Hawaiian": "Pāʻani pōpō nui",
    "English": "Football game",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2326,
-   "Hawaiian": "Pā‘ani heʻe nalu",
+   "Hawaiian": "Pāʻani heʻe nalu",
    "English": "Surf contest",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2327,
-   "Hawaiian": "Pā‘ani holo",
+   "Hawaiian": "Pāʻani holo",
    "English": "Footrace",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2328,
-   "Hawaiian": "Pā‘ani holo waʻa",
+   "Hawaiian": "Pāʻani holo waʻa",
    "English": "Canoe race",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2329,
-   "Hawaiian": "Pā‘ani heihei lio",
+   "Hawaiian": "Pāʻani heihei lio",
    "English": "Horse race",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2330,
-   "Hawaiian": "Pā‘ani peki",
+   "Hawaiian": "Pāʻani peki",
    "English": "Boxing match",
    "Type": "Kikino (Noun)"
  },
  {
    "ID": 2331,
-   "Hawaiian": "Pā‘ani lā kau",
+   "Hawaiian": "Pāʻani lā kau",
    "English": "Tennis match",
    "Type": "Kikino (Noun)"
  },
