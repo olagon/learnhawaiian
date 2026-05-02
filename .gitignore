@@ -1,0 +1,33 @@
+# Mac
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor backups and swap files
+*~
+*.swp
+*.swo
+*.bak
+
+# Local web server logs
+ErrorLog.txt
+*.log
+
+# Personal notes and scratch files
+notes.txt
+TODO.txt
+
+# Environment files (for later when you add login)
+.env
+.env.local
+.env.*.local
+
+# Old versions or experiments
+v1/
+v2/
+old/
+backup/
+
+# Editor folders
+.vscode/
+.idea/

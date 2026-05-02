@@ -1,0 +1,2087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="theme-color" content="#faf7f2">
+    <title>ʻŌlelo Hawaiʻi Study</title>
+    <script src="data.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #faf7f2;
+            --surface: #ffffff;
+            --surface-warm: #f5f0e8;
+            --ink: #1a1614;
+            --ink-soft: #4a4540;
+            --ink-muted: #8a8580;
+            --line: #e8e1d6;
+            --line-soft: #f0ebe1;
+
+            --accent: #5e3a9e;
+            --accent-soft: #ede7f7;
+            --accent-deep: #3d2670;
+
+            --warm: #c4602b;
+            --warm-soft: #f9ede4;
+
+            --success: #5a7a3c;
+            --success-soft: #eef3e6;
+            --error: #b8312a;
+            --error-soft: #f9e9e7;
+
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 1px 2px rgba(26, 22, 20, 0.04), 0 4px 12px rgba(26, 22, 20, 0.04);
+            --shadow-lg: 0 8px 32px rgba(26, 22, 20, 0.08);
+
+            --font-display: 'Source Serif 4', Georgia, serif;
+            --font-body: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.55;
+            font-optical-sizing: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image:
+                radial-gradient(circle at 15% 0%, rgba(94, 58, 158, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 85% 100%, rgba(196, 96, 43, 0.025) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        button {
+            font-family: var(--font-body);
+            font-size: inherit;
+            cursor: pointer;
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(250, 247, 242, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line-soft);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--ink);
+        }
+
+        .brand-mark {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.6rem;
+            line-height: 1;
+            color: var(--accent);
+        }
+
+        .brand-name {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.05rem;
+            letter-spacing: -0.01em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.45rem 0.85rem;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+            transition: all 0.15s ease;
+        }
+
+        .pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .streak-pill { color: var(--warm); border-color: var(--warm-soft); background: var(--warm-soft); }
+        .streak-pill.cold { color: var(--ink-muted); background: var(--surface); border-color: var(--line); }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--ink-soft);
+            transition: all 0.15s ease;
+        }
+        .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .icon-btn svg { width: 18px; height: 18px; }
+
+        /* DAILY GOAL RING */
+        .goal-ring {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            cursor: pointer;
+        }
+        .goal-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .goal-ring-bg { fill: none; stroke: var(--line); stroke-width: 3; }
+        .goal-ring-fill {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 3;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.6s ease;
+        }
+        .goal-ring-fill.complete { stroke: var(--warm); }
+        .goal-ring-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+        .goal-ring.complete .goal-ring-text { color: var(--warm); }
+
+        /* MAIN */
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 3rem;
+        }
+
+        .hidden { display: none !important; }
+
+        /* CARD */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        /* PROGRESS DOTS */
+        .progress-track {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 2.5rem;
+        }
+        .progress-dot {
+            flex: 1;
+            height: 4px;
+            background: var(--line);
+            border-radius: 2px;
+            transition: background 0.3s ease;
+        }
+        .progress-dot.active { background: var(--accent); }
+        .progress-dot.current { background: var(--ink); }
+
+        .phase-label {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--ink-muted);
+            margin-bottom: 1rem;
+        }
+
+        .phase-label.review { color: var(--warm); }
+        .phase-label.new { color: var(--accent); }
+        .phase-label.mastery-check { color: var(--success); }
+
+        /* WORD DISPLAY */
+        .word-block {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .word-display {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            margin: 0 0 0.5rem;
+            word-break: break-word;
+        }
+
+        .word-meta {
+            font-size: 0.85rem;
+            color: var(--ink-muted);
+            font-weight: 500;
+        }
+
+        .word-meta .dot {
+            margin: 0 0.5rem;
+            color: var(--line);
+        }
+
+        /* INPUT */
+        .input-wrap {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1.1rem;
+            font-family: var(--font-body);
+            font-weight: 500;
+            background: var(--bg);
+            color: var(--ink);
+            border: 2px solid var(--line);
+            border-radius: var(--radius-sm);
+            outline: none;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+        input[type="text"]::placeholder { color: var(--ink-muted); font-weight: 400; }
+        input[type="text"]:focus { border-color: var(--accent); background: var(--surface); }
+        input[type="text"]:disabled { background: var(--surface-warm); cursor: not-allowed; opacity: 0.85; }
+        input[type="text"].correct { border-color: var(--success); background: var(--success-soft); }
+        input[type="text"].wrong { border-color: var(--error); background: var(--error-soft); }
+        input[type="text"].close { border-color: var(--warm); background: var(--warm-soft); }
+
+        /* FEEDBACK */
+        .feedback {
+            min-height: 60px;
+            margin-bottom: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .feedback.visible { opacity: 1; transform: translateY(0); }
+
+        .feedback-main {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.15rem;
+        }
+        .feedback-sub {
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+        }
+        .feedback-sub strong { color: var(--ink); font-weight: 600; }
+
+        .feedback.correct .feedback-main { color: var(--success); }
+        .feedback.close .feedback-main { color: var(--warm); }
+        .feedback.wrong .feedback-main { color: var(--error); }
+
+        .xp-pop {
+            display: inline-block;
+            margin-left: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--warm);
+            background: var(--warm-soft);
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            animation: xp-pop 0.6s ease;
+        }
+        @keyframes xp-pop {
+            0% { opacity: 0; transform: scale(0.7) translateY(4px); }
+            60% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.95rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: var(--font-body);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: var(--accent);
+            color: white;
+            width: 100%;
+        }
+        .btn:hover { background: var(--accent-deep); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--line);
+        }
+        .btn-outline:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateY(-1px); }
+
+        .btn-warm {
+            background: var(--warm);
+        }
+        .btn-warm:hover { background: #a04e1f; }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--ink-soft);
+            padding: 0.75rem 1rem;
+        }
+        .btn-ghost:hover { color: var(--accent); background: var(--accent-soft); }
+
+        .btn-sm { padding: 0.6rem 1rem; font-size: 0.9rem; }
+
+        /* SUMMARY */
+        .summary-card {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .summary-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            background: var(--success-soft);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .summary-icon svg { width: 32px; height: 32px; }
+
+        .summary-card h2 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 2rem;
+            margin: 0 0 0.5rem;
+        }
+
+        .summary-card .subtitle {
+            color: var(--ink-soft);
+            margin: 0 0 2rem;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        .summary-stat {
+            padding: 1rem 0.75rem;
+            background: var(--surface-warm);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+        .summary-stat-value {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+        .summary-stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-muted);
+            font-weight: 600;
+        }
+        .summary-stat.win .summary-stat-value { color: var(--success); }
+        .summary-stat.miss .summary-stat-value { color: var(--warm); }
+        .summary-stat.xp .summary-stat-value { color: var(--accent); }
+
+        .button-row {
+            display: flex;
+            gap: 0.75rem;
+            flex-direction: column;
+        }
+
+        /* DAILY GOAL CELEBRATION */
+        .celebration {
+            background: linear-gradient(135deg, var(--warm-soft) 0%, var(--accent-soft) 100%);
+            border: 1px solid var(--warm-soft);
+            padding: 1.25rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--ink);
+        }
+        .celebration strong { color: var(--warm); font-weight: 700; }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(26, 22, 20, 0.45);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 1rem;
+            animation: fade-in 0.2s ease;
+        }
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: var(--radius);
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slide-up 0.3s ease;
+        }
+        @keyframes slide-up {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-large { max-width: 600px; }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 1.5rem 0.5rem;
+        }
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.4rem;
+            margin: 0;
+            color: var(--ink);
+        }
+        .modal-body {
+            padding: 0.5rem 1.5rem 1.5rem;
+        }
+        .modal-body p {
+            color: var(--ink-soft);
+            margin: 0 0 1rem;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            color: var(--ink-muted);
+            border-radius: 999px;
+            transition: all 0.15s ease;
+        }
+        .close-btn:hover { background: var(--line-soft); color: var(--ink); }
+
+        /* WELCOME MODAL */
+        .welcome-hero {
+            padding: 2rem 1.5rem 1rem;
+            text-align: center;
+        }
+        .welcome-hero h2 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 2.2rem;
+            margin: 0 0 0.5rem;
+            line-height: 1.1;
+        }
+        .welcome-hero h2 .accent { color: var(--accent); }
+        .welcome-hero .subtitle {
+            color: var(--ink-soft);
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .feature-item {
+            display: flex;
+            gap: 0.85rem;
+            align-items: flex-start;
+        }
+        .feature-icon {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .feature-icon svg { width: 18px; height: 18px; }
+        .feature-text { font-size: 0.95rem; color: var(--ink-soft); padding-top: 0.4rem; }
+        .feature-text strong { color: var(--ink); font-weight: 600; }
+
+        /* RATIONALE BOX */
+        .rationale-box {
+            background: var(--accent-soft);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem 1.25rem 1rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid var(--accent);
+        }
+        .rationale-box h3 {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 0 0 0.6rem;
+            color: var(--ink);
+        }
+        .rationale-box p {
+            font-size: 0.93rem;
+            color: var(--ink-soft);
+            margin: 0 0 0.7rem;
+            line-height: 1.55;
+        }
+        .rationale-box p:last-child { margin-bottom: 0; }
+        .rationale-callout {
+            color: var(--ink) !important;
+            font-weight: 600;
+            border-top: 1px solid var(--accent-soft);
+            padding-top: 0.7rem;
+            margin-top: 0.4rem !important;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.05rem;
+            margin: 1rem 0 0.5rem;
+            color: var(--ink);
+        }
+
+        /* GOAL TRACKER */
+        .goal-tracker {
+            padding: 0 1.5rem 1.5rem;
+        }
+        .goal-tracker h3 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin: 0 0 0.4rem;
+        }
+        .goal-tracker .goal-sub {
+            font-size: 0.88rem;
+            color: var(--ink-muted);
+            margin: 0 0 0.85rem;
+        }
+        .goal-bar-track {
+            height: 14px;
+            background: var(--line-soft);
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+        .goal-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            border-radius: 7px;
+            transition: width 0.8s ease;
+        }
+        .goal-bar-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--ink-soft);
+            font-weight: 600;
+        }
+        .goal-bar-row .goal-pct { color: var(--accent); }
+        .goal-rationale {
+            margin-top: 1rem;
+            padding: 0.9rem 1rem;
+            background: var(--surface-warm);
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            color: var(--ink-soft);
+            line-height: 1.5;
+        }
+        .goal-rationale strong { color: var(--ink); font-weight: 600; }
+
+        .home-goal {
+            background: var(--surface-warm);
+            border-radius: var(--radius-sm);
+            padding: 0.85rem 1rem;
+            margin: 0 0 1.25rem;
+            text-align: left;
+        }
+        .home-goal-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.45rem;
+        }
+        .home-goal-label {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .home-goal-pct {
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .home-goal-foot {
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            margin-top: 0.5rem;
+        }
+        .home-goal-foot a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent-soft);
+        }
+        .home-goal-foot a:hover { border-bottom-color: var(--accent); }
+
+        /* STATS MODAL */
+        .stats-hero {
+            padding: 2rem 1.5rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--line-soft);
+        }
+        .stats-hero .big-streak {
+            font-family: var(--font-display);
+            font-size: 3.5rem;
+            font-weight: 600;
+            line-height: 1;
+            color: var(--warm);
+        }
+        .stats-hero .big-streak.cold { color: var(--ink-muted); }
+        .stats-hero .streak-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-muted);
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+        .stats-hero .streak-msg {
+            margin-top: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            padding: 1.5rem;
+        }
+        .stat-tile {
+            padding: 1.25rem 1rem;
+            background: var(--surface-warm);
+            border-radius: var(--radius-sm);
+        }
+        .stat-tile-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 600;
+            line-height: 1;
+            color: var(--ink);
+        }
+        .stat-tile-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--ink-muted);
+            font-weight: 600;
+            margin-top: 0.4rem;
+        }
+
+        /* MASTERY BREAKDOWN */
+        .mastery-section {
+            padding: 0 1.5rem 1.5rem;
+        }
+        .mastery-section h3 {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin: 0 0 1rem;
+        }
+        .mastery-bar-wrap {
+            margin-bottom: 0.85rem;
+        }
+        .mastery-bar-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        .mastery-bar-label { color: var(--ink-soft); font-weight: 500; }
+        .mastery-bar-count { color: var(--ink-muted); font-weight: 600; }
+        .mastery-bar-track {
+            height: 6px;
+            background: var(--line-soft);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .mastery-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+        .mastery-l0 .mastery-bar-fill { background: var(--ink-muted); }
+        .mastery-l1 .mastery-bar-fill { background: #d4886b; }
+        .mastery-l2 .mastery-bar-fill { background: var(--warm); }
+        .mastery-l3 .mastery-bar-fill { background: #5a9a8a; }
+        .mastery-l4 .mastery-bar-fill { background: var(--accent); }
+        .mastery-l5 .mastery-bar-fill { background: var(--success); }
+
+        /* GRAMMAR */
+        .grammar-item {
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--line-soft);
+        }
+        .grammar-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .grammar-item h3 {
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 1.05rem;
+            margin: 0 0 0.4rem;
+            color: var(--ink);
+        }
+        .grammar-item p {
+            margin: 0;
+            color: var(--ink-soft);
+            font-size: 0.95rem;
+        }
+        .grammar-item em {
+            color: var(--accent);
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        /* DANGER ZONE */
+        .danger-zone {
+            padding: 1rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--line-soft);
+            text-align: center;
+        }
+
+        /* LOADING */
+        .loading {
+            text-align: center;
+            padding: 4rem 1rem;
+            color: var(--ink-muted);
+        }
+        .loading-spin {
+            width: 28px;
+            height: 28px;
+            border: 2.5px solid var(--line);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 1.5rem 1rem 2rem;
+            font-size: 0.8rem;
+            color: var(--ink-muted);
+            margin-top: auto;
+            line-height: 1.7;
+        }
+        footer .ʻokina { color: var(--warm); font-style: normal; }
+        footer a {
+            color: var(--ink-soft);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+            transition: color 0.15s, border-color 0.15s;
+        }
+        footer a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+        footer .footer-line { display: block; }
+
+        /* RESPONSIVE */
+        @media (max-width: 600px) {
+            header { padding: 0.75rem 1rem; }
+            .brand-name { font-size: 0.92rem; }
+            main { padding: 1rem 1rem 2rem; }
+            .card { padding: 1.75rem 1.25rem; }
+            .summary-card { padding: 2rem 1.25rem; }
+            .modal { max-height: 92vh; }
+            .pill { padding: 0.4rem 0.7rem; font-size: 0.82rem; }
+        }
+
+        @media (max-width: 380px) {
+            .summary-stats { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ANIMATION ENTRANCE */
+        .card, .summary-card {
+            animation: card-in 0.35s ease;
+        }
+        @keyframes card-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SHAKE ANIMATION FOR WRONG */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        input[type="text"].wrong, input[type="text"].close {
+            animation: shake 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a class="brand" href="#">
+        <span class="brand-name">Master ʻŌlelo Hawaiʻi Vocabulary</span>
+    </a>
+    <div class="header-actions">
+        <span class="pill streak-pill cold" id="streakPill" title="Daily streak">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            <span id="streakCount">0</span>
+        </span>
+        <div class="goal-ring" id="goalRing" onclick="openStats()" title="Daily XP goal">
+            <svg viewBox="0 0 38 38">
+                <circle class="goal-ring-bg" cx="19" cy="19" r="16"/>
+                <circle class="goal-ring-fill" id="goalRingFill" cx="19" cy="19" r="16" stroke-dasharray="100.5" stroke-dashoffset="100.5"/>
+            </svg>
+            <div class="goal-ring-text" id="goalRingText">0</div>
+        </div>
+        <button class="icon-btn" onclick="openGrammar()" title="Grammar guide" aria-label="Grammar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </button>
+    </div>
+</header>
+
+<main>
+    <div id="loading" class="loading">
+        <div class="loading-spin"></div>
+        Loading vocabulary
+    </div>
+
+    <div id="dailyCheckin" class="card hidden" style="text-align:center;">
+        <div class="summary-icon" style="background: var(--warm-soft); color: var(--warm);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+        </div>
+        <h2 style="font-family: var(--font-display); font-weight: 500; font-size: 1.8rem; margin: 0 0 0.5rem;" id="checkinTitle">Welina hou mai</h2>
+        <p style="color: var(--ink-soft); margin: 0 0 1.25rem;" id="checkinMessage">Welcome back. Time for today's round.</p>
+        <div class="home-goal" id="homeGoal">
+            <div class="home-goal-row">
+                <span class="home-goal-label">Path to 2,000 mastered</span>
+                <span class="home-goal-pct" id="homeGoalPct">0%</span>
+            </div>
+            <div class="goal-bar-track">
+                <div class="goal-bar-fill" id="homeGoalFill" style="width: 0%;"></div>
+            </div>
+            <div class="home-goal-foot"><span id="homeGoalCount">0</span> of 2,000 words mastered. <a href="#" onclick="openStats(); return false;">See why 2,000</a>.</div>
+        </div>
+        <button class="btn" onclick="startSession()" id="checkinBtn">Start today's round</button>
+    </div>
+
+    <div id="gameContainer" class="hidden">
+        <div class="card">
+            <div class="progress-track" id="progressTrack"></div>
+            <span class="phase-label" id="phaseLabel">Translate to English</span>
+            <div class="word-block">
+                <div class="word-display" id="wordDisplay">Word</div>
+                <div class="word-meta">
+                    <span id="wordType">Type</span>
+                    <span class="dot">•</span>
+                    <span id="wordTagBadge">New</span>
+                </div>
+            </div>
+            <div class="input-wrap">
+                <input type="text" id="answerInput" placeholder="Type your answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </div>
+            <div class="feedback" id="feedback"></div>
+            <button class="btn btn-outline hidden" id="advanceBtn" onclick="advanceWord()">Continue</button>
+            <button class="btn hidden" id="nextPhaseBtn" onclick="startPhase2()">Begin reverse direction</button>
+        </div>
+    </div>
+
+    <div id="summaryContainer" class="hidden">
+        <div class="card summary-card">
+            <div id="celebrationBox" class="celebration hidden"></div>
+            <div class="summary-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <h2 id="summaryTitle">Hana maikaʻi</h2>
+            <p class="subtitle" id="summarySubtitle">Round complete</p>
+
+            <div class="summary-stats">
+                <div class="summary-stat win">
+                    <div class="summary-stat-value" id="sumCorrect">0</div>
+                    <div class="summary-stat-label">Correct</div>
+                </div>
+                <div class="summary-stat miss">
+                    <div class="summary-stat-value" id="sumMissed">0</div>
+                    <div class="summary-stat-label">To revisit</div>
+                </div>
+                <div class="summary-stat xp">
+                    <div class="summary-stat-value" id="sumXP">0</div>
+                    <div class="summary-stat-label">XP earned</div>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button class="btn" onclick="generateRound()">Another round</button>
+                <button class="btn btn-outline" onclick="openStats()">View progress</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <span class="footer-line">Built with aloha by <a href="https://www.linkedin.com/in/olinlagon/" target="_blank" rel="noopener">Olin</a>. No ads. No tracking.</span>
+    <span class="footer-line">© 2026 Olin Kealoha Lagon. Open source under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT License</a>.</span>
+</footer>
+
+<!-- WELCOME MODAL -->
+<div id="welcomeModal" class="modal-overlay hidden">
+    <div class="modal modal-large">
+        <div class="welcome-hero">
+            <h2>Master <span class="accent">2,000</span> words</h2>
+            <p class="subtitle">The fastest, most proven way to grasp ʻōlelo Hawaiʻi</p>
+        </div>
+        <div class="modal-body">
+            <div class="rationale-box">
+                <h3>Why 2,000 words</h3>
+                <p>Decades of language research show the same pattern across every language studied. The 2,000 most used words cover roughly 95 percent of everyday speech and writing. Hit that milestone and you stop reaching for a dictionary every other sentence. You start understanding.</p>
+                <p>Hawaiian works the same way. The same core nouns, verbs, and connectors do the heavy lifting in conversation, mele, moʻolelo, and the news. Lock in those 2,000 and you have a real working command of the language.</p>
+                <p class="rationale-callout">This app tracks your path to all 2,000. Every word you master moves the needle.</p>
+            </div>
+
+            <h3 class="section-title">Why this method works</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+                    </div>
+                    <div class="feature-text"><strong>Spaced repetition.</strong> Words you miss come back fast. Words you nail check in less often. Your brain locks them in for the long haul.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="feature-text"><strong>Active recall, both directions.</strong> You translate from Hawaiian to English, then back the other way. Two way recall is what builds real fluency.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div class="feature-text"><strong>Daily rounds.</strong> A short round each day beats a long session once a week. Streaks keep you honest.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><path d="M21 12c-1 0-2.4-.6-3-1.5-.6.9-2 1.5-3 1.5s-2.4-.6-3-1.5c-.6.9-2 1.5-3 1.5s-2.4-.6-3-1.5C4.4 11.4 3 12 2 12"/></svg>
+                    </div>
+                    <div class="feature-text"><strong>Forgiving typos.</strong> Skip the kahakō or ʻokina and it still counts. Close spelling still counts too. Focus on knowing the word.</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                    </div>
+                    <div class="feature-text"><strong>Stays on your device.</strong> Progress saves to cookies. No accounts. No tracking. No data leaves.</div>
+                </div>
+            </div>
+            <button class="btn" onclick="closeWelcome()">E hoʻomaka kākou</button>
+        </div>
+    </div>
+</div>
+
+<!-- STATS MODAL -->
+<div id="statsModal" class="modal-overlay hidden">
+    <div class="modal modal-large">
+        <div class="modal-header">
+            <h2>Your progress</h2>
+            <button class="close-btn" onclick="closeStats()" aria-label="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="stats-hero">
+            <div class="big-streak" id="bigStreak">0</div>
+            <div class="streak-label">Day streak</div>
+            <div class="streak-msg" id="streakMessage"></div>
+        </div>
+
+        <div class="goal-tracker">
+            <h3>Path to 2,000 mastered words</h3>
+            <p class="goal-sub">The proven threshold for understanding Hawaiian fluently</p>
+            <div class="goal-bar-track">
+                <div class="goal-bar-fill" id="goalBarFill" style="width: 0%;"></div>
+            </div>
+            <div class="goal-bar-row">
+                <span><span id="goalCount">0</span> of 2,000 mastered</span>
+                <span class="goal-pct" id="goalPct">0%</span>
+            </div>
+            <div class="goal-rationale">
+                <strong>Why 2,000?</strong> Linguistic research shows the 2,000 most common words cover roughly <strong>95% of everyday speech and writing</strong> in any language, including Hawaiian. The same core words appear over and over in conversation, mele, moʻolelo, and the news. Master those and you stop translating word by word. You start understanding.
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-tile">
+                <div class="stat-tile-value" id="statMastered">0</div>
+                <div class="stat-tile-label">Words mastered</div>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile-value" id="statLearning">0</div>
+                <div class="stat-tile-label">In progress</div>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile-value" id="statRounds">0</div>
+                <div class="stat-tile-label">Rounds played</div>
+            </div>
+            <div class="stat-tile">
+                <div class="stat-tile-value" id="statTotalXP">0</div>
+                <div class="stat-tile-label">Total XP</div>
+            </div>
+        </div>
+        <div class="mastery-section">
+            <h3>Mastery breakdown</h3>
+            <div id="masteryBars"></div>
+        </div>
+        <div class="danger-zone">
+            <button class="btn-ghost" onclick="confirmReset()" style="border: none; background: none;">Reset all progress</button>
+        </div>
+    </div>
+</div>
+
+<!-- GRAMMAR MODAL -->
+<div id="grammarModal" class="modal-overlay hidden">
+    <div class="modal modal-large">
+        <div class="modal-header">
+            <h2>Grammar reference</h2>
+            <button class="close-btn" onclick="closeGrammar()" aria-label="Close">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p style="margin-bottom: 1.5rem;">A few building blocks for sentence structure.</p>
+            <div class="grammar-item">
+                <h3>Kikino (noun)</h3>
+                <p>People, places, and things. Often preceded by markers like <em>ka</em> or <em>ke</em>.</p>
+            </div>
+            <div class="grammar-item">
+                <h3>Hamani (transitive verb)</h3>
+                <p>Actions that do something to a direct object, like <em>ʻai</em> (to eat).</p>
+            </div>
+            <div class="grammar-item">
+                <h3>Hehele (intransitive verb)</h3>
+                <p>Actions of movement or state that do not take a direct object, like <em>hele</em> (to go).</p>
+            </div>
+            <div class="grammar-item">
+                <h3>ʻAʻano (stative verb / adjective)</h3>
+                <p>Words describing a state, condition, or quality, like <em>maikaʻi</em> (good) or <em>nui</em> (big).</p>
+            </div>
+            <div class="grammar-item">
+                <h3>Special characters</h3>
+                <p>The <em>ʻokina (ʻ)</em> is a glottal stop and acts as a consonant. The <em>kahakō (ā)</em> is a macron that elongates a vowel. Typing without them still counts.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirmModal" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 400px;">
+        <div class="modal-header">
+            <h2 id="confirmTitle">Are you sure?</h2>
+        </div>
+        <div class="modal-body">
+            <p id="confirmMessage">This will erase all your progress.</p>
+            <div class="button-row">
+                <button class="btn btn-warm" id="confirmYesBtn">Yes, reset everything</button>
+                <button class="btn btn-outline" onclick="closeConfirm()">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==========================================================================
+//  COOKIE STORAGE  (no localStorage anywhere)
+// ==========================================================================
+
+const COOKIE_DAYS = 365;
+const MAX_CHUNK = 3500; // safe under typical 4KB cookie limit
+
+function setCookie(name, value, days = COOKIE_DAYS) {
+    const expires = new Date(Date.now() + days * 86400000).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+}
+
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[.$?*|{}()[\]\\\/+^]/g, '\\$&') + '=([^;]*)'));
+    return match ? decodeURIComponent(match[1]) : null;
+}
+
+function deleteCookie(name) {
+    document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+}
+
+function setLargeCookie(prefix, value, days = COOKIE_DAYS) {
+    // remove old chunks
+    let i = 0;
+    while (getCookie(`${prefix}_${i}`) !== null) {
+        deleteCookie(`${prefix}_${i}`);
+        i++;
+    }
+    deleteCookie(`${prefix}_n`);
+
+    if (!value) return;
+
+    const chunks = [];
+    for (let j = 0; j < value.length; j += MAX_CHUNK) {
+        chunks.push(value.slice(j, j + MAX_CHUNK));
+    }
+    chunks.forEach((chunk, idx) => setCookie(`${prefix}_${idx}`, chunk, days));
+    setCookie(`${prefix}_n`, chunks.length.toString(), days);
+}
+
+function getLargeCookie(prefix) {
+    const n = parseInt(getCookie(`${prefix}_n`) || '0', 10);
+    if (!n) return null;
+    let result = '';
+    for (let i = 0; i < n; i++) {
+        const part = getCookie(`${prefix}_${i}`);
+        if (part === null) return null;
+        result += part;
+    }
+    return result;
+}
+
+// ==========================================================================
+//  STATE
+// ==========================================================================
+
+const REVIEW_INTERVALS = [0, 1, 3, 7, 15, 30]; // rounds before next review per level
+const DAILY_GOAL_XP = 30;
+const XP_PER_CORRECT = 5;
+const XP_ROUND_BONUS = 10;
+const ROUND_SIZE = 11;
+const FLUENCY_GOAL = 2000; // 2,000 mastered words ≈ 95% comprehension
+
+let appState = {
+    streak: 0,
+    lastPlayedDate: null,   // YYYY-MM-DD string
+    totalRounds: 0,
+    totalXP: 0,
+    dailyXP: 0,
+    dailyXPDate: null,
+    progress: {}             // { [id]: { l: level0to5, r: lastRoundSeen } }
+};
+
+let vocabulary = [];
+let roundWords = [];
+let currentWordIndex = 0;
+let isPhase2 = false;
+let roundResults = []; // [{id, correctP1, correctP2, prevLevel}]
+let inputDisabled = false;
+let answerChecked = false;
+let sessionXP = 0;
+
+// ==========================================================================
+//  PERSISTENCE
+// ==========================================================================
+
+function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function daysBetween(dStr1, dStr2) {
+    if (!dStr1 || !dStr2) return null;
+    const a = new Date(dStr1 + 'T00:00:00');
+    const b = new Date(dStr2 + 'T00:00:00');
+    return Math.round((b - a) / 86400000);
+}
+
+// Compact progress encoding.
+// Format: "id1.lvl.round,id2.lvl.round,..." in base36
+function encodeProgress(progress) {
+    const parts = [];
+    for (const id in progress) {
+        const p = progress[id];
+        // skip never-touched (level 0 with no round info)
+        if (!p || (p.l === 0 && (p.r === undefined || p.r === 0))) continue;
+        const idB = parseInt(id, 10).toString(36);
+        const rB = (p.r || 0).toString(36);
+        parts.push(`${idB}.${p.l}.${rB}`);
+    }
+    return parts.join(',');
+}
+
+function decodeProgress(str) {
+    const out = {};
+    if (!str) return out;
+    str.split(',').forEach(piece => {
+        if (!piece) return;
+        const [idB, lB, rB] = piece.split('.');
+        const id = parseInt(idB, 36);
+        const l = parseInt(lB, 10);
+        const r = parseInt(rB || '0', 36);
+        if (!isNaN(id)) out[id] = { l: isNaN(l) ? 0 : l, r: isNaN(r) ? 0 : r };
+    });
+    return out;
+}
+
+function saveStats() {
+    const stats = {
+        s: appState.streak,
+        lp: appState.lastPlayedDate,
+        tr: appState.totalRounds,
+        tx: appState.totalXP,
+        dx: appState.dailyXP,
+        dd: appState.dailyXPDate
+    };
+    setCookie('hl_stats', JSON.stringify(stats));
+}
+
+function saveProgress() {
+    setLargeCookie('hl_prog', encodeProgress(appState.progress));
+}
+
+function loadFromCookies() {
+    const statsRaw = getCookie('hl_stats');
+    if (statsRaw) {
+        try {
+            const s = JSON.parse(statsRaw);
+            appState.streak = s.s || 0;
+            appState.lastPlayedDate = s.lp || null;
+            appState.totalRounds = s.tr || 0;
+            appState.totalXP = s.tx || 0;
+            appState.dailyXP = s.dx || 0;
+            appState.dailyXPDate = s.dd || null;
+        } catch (e) { /* ignore */ }
+    }
+    const progRaw = getLargeCookie('hl_prog');
+    appState.progress = decodeProgress(progRaw);
+
+    // Reset daily XP if it's a new day
+    if (appState.dailyXPDate !== todayStr()) {
+        appState.dailyXP = 0;
+        appState.dailyXPDate = todayStr();
+    }
+
+    // Streak validation
+    if (appState.lastPlayedDate) {
+        const gap = daysBetween(appState.lastPlayedDate, todayStr());
+        if (gap > 1) appState.streak = 0;
+    }
+}
+
+function resetAll() {
+    deleteCookie('hl_stats');
+    let i = 0;
+    while (getCookie(`hl_prog_${i}`) !== null) { deleteCookie(`hl_prog_${i}`); i++; }
+    deleteCookie('hl_prog_n');
+    appState = {
+        streak: 0, lastPlayedDate: null, totalRounds: 0, totalXP: 0,
+        dailyXP: 0, dailyXPDate: todayStr(), progress: {}
+    };
+    saveStats();
+    saveProgress();
+}
+
+// ==========================================================================
+//  FUZZY MATCHING
+// ==========================================================================
+
+function normalize(str) {
+    return str
+        .toLowerCase()
+        .replace(/[ʻ'`'ʼ]/g, '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.,!?;:]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    const dp = new Array(b.length + 1);
+    for (let j = 0; j <= b.length; j++) dp[j] = j;
+    for (let i = 1; i <= a.length; i++) {
+        let prev = dp[0];
+        dp[0] = i;
+        for (let j = 1; j <= b.length; j++) {
+            const tmp = dp[j];
+            const cost = a.charCodeAt(i-1) === b.charCodeAt(j-1) ? 0 : 1;
+            dp[j] = Math.min(dp[j] + 1, dp[j-1] + 1, prev + cost);
+            prev = tmp;
+        }
+    }
+    return dp[b.length];
+}
+
+// Build alternative valid forms of an answer
+function expandEnglishAnswers(english) {
+    const variants = new Set();
+    english.split('/').forEach(seg => {
+        const trimmed = seg.trim();
+        variants.add(trimmed);
+        // strip parentheticals
+        const noParen = trimmed.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+        if (noParen) variants.add(noParen);
+        // drop leading articles for noun-style answers
+        const noArticle = noParen.replace(/^(a |an |the |to )/i, '').trim();
+        if (noArticle) variants.add(noArticle);
+    });
+    return [...variants].map(v => normalize(v)).filter(Boolean);
+}
+
+function expandHawaiianAnswers(hawaiian) {
+    const variants = new Set();
+    hawaiian.split('/').forEach(seg => {
+        const trimmed = seg.trim();
+        variants.add(trimmed);
+        const noParen = trimmed.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
+        if (noParen) variants.add(noParen);
+    });
+    return [...variants].map(v => normalize(v)).filter(Boolean);
+}
+
+// Tolerance scales with length
+function exactTolerance(len) {
+    if (len <= 3) return 0;
+    if (len <= 6) return 1;
+    if (len <= 10) return 2;
+    if (len <= 15) return 3;
+    return Math.floor(len / 5);
+}
+
+function closeTolerance(len) {
+    if (len <= 3) return 0; // very short words must be exact
+    return exactTolerance(len) + Math.max(1, Math.floor(len / 8));
+}
+
+// Returns: { status: 'correct' | 'close' | 'wrong', distance, matchedVariant }
+function fuzzyCheck(input, validForms) {
+    const inN = normalize(input);
+    if (!inN) return { status: 'wrong', distance: Infinity };
+
+    let best = { status: 'wrong', distance: Infinity, matchedVariant: null };
+
+    for (const form of validForms) {
+        const dist = levenshtein(inN, form);
+        if (dist < best.distance) {
+            best.distance = dist;
+            best.matchedVariant = form;
+        }
+        const refLen = Math.max(form.length, inN.length);
+        if (dist <= exactTolerance(refLen)) {
+            return { status: 'correct', distance: dist, matchedVariant: form };
+        }
+    }
+
+    if (best.distance !== Infinity) {
+        const refLen = Math.max(best.matchedVariant.length, inN.length);
+        if (best.distance <= closeTolerance(refLen)) {
+            best.status = 'close';
+        }
+    }
+    return best;
+}
+
+// ==========================================================================
+//  ROUND GENERATION (SRS)
+// ==========================================================================
+
+function isDue(wordState, currentRound) {
+    if (!wordState || wordState.l === 0) return true;
+    const interval = REVIEW_INTERVALS[wordState.l] || 30;
+    return (currentRound - (wordState.r || 0)) >= interval;
+}
+
+function getWordState(id) {
+    return appState.progress[id] || { l: 0, r: 0 };
+}
+
+function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// Categorize words and pick a balanced round
+function buildRoundPool() {
+    const cur = appState.totalRounds;
+    const buckets = {
+        struggling: [], // level 1-2 due
+        growing: [],    // level 3-4 due
+        mastered: [],   // level 5 due
+        new: []         // level 0
+    };
+
+    vocabulary.forEach(w => {
+        const st = getWordState(w.ID);
+        if (st.l === 0) {
+            buckets.new.push(w);
+        } else if (isDue(st, cur)) {
+            if (st.l <= 2) buckets.struggling.push(w);
+            else if (st.l <= 4) buckets.growing.push(w);
+            else buckets.mastered.push(w);
+        }
+    });
+
+    // Shuffle each bucket
+    Object.keys(buckets).forEach(k => buckets[k] = shuffle(buckets[k]));
+
+    // Round composition target: 4 struggling, 2 growing, 1 mastery check, 4 new
+    const target = { struggling: 4, growing: 2, mastered: 1, new: 4 };
+    const selected = [];
+    const used = new Set();
+
+    function take(bucket, count) {
+        let added = 0;
+        while (added < count && buckets[bucket].length > 0) {
+            const w = buckets[bucket].shift();
+            if (!used.has(w.ID)) { selected.push(w); used.add(w.ID); added++; }
+        }
+        return added;
+    }
+
+    // First pass: try to fill targets
+    const order = ['struggling', 'growing', 'mastered', 'new'];
+    order.forEach(k => take(k, target[k]));
+
+    // Backfill from any remaining bucket
+    const fillOrder = ['struggling', 'growing', 'new', 'mastered'];
+    let safety = 0;
+    while (selected.length < ROUND_SIZE && safety < 50) {
+        let added = false;
+        for (const k of fillOrder) {
+            if (selected.length >= ROUND_SIZE) break;
+            if (buckets[k].length > 0) {
+                if (take(k, 1) > 0) added = true;
+            }
+        }
+        if (!added) break;
+        safety++;
+    }
+
+    // Last resort: pick any vocabulary word not yet used
+    if (selected.length < ROUND_SIZE) {
+        const leftovers = shuffle(vocabulary.filter(w => !used.has(w.ID)));
+        while (selected.length < ROUND_SIZE && leftovers.length > 0) {
+            selected.push(leftovers.shift());
+        }
+    }
+
+    return shuffle(selected);
+}
+
+function tagForWord(w) {
+    const st = getWordState(w.ID);
+    if (st.l === 0) return { label: 'New', cls: 'new' };
+    if (st.l <= 2) return { label: 'Review', cls: 'review' };
+    if (st.l === 5) return { label: 'Mastery check', cls: 'mastery-check' };
+    return { label: 'Reinforce', cls: 'review' };
+}
+
+// ==========================================================================
+//  GAME FLOW
+// ==========================================================================
+
+function generateRound() {
+    document.getElementById('summaryContainer').classList.add('hidden');
+    document.getElementById('dailyCheckin').classList.add('hidden');
+    document.getElementById('gameContainer').classList.remove('hidden');
+
+    roundWords = buildRoundPool();
+    if (roundWords.length === 0) return;
+
+    currentWordIndex = 0;
+    isPhase2 = false;
+    roundResults = roundWords.map(w => ({
+        id: w.ID,
+        correctP1: false,
+        correctP2: false,
+        prevLevel: getWordState(w.ID).l
+    }));
+    sessionXP = 0;
+
+    renderProgressTrack();
+    renderWord();
+}
+
+function renderProgressTrack() {
+    const track = document.getElementById('progressTrack');
+    const total = roundWords.length * 2;
+    let html = '';
+    for (let i = 0; i < total; i++) {
+        const cls = i < currentStep() ? 'active' : (i === currentStep() ? 'current' : '');
+        html += `<div class="progress-dot ${cls}"></div>`;
+    }
+    track.innerHTML = html;
+}
+
+function currentStep() {
+    return (isPhase2 ? roundWords.length : 0) + currentWordIndex;
+}
+
+function renderWord() {
+    const w = roundWords[currentWordIndex];
+    const display = isPhase2 ? w.English : w.Hawaiian;
+    const phaseText = isPhase2 ? 'Translate to Hawaiian' : 'Translate to English';
+    const tag = tagForWord(w);
+
+    document.getElementById('wordDisplay').textContent = display;
+    document.getElementById('wordType').textContent = w.Type;
+    const tagBadge = document.getElementById('wordTagBadge');
+    tagBadge.textContent = tag.label;
+
+    const phaseLabel = document.getElementById('phaseLabel');
+    phaseLabel.textContent = phaseText;
+    phaseLabel.className = `phase-label ${tag.cls}`;
+
+    renderProgressTrack();
+
+    const inputEl = document.getElementById('answerInput');
+    inputEl.value = '';
+    inputEl.disabled = false;
+    inputEl.className = '';
+    inputDisabled = false;
+    answerChecked = false;
+
+    const fb = document.getElementById('feedback');
+    fb.innerHTML = '';
+    fb.className = 'feedback';
+
+    document.getElementById('advanceBtn').classList.add('hidden');
+    document.getElementById('nextPhaseBtn').classList.add('hidden');
+
+    setTimeout(() => inputEl.focus(), 50);
+}
+
+function checkAnswer() {
+    if (inputDisabled) return;
+    const input = document.getElementById('answerInput').value.trim();
+    if (!input) return;
+
+    const w = roundWords[currentWordIndex];
+    const validForms = isPhase2 ? expandHawaiianAnswers(w.Hawaiian) : expandEnglishAnswers(w.English);
+    const result = fuzzyCheck(input, validForms);
+
+    inputDisabled = true;
+    answerChecked = true;
+    const inputEl = document.getElementById('answerInput');
+    inputEl.disabled = true;
+    inputEl.className = result.status;
+
+    const correctAnswer = isPhase2 ? w.Hawaiian : w.English;
+    const fb = document.getElementById('feedback');
+
+    let xpEarned = 0;
+
+    if (result.status === 'correct') {
+        xpEarned = XP_PER_CORRECT;
+        sessionXP += xpEarned;
+        addDailyXP(xpEarned);
+
+        if (!isPhase2) roundResults[currentWordIndex].correctP1 = true;
+        else roundResults[currentWordIndex].correctP2 = true;
+
+        const ex = result.distance > 0 ? `<span class="feedback-sub">Accepted close to <strong>${escapeHtml(correctAnswer)}</strong></span>` : `<span class="feedback-sub"><strong>${escapeHtml(correctAnswer)}</strong></span>`;
+        fb.innerHTML = `<span class="feedback-main">Pololei <span class="xp-pop">+${xpEarned} XP</span></span>${ex}`;
+        fb.className = 'feedback correct visible';
+    } else if (result.status === 'close') {
+        // Mark wrong but show close note
+        fb.innerHTML = `<span class="feedback-main">Kokoke loa, very close</span><span class="feedback-sub">Answer: <strong>${escapeHtml(correctAnswer)}</strong></span>`;
+        fb.className = 'feedback close visible';
+    } else {
+        fb.innerHTML = `<span class="feedback-main">ʻAʻole pololei</span><span class="feedback-sub">Answer: <strong>${escapeHtml(correctAnswer)}</strong></span>`;
+        fb.className = 'feedback wrong visible';
+    }
+
+    const advanceBtn = document.getElementById('advanceBtn');
+    advanceBtn.classList.remove('hidden');
+    const isLastOfRound = currentWordIndex === roundWords.length - 1 && isPhase2;
+    advanceBtn.textContent = isLastOfRound ? 'Finish round' : 'Continue';
+    advanceBtn.focus();
+}
+
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function advanceWord() {
+    currentWordIndex++;
+    if (currentWordIndex >= roundWords.length) {
+        if (!isPhase2) {
+            // End of phase 1
+            const fb = document.getElementById('feedback');
+            fb.innerHTML = `<span class="feedback-main">Phase 1 complete</span><span class="feedback-sub">Now translate from English to Hawaiian</span>`;
+            fb.className = 'feedback correct visible';
+            document.getElementById('advanceBtn').classList.add('hidden');
+            const npb = document.getElementById('nextPhaseBtn');
+            npb.classList.remove('hidden');
+            npb.focus();
+        } else {
+            endRound();
+        }
+    } else {
+        renderWord();
+    }
+}
+
+function startPhase2() {
+    isPhase2 = true;
+    currentWordIndex = 0;
+    renderWord();
+}
+
+// ==========================================================================
+//  XP + STREAK
+// ==========================================================================
+
+function addDailyXP(amount) {
+    if (appState.dailyXPDate !== todayStr()) {
+        appState.dailyXP = 0;
+        appState.dailyXPDate = todayStr();
+    }
+    appState.dailyXP += amount;
+    appState.totalXP += amount;
+    updateStreakUI();
+    saveStats();
+}
+
+function updateStreakOnRoundComplete() {
+    const today = todayStr();
+    if (appState.lastPlayedDate === today) {
+        // already counted today
+    } else if (!appState.lastPlayedDate) {
+        appState.streak = 1;
+    } else {
+        const gap = daysBetween(appState.lastPlayedDate, today);
+        if (gap === 1) appState.streak += 1;
+        else if (gap > 1) appState.streak = 1;
+        // gap === 0 means same day, no change
+    }
+    appState.lastPlayedDate = today;
+    saveStats();
+}
+
+function updateStreakUI() {
+    const pill = document.getElementById('streakPill');
+    document.getElementById('streakCount').textContent = appState.streak;
+    if (appState.streak > 0 && appState.lastPlayedDate === todayStr()) {
+        pill.classList.remove('cold');
+    } else {
+        pill.classList.add('cold');
+    }
+
+    // Goal ring
+    const ratio = Math.min(1, appState.dailyXP / DAILY_GOAL_XP);
+    const circumference = 2 * Math.PI * 16;
+    const fill = document.getElementById('goalRingFill');
+    fill.setAttribute('stroke-dasharray', circumference);
+    fill.setAttribute('stroke-dashoffset', circumference * (1 - ratio));
+    document.getElementById('goalRingText').textContent = appState.dailyXP >= DAILY_GOAL_XP ? '✓' : appState.dailyXP;
+
+    if (appState.dailyXP >= DAILY_GOAL_XP) {
+        document.getElementById('goalRing').classList.add('complete');
+        fill.classList.add('complete');
+    } else {
+        document.getElementById('goalRing').classList.remove('complete');
+        fill.classList.remove('complete');
+    }
+
+    updateHomeGoal();
+}
+
+function updateHomeGoal() {
+    const homeFill = document.getElementById('homeGoalFill');
+    if (!homeFill) return;
+    const mastered = Object.values(appState.progress).filter(p => p.l === 5).length;
+    const pct = Math.min(100, Math.round((mastered / FLUENCY_GOAL) * 100));
+    homeFill.style.width = pct + '%';
+    document.getElementById('homeGoalPct').textContent = pct + '%';
+    document.getElementById('homeGoalCount').textContent = mastered;
+}
+
+// ==========================================================================
+//  END ROUND
+// ==========================================================================
+
+function endRound() {
+    appState.totalRounds++;
+    const cur = appState.totalRounds;
+
+    // SRS update per word
+    let correctCount = 0;
+    let missedCount = 0;
+
+    roundResults.forEach(r => {
+        const both = r.correctP1 && r.correctP2;
+        const either = r.correctP1 || r.correctP2;
+        const prev = r.prevLevel;
+        let next;
+
+        if (both) {
+            next = Math.min(5, prev + 1);
+            correctCount++;
+        } else if (either) {
+            next = prev; // hold steady, partial credit
+            // count as half
+        } else {
+            // got both wrong
+            next = Math.max(1, Math.min(prev, 1));
+            missedCount++;
+        }
+
+        appState.progress[r.id] = { l: next, r: cur };
+    });
+
+    // Round bonus XP
+    addDailyXP(XP_ROUND_BONUS);
+    sessionXP += XP_ROUND_BONUS;
+
+    // Streak update (must check BEFORE updating lastPlayedDate)
+    const goalWasMet = (appState.dailyXP - sessionXP) >= DAILY_GOAL_XP;
+    const goalNowMet = appState.dailyXP >= DAILY_GOAL_XP;
+    const previousLastPlayed = appState.lastPlayedDate;
+    const previousStreak = appState.streak;
+
+    updateStreakOnRoundComplete();
+
+    saveStats();
+    saveProgress();
+    updateStreakUI();
+
+    // Show summary
+    document.getElementById('gameContainer').classList.add('hidden');
+    document.getElementById('summaryContainer').classList.remove('hidden');
+
+    document.getElementById('sumCorrect').textContent = correctCount;
+    document.getElementById('sumMissed').textContent = missedCount;
+    document.getElementById('sumXP').textContent = sessionXP;
+
+    const titles = ['Hana maikaʻi', 'Pono loa', 'Holomua', 'ʻOnipaʻa'];
+    document.getElementById('summaryTitle').textContent = titles[Math.floor(Math.random() * titles.length)];
+
+    // Celebration messaging - priority order: streak extended > goal reached > streak started
+    const celebBox = document.getElementById('celebrationBox');
+    celebBox.classList.add('hidden');
+
+    const justExtendedStreak = previousLastPlayed && previousLastPlayed !== todayStr() && appState.streak > previousStreak;
+    const justStartedStreak = !previousLastPlayed && appState.streak === 1;
+    const justHitGoal = !goalWasMet && goalNowMet;
+
+    if (justExtendedStreak) {
+        celebBox.innerHTML = `Streak extended to <strong>${appState.streak} day${appState.streak === 1 ? '' : 's'}</strong>. Keep going.`;
+        celebBox.classList.remove('hidden');
+    } else if (justStartedStreak) {
+        celebBox.innerHTML = `<strong>Day 1 streak started.</strong> Come back tomorrow to make it two.`;
+        celebBox.classList.remove('hidden');
+    } else if (justHitGoal) {
+        celebBox.innerHTML = `<strong>Daily goal reached.</strong> ${appState.streak} day streak going.`;
+        celebBox.classList.remove('hidden');
+    }
+}
+
+// ==========================================================================
+//  MODAL HANDLERS
+// ==========================================================================
+
+function closeWelcome() {
+    document.getElementById('welcomeModal').classList.add('hidden');
+    startSession();
+}
+
+function openStats() {
+    const m = document.getElementById('statsModal');
+    document.getElementById('bigStreak').textContent = appState.streak;
+    document.getElementById('bigStreak').className = appState.streak === 0 ? 'big-streak cold' : 'big-streak';
+    document.getElementById('streakMessage').textContent = streakMessage();
+
+    const mastered = Object.values(appState.progress).filter(p => p.l === 5).length;
+    const learning = Object.values(appState.progress).filter(p => p.l > 0 && p.l < 5).length;
+    document.getElementById('statMastered').textContent = mastered;
+    document.getElementById('statLearning').textContent = learning;
+    document.getElementById('statRounds').textContent = appState.totalRounds;
+    document.getElementById('statTotalXP').textContent = appState.totalXP;
+
+    // 2,000 word goal
+    const goalPct = Math.min(100, Math.round((mastered / FLUENCY_GOAL) * 100));
+    document.getElementById('goalCount').textContent = mastered;
+    document.getElementById('goalPct').textContent = goalPct + '%';
+    document.getElementById('goalBarFill').style.width = goalPct + '%';
+
+    // Mastery breakdown
+    const counts = [0, 0, 0, 0, 0, 0]; // levels 0-5
+    const totalVocab = vocabulary.length;
+    Object.values(appState.progress).forEach(p => {
+        if (p.l >= 0 && p.l <= 5) counts[p.l]++;
+    });
+    counts[0] = totalVocab - (counts[1] + counts[2] + counts[3] + counts[4] + counts[5]);
+
+    const labels = ['Untouched', 'Just learned', 'Building', 'Familiar', 'Strong', 'Mastered'];
+    let html = '';
+    for (let i = 5; i >= 0; i--) {
+        const pct = totalVocab > 0 ? (counts[i] / totalVocab * 100) : 0;
+        html += `
+            <div class="mastery-bar-wrap mastery-l${i}">
+                <div class="mastery-bar-row">
+                    <span class="mastery-bar-label">${labels[i]}</span>
+                    <span class="mastery-bar-count">${counts[i]}</span>
+                </div>
+                <div class="mastery-bar-track">
+                    <div class="mastery-bar-fill" style="width: ${pct}%;"></div>
+                </div>
+            </div>`;
+    }
+    document.getElementById('masteryBars').innerHTML = html;
+
+    m.classList.remove('hidden');
+}
+
+function streakMessage() {
+    if (appState.streak === 0) return 'Complete a round today to start a streak.';
+    if (appState.lastPlayedDate === todayStr()) {
+        if (appState.dailyXP >= DAILY_GOAL_XP) return 'Daily goal reached. See you tomorrow.';
+        return `${DAILY_GOAL_XP - appState.dailyXP} XP to today's goal.`;
+    }
+    return 'Play today to keep the streak alive.';
+}
+
+function closeStats() {
+    document.getElementById('statsModal').classList.add('hidden');
+    restoreFocus();
+}
+
+function openGrammar() { document.getElementById('grammarModal').classList.remove('hidden'); }
+function closeGrammar() {
+    document.getElementById('grammarModal').classList.add('hidden');
+    restoreFocus();
+}
+
+function confirmReset() {
+    document.getElementById('confirmTitle').textContent = 'Reset all progress?';
+    document.getElementById('confirmMessage').textContent = 'This erases your streak, mastery levels, and XP. Cannot be undone.';
+    document.getElementById('confirmYesBtn').onclick = () => {
+        resetAll();
+        closeConfirm();
+        closeStats();
+        updateStreakUI();
+        showCheckin();
+    };
+    document.getElementById('confirmModal').classList.remove('hidden');
+}
+
+function closeConfirm() { document.getElementById('confirmModal').classList.add('hidden'); }
+
+function restoreFocus() {
+    if (!document.getElementById('gameContainer').classList.contains('hidden')) {
+        const inputEl = document.getElementById('answerInput');
+        if (!answerChecked) inputEl.focus();
+        else if (!document.getElementById('advanceBtn').classList.contains('hidden')) document.getElementById('advanceBtn').focus();
+        else if (!document.getElementById('nextPhaseBtn').classList.contains('hidden')) document.getElementById('nextPhaseBtn').focus();
+    }
+}
+
+// ==========================================================================
+//  SESSION ENTRY
+// ==========================================================================
+
+function showCheckin() {
+    document.getElementById('gameContainer').classList.add('hidden');
+    document.getElementById('summaryContainer').classList.add('hidden');
+    document.getElementById('dailyCheckin').classList.remove('hidden');
+
+    const t = todayStr();
+    const playedToday = appState.lastPlayedDate === t;
+    const goalMet = appState.dailyXP >= DAILY_GOAL_XP;
+    const titleEl = document.getElementById('checkinTitle');
+    const msgEl = document.getElementById('checkinMessage');
+    const btnEl = document.getElementById('checkinBtn');
+
+    if (!appState.lastPlayedDate) {
+        titleEl.textContent = 'E hoʻomaka kākou';
+        msgEl.textContent = 'Let us begin. One round to get going.';
+        btnEl.textContent = 'Start first round';
+    } else if (goalMet && playedToday) {
+        titleEl.textContent = 'Pau ka lā';
+        msgEl.innerHTML = `Daily goal already met. <strong>${appState.streak} day streak</strong> going strong. Keep practicing if you want.`;
+        btnEl.textContent = 'Practice anyway';
+    } else if (playedToday) {
+        const remaining = DAILY_GOAL_XP - appState.dailyXP;
+        titleEl.textContent = 'Hoʻomau ʻana';
+        msgEl.innerHTML = `${remaining} XP from today's goal. Streak <strong>${appState.streak}</strong>.`;
+        btnEl.textContent = 'Continue practicing';
+    } else if (appState.streak > 0) {
+        const gap = daysBetween(appState.lastPlayedDate, t);
+        if (gap === 1) {
+            titleEl.textContent = 'Welina hou mai';
+            msgEl.innerHTML = `Welcome back. <strong>${appState.streak} day streak</strong>. One round keeps it alive.`;
+        } else {
+            titleEl.textContent = 'Welina hou mai';
+            msgEl.textContent = `It has been ${gap} days. Streak reset, but progress saved. Pick back up where you left off.`;
+        }
+        btnEl.textContent = 'Start today\'s round';
+    } else {
+        titleEl.textContent = 'Welina hou mai';
+        msgEl.textContent = 'Welcome back. One round to start a new streak.';
+        btnEl.textContent = 'Start round';
+    }
+}
+
+function startSession() { generateRound(); }
+
+// ==========================================================================
+//  INIT
+// ==========================================================================
+
+function init() {
+    loadFromCookies();
+
+    if (typeof vocabularyData === 'undefined') {
+        document.getElementById('loading').innerHTML = `
+            <div style="color: var(--error); font-weight: 600; font-size: 1.05rem; margin-bottom: 0.5rem;">Vocabulary file not found</div>
+            <div style="font-size: 0.9rem;">Cannot find <code style="background:var(--surface-warm);padding:2px 6px;border-radius:3px;">data.js</code> in the same folder.</div>`;
+        return;
+    }
+    vocabulary = vocabularyData;
+    document.getElementById('loading').classList.add('hidden');
+    updateStreakUI();
+
+    // Decide first screen
+    const isFirstTime = !appState.lastPlayedDate && Object.keys(appState.progress).length === 0;
+    if (isFirstTime) {
+        document.getElementById('welcomeModal').classList.remove('hidden');
+    } else {
+        showCheckin();
+    }
+}
+
+// ==========================================================================
+//  KEYBOARD
+// ==========================================================================
+
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Enter') return;
+
+    // Skip if any modal is open (except if we're inside game)
+    const modalOpen = ['welcomeModal','statsModal','grammarModal','confirmModal']
+        .some(id => !document.getElementById(id).classList.contains('hidden'));
+    if (modalOpen) return;
+
+    // Daily check-in screen
+    if (!document.getElementById('dailyCheckin').classList.contains('hidden')) {
+        e.preventDefault();
+        startSession();
+        return;
+    }
+
+    // Summary screen
+    if (!document.getElementById('summaryContainer').classList.contains('hidden')) {
+        e.preventDefault();
+        generateRound();
+        return;
+    }
+
+    // Game flow
+    if (document.getElementById('gameContainer').classList.contains('hidden')) return;
+
+    if (!answerChecked && !inputDisabled) {
+        e.preventDefault();
+        checkAnswer();
+    } else if (answerChecked && !document.getElementById('advanceBtn').classList.contains('hidden')) {
+        e.preventDefault();
+        advanceWord();
+    } else if (!document.getElementById('nextPhaseBtn').classList.contains('hidden')) {
+        e.preventDefault();
+        startPhase2();
+    }
+});
+
+// Click on goal ring opens stats already; allow Esc to close modals
+document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    if (!document.getElementById('statsModal').classList.contains('hidden')) closeStats();
+    else if (!document.getElementById('grammarModal').classList.contains('hidden')) closeGrammar();
+    else if (!document.getElementById('confirmModal').classList.contains('hidden')) closeConfirm();
+});
+
+window.addEventListener('load', init);
+</script>
+
+</body>
+</html>
