@@ -1562,6 +1562,26 @@
 
 <script>
 // ==========================================================================
+//  ANALYTICS  (anonymous gameplay events; no user identifiers ever sent)
+// ==========================================================================
+
+const STREAK_MILESTONES = [1, 3, 7, 14, 30, 60, 100, 180, 365];
+const FLUENCY_MILESTONES = [10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000];
+
+function trackEvent(name, params) {
+    if (typeof gtag !== 'function') return;
+    try { gtag('event', name, params || {}); } catch (e) {}
+}
+
+// Returns the milestone that was just CROSSED, or null if no milestone was crossed.
+function milestoneCrossed(prev, current, milestones) {
+    for (const m of milestones) {
+        if (prev < m && current >= m) return m;
+    }
+    return null;
+}
+
+// ==========================================================================
 //  STORAGE  (localStorage preferred; cookies as fallback for old browsers
 //  and to auto-migrate progress saved before this version)
 // ==========================================================================
@@ -1870,6 +1890,7 @@ function validateStreakWithFreeze() {
         y.setDate(y.getDate() - 1);
         appState.lastPlayedDate = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
         showToast(`Streak freeze used. Your ${appState.streak}-day streak is safe.`, 'success', 5000);
+        trackEvent('streak_freeze_used', { streak_days: appState.streak, days_covered: daysToCover });
         saveStats();
         return true;
     }
@@ -2115,6 +2136,8 @@ function generateRound() {
     sessionXP = 0;
     resetRoundControls();
 
+    trackEvent('round_start', { round_number: appState.totalRounds + 1 });
+
     renderProgressTrack();
     renderWord();
 }
@@ -2278,12 +2301,14 @@ function skipWord() {
     if (skipBtn && skipsUsedThisRound >= MAX_SKIPS_PER_ROUND) skipBtn.disabled = true;
     // Mark this attempt as skipped so SRS ignores it
     if (roundResults[currentWordIndex]) roundResults[currentWordIndex].skipped = true;
+    trackEvent('word_skipped', { phase: isPhase2 ? 2 : 1 });
     showToast('Skipped. The word stays at its current level.', 'success', 2500);
     advanceWord();
 }
 
 function showAnswer() {
     if (inputDisabled || answerChecked) return;
+    trackEvent('answer_revealed', { phase: isPhase2 ? 2 : 1 });
     const w = roundWords[currentWordIndex];
     const correctAnswer = isPhase2 ? w.Hawaiian : w.English;
     inputDisabled = true;
@@ -2318,6 +2343,7 @@ function confirmAbandonRound() {
 }
 
 function abandonRound() {
+    trackEvent('round_abandoned', { word_index: currentWordIndex, phase: isPhase2 ? 2 : 1 });
     // Reset round state and return to home/check-in
     roundResults = [];
     roundWords = [];
@@ -2406,12 +2432,17 @@ function endRound() {
     appState.totalRounds++;
     const cur = appState.totalRounds;
 
+    // Snapshot pre-round state for milestone detection
+    const masteredBefore = Object.values(appState.progress).filter(p => p.l === 5).length;
+
     // SRS update per word
     let correctCount = 0;
     let missedCount = 0;
+    let skippedCount = 0;
+    let newlyMastered = 0;
 
     roundResults.forEach(r => {
-        if (r.skipped) return; // Skipped words don't update SRS
+        if (r.skipped) { skippedCount++; return; }
         const both = r.correctP1 && r.correctP2;
         const either = r.correctP1 || r.correctP2;
         const prev = r.prevLevel;
@@ -2421,14 +2452,13 @@ function endRound() {
             next = Math.min(5, prev + 1);
             correctCount++;
         } else if (either) {
-            next = prev; // hold steady, partial credit
-            // count as half
+            next = prev;
         } else {
-            // got both wrong
             next = Math.max(1, Math.min(prev, 1));
             missedCount++;
         }
 
+        if (next === 5 && prev < 5) newlyMastered++;
         appState.progress[r.id] = { l: next, r: cur, t: Date.now() };
     });
 
@@ -2477,6 +2507,35 @@ function endRound() {
         celebBox.innerHTML = `<strong>Daily goal reached.</strong> ${appState.streak} day streak going.`;
         celebBox.classList.remove('hidden');
     }
+
+    // ---- Anonymous analytics ----
+    const totalMastered = masteredBefore + newlyMastered;
+
+    trackEvent('round_complete', {
+        correct: correctCount,
+        missed: missedCount,
+        skipped: skippedCount,
+        xp_earned: sessionXP,
+        round_number: cur,
+        streak: appState.streak,
+        total_mastered: totalMastered,
+        signed_in: !!currentUser
+    });
+
+    // Streak milestone (only fires when crossing into a milestone)
+    if (appState.streak > previousStreak) {
+        const sm = milestoneCrossed(previousStreak, appState.streak, STREAK_MILESTONES);
+        if (sm) trackEvent('streak_milestone', { streak_days: sm });
+    }
+
+    // Fluency milestone (crossed mastered-word thresholds)
+    const fm = milestoneCrossed(masteredBefore, totalMastered, FLUENCY_MILESTONES);
+    if (fm) trackEvent('fluency_milestone', { words_mastered: fm });
+
+    // Daily goal hit (only first time today)
+    if (justHitGoal) {
+        trackEvent('daily_goal_reached', { streak: appState.streak });
+    }
 }
 
 // ==========================================================================
@@ -2485,6 +2544,7 @@ function endRound() {
 
 function closeWelcome() {
     document.getElementById('welcomeModal').classList.add('hidden');
+    trackEvent('welcome_dismissed');
     startSession();
 }
 
@@ -2597,6 +2657,7 @@ function requestNotifications() {
     }
     Notification.requestPermission().then(perm => {
         updateReminderButton();
+        trackEvent('notifications_permission', { result: perm });
         if (perm === 'granted') showToast('Daily reminders enabled.', 'success', 3500);
         else if (perm === 'denied') showToast('Reminders are blocked. You can re-enable them in your browser settings.', 'error', 5000);
     });
@@ -2722,6 +2783,7 @@ function toggleTheme() {
     else document.documentElement.removeAttribute('data-theme');
     try { localStorage.setItem('hl_theme', next); } catch (e) {}
     updateThemeIcon();
+    trackEvent('theme_toggled', { theme: next });
 }
 
 function updateThemeIcon() {
@@ -2952,6 +3014,7 @@ async function signOut() {
 async function handleSignIn(user, firstTime) {
     currentUser = user;
     setAuthIconState(true);
+    if (firstTime) trackEvent('sign_in', { method: 'email_otp' });
     const remote = await fetchRemoteState();
     const local = { progress: appState.progress, stats: extractStats() };
     if (firstTime && hasMeaningfulLocalProgress() && remote && hasMeaningfulRemoteProgress(remote)) {
@@ -2968,6 +3031,7 @@ async function handleSignIn(user, firstTime) {
 }
 
 function handleSignOut() {
+    trackEvent('sign_out');
     currentUser = null;
     setAuthIconState(false);
     if (!document.getElementById('authModal').classList.contains('hidden')) {
@@ -3200,6 +3264,11 @@ window.addEventListener('load', () => {
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').catch(() => {});
     }
+});
+
+// Track when the user installs the PWA to their home screen
+window.addEventListener('appinstalled', () => {
+    trackEvent('app_installed');
 });
 
 // Daily reminder: if the user has notification permission and hasn't played today,
