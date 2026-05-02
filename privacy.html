@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#faf7f2">
     <title>Privacy Policy — Master ʻŌlelo Hawaiʻi Vocabulary</title>
+
+    <!-- Google Analytics 4 (privacy-friendly settings) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WJBFBW9N3S"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-WJBFBW9N3S', {
+            anonymize_ip: true,
+            allow_google_signals: false,
+            allow_ad_personalization_signals: false
+        });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -40,6 +54,28 @@
         a:hover { border-bottom-color: var(--accent); }
         .nav-back { display: inline-block; margin-bottom: 2rem; font-size: 0.9rem; color: var(--ink-muted); }
         .meta { font-size: 0.85rem; color: var(--ink-muted); margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+        .kindness {
+            background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem 1.75rem;
+            border-radius: 12px;
+            margin: 1.5rem 0 2.5rem;
+        }
+        .kindness .kind-headline {
+            font-family: var(--font-display);
+            font-size: 1.7rem;
+            font-weight: 500;
+            color: var(--accent);
+            margin: 0 0 0.6rem;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+        }
+        .kindness p {
+            margin: 0;
+            color: var(--ink);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
     </style>
     <script>
         (function(){try{var t=localStorage.getItem('hl_theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();
@@ -49,7 +85,11 @@
 <main>
     <a href="index.html" class="nav-back">← Back to ʻŌlelo Daily</a>
     <h1>Privacy Policy</h1>
-    <p class="lead">The short version. We do not want your data. This is a learning app, not a data business.</p>
+
+    <div class="kindness">
+        <p class="kind-headline">Be kind.</p>
+        <p>That includes how we treat your information. We collect as little as we can. We never sell what we have. We only use it to help you learn. The rest of this page is just the detail behind that promise.</p>
+    </div>
 
     <h2>What we collect</h2>
     <p>If you sign in, we store your email address and your vocabulary progress. That is it. We use them only to sync your progress across your devices.</p>
