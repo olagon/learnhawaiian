@@ -2483,7 +2483,18 @@ async function sendMagicLink() {
         document.getElementById('authMessage').innerHTML = `Sign-in link sent to <strong>${email}</strong>. Check your inbox (and spam folder).`;
         startResendCooldown();
     } catch (e) {
-        document.getElementById('authMessage').textContent = 'Could not send link. ' + (e.message || '');
+        const msg = (e.message || '').toLowerCase();
+        let friendly;
+        if (msg.includes('rate') || msg.includes('limit') || msg.includes('too many')) {
+            friendly = 'Too many sign-in emails sent recently. Please wait a few minutes and try again.';
+        } else if (msg.includes('invalid') && msg.includes('email')) {
+            friendly = 'That email looks invalid. Please check and try again.';
+        } else if (msg.includes('network') || msg.includes('fetch')) {
+            friendly = 'Network problem reaching the sign-in service. Check your connection and try again.';
+        } else {
+            friendly = 'Could not send link. ' + (e.message || 'Please try again.');
+        }
+        document.getElementById('authMessage').textContent = friendly;
         btn.disabled = false;
         btn.textContent = 'Email me a sign-in link';
     }
