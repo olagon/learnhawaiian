@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="theme-color" content="#faf7f2">
-    <title>ʻŌlelo Hawaiʻi Study</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <title>Master ʻŌlelo Hawaiʻi Vocabulary</title>
     <script src="data.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,8 +40,41 @@
             --shadow: 0 1px 2px rgba(26, 22, 20, 0.04), 0 4px 12px rgba(26, 22, 20, 0.04);
             --shadow-lg: 0 8px 32px rgba(26, 22, 20, 0.08);
 
+            --header-bg: rgba(250, 247, 242, 0.85);
+            --modal-overlay: rgba(26, 22, 20, 0.45);
+
             --font-display: 'Source Serif 4', Georgia, serif;
             --font-body: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* DARK MODE — sets when html has data-theme="dark" */
+        html[data-theme="dark"] {
+            --bg: #15171c;
+            --surface: #1e2128;
+            --surface-warm: #232730;
+            --ink: #e8e6e1;
+            --ink-soft: #b3afa6;
+            --ink-muted: #7a7670;
+            --line: #2d3138;
+            --line-soft: #262a31;
+
+            --accent: #a98ce0;
+            --accent-soft: #2c2540;
+            --accent-deep: #c9b3f5;
+
+            --warm: #e89060;
+            --warm-soft: #3a2820;
+
+            --success: #88c060;
+            --success-soft: #233019;
+            --error: #e57570;
+            --error-soft: #391a18;
+
+            --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45);
+
+            --header-bg: rgba(21, 23, 28, 0.85);
+            --modal-overlay: rgba(0, 0, 0, 0.65);
         }
 
         * { box-sizing: border-box; }
@@ -87,7 +122,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
-            background: rgba(250, 247, 242, 0.85);
+            background: var(--header-bg);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--line-soft);
@@ -163,6 +198,42 @@
         }
         @media (hover: none) {
             [data-tip]::after, [data-tip]::before { display: none; }
+        }
+
+        /* ROUND CONTROLS */
+        .round-controls {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            margin-top: 1.25rem;
+            flex-wrap: wrap;
+        }
+        .round-control-btn {
+            background: transparent;
+            border: 1px solid var(--line);
+            color: var(--ink-muted);
+            padding: 0.45rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .round-control-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .round-control-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .round-control-btn:disabled:hover {
+            border-color: var(--line);
+            color: var(--ink-muted);
+        }
+        .round-control-danger:hover {
+            border-color: var(--error);
+            color: var(--error);
         }
 
         /* TOAST */
@@ -600,7 +671,7 @@
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(26, 22, 20, 0.45);
+            background: var(--modal-overlay);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             display: flex;
@@ -938,6 +1009,29 @@
             border-radius: 3px;
             transition: width 0.6s ease;
         }
+        .balance-row { margin-bottom: 0.7rem; }
+        .balance-row:last-child { margin-bottom: 0; }
+        .balance-row-head {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+        .balance-label { color: var(--ink-soft); font-weight: 500; }
+        .balance-count { color: var(--ink-muted); font-weight: 600; font-variant-numeric: tabular-nums; }
+        .balance-track {
+            height: 6px;
+            background: var(--line-soft);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .balance-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            transition: width 0.6s ease;
+        }
+
         .mastery-l0 .mastery-bar-fill { background: var(--ink-muted); }
         .mastery-l1 .mastery-bar-fill { background: #d4886b; }
         .mastery-l2 .mastery-bar-fill { background: var(--warm); }
@@ -1054,6 +1148,18 @@
             animation: shake 0.3s ease;
         }
     </style>
+    <script>
+        // Apply saved theme before paint to prevent flash of wrong theme
+        (function() {
+            try {
+                var t = localStorage.getItem('hl_theme');
+                if (!t) {
+                    t = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+            } catch (e) {}
+        })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -1081,6 +1187,10 @@
         </button>
         <button class="icon-btn" onclick="openGrammar()" data-tip="Open the grammar guide. Quick reference for nouns, verbs, and Hawaiian sentence structure." aria-label="Grammar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </button>
+        <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" data-tip="Switch between light and dark mode." aria-label="Toggle theme">
+            <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
         </button>
     </div>
 </header>
@@ -1128,6 +1238,11 @@
             <div class="feedback" id="feedback"></div>
             <button class="btn btn-outline hidden" id="advanceBtn" onclick="advanceWord()">Continue</button>
             <button class="btn hidden" id="nextPhaseBtn" onclick="startPhase2()">Begin reverse direction</button>
+            <div class="round-controls" id="roundControls">
+                <button class="round-control-btn" id="showAnswerBtn" onclick="showAnswer()" data-tip="Reveal the answer. The word will count as missed.">Show answer</button>
+                <button class="round-control-btn" id="skipWordBtn" onclick="skipWord()" data-tip="Skip this word with no penalty. One skip per round.">Skip word</button>
+                <button class="round-control-btn round-control-danger" onclick="confirmAbandonRound()" data-tip="End this round without saving any progress for these words.">End round</button>
+            </div>
         </div>
     </div>
 
@@ -1272,10 +1387,23 @@
                 <div class="stat-tile-value" id="statTotalXP">0</div>
                 <div class="stat-tile-label">Total XP</div>
             </div>
+            <div class="stat-tile" data-tip="Freezes auto-protect your streak when you miss a day. You earn one per week, up to three saved.">
+                <div class="stat-tile-value" id="statFreezes">0</div>
+                <div class="stat-tile-label">Streak freezes</div>
+            </div>
         </div>
         <div class="mastery-section">
             <h3>Mastery breakdown</h3>
             <div id="masteryBars"></div>
+        </div>
+        <div class="mastery-section">
+            <h3>Balance by category</h3>
+            <p style="font-size: 0.85rem; color: var(--ink-muted); margin: -0.5rem 0 1rem;">A balanced learner masters words across many categories, not just one.</p>
+            <div id="balanceBars"></div>
+        </div>
+        <div class="reminder-section" id="reminderSection" style="padding: 0 1.5rem 1rem;">
+            <button class="btn btn-outline" id="reminderBtn" onclick="requestNotifications()" style="width: 100%;">Enable daily reminders</button>
+            <p style="font-size: 0.78rem; color: var(--ink-muted); text-align: center; margin: 0.5rem 0 0;">A gentle nudge once a day if you haven't played yet. Sent only when you have the page open or installed as an app.</p>
         </div>
         <div class="danger-zone">
             <button class="btn-ghost" onclick="confirmReset()" style="border: none; background: none;">Reset all progress</button>
@@ -1534,7 +1662,10 @@ let appState = {
     totalXP: 0,
     dailyXP: 0,
     dailyXPDate: null,
-    progress: {}             // { [id]: { l: level0to5, r: lastRoundSeen } }
+    freezesAvailable: 1,    // streak freezes user can spend
+    freezesGrantedWeek: null, // YYYY-Www string for tracking weekly free freeze
+    lastFreezeUsed: null,   // YYYY-MM-DD when last applied
+    progress: {}             // { [id]: { l: level0to5, r: lastRoundSeen, t: timestamp } }
 };
 
 let vocabulary = [];
@@ -1611,7 +1742,10 @@ function saveStats() {
         tr: appState.totalRounds,
         tx: appState.totalXP,
         dx: appState.dailyXP,
-        dd: appState.dailyXPDate
+        dd: appState.dailyXPDate,
+        fz: appState.freezesAvailable,
+        fw: appState.freezesGrantedWeek,
+        fu: appState.lastFreezeUsed
     };
     setStored('hl_stats', JSON.stringify(stats));
 }
@@ -1634,6 +1768,9 @@ function loadFromCookies() {
             appState.totalXP = s.tx || 0;
             appState.dailyXP = s.dx || 0;
             appState.dailyXPDate = s.dd || null;
+            appState.freezesAvailable = (typeof s.fz === 'number') ? s.fz : 1;
+            appState.freezesGrantedWeek = s.fw || null;
+            appState.lastFreezeUsed = s.fu || null;
         } catch (e) { /* ignore */ }
     }
     const progRaw = getLargeStored('hl_prog');
@@ -1645,11 +1782,54 @@ function loadFromCookies() {
         appState.dailyXPDate = todayStr();
     }
 
-    // Streak validation
-    if (appState.lastPlayedDate) {
-        const gap = daysBetween(appState.lastPlayedDate, todayStr());
-        if (gap > 1) appState.streak = 0;
+    // Grant weekly freeze if a new week has begun
+    grantWeeklyFreezeIfDue();
+
+    // Streak validation with freeze logic
+    validateStreakWithFreeze();
+}
+
+// ISO-week string like "2026-W18"
+function isoWeek(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    const weekNum = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    return `${date.getUTCFullYear()}-W${String(weekNum).padStart(2, '0')}`;
+}
+
+function grantWeeklyFreezeIfDue() {
+    const thisWeek = isoWeek(new Date());
+    if (appState.freezesGrantedWeek !== thisWeek) {
+        appState.freezesGrantedWeek = thisWeek;
+        // Cap freezes at 3 to prevent stockpiling forever
+        appState.freezesAvailable = Math.min(3, (appState.freezesAvailable || 0) + 1);
     }
+}
+
+// If user missed a day after having a streak, automatically apply a freeze if available.
+// Returns true if a freeze was applied.
+function validateStreakWithFreeze() {
+    if (!appState.lastPlayedDate) return false;
+    const gap = daysBetween(appState.lastPlayedDate, todayStr());
+    if (gap <= 1) return false; // streak intact
+    const daysToCover = gap - 1; // each freeze covers one missed day
+    if (appState.freezesAvailable >= daysToCover && appState.streak > 0) {
+        appState.freezesAvailable -= daysToCover;
+        appState.lastFreezeUsed = todayStr();
+        // Pretend the user played yesterday so the streak holds
+        const y = new Date();
+        y.setDate(y.getDate() - 1);
+        appState.lastPlayedDate = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,'0')}-${String(y.getDate()).padStart(2,'0')}`;
+        showToast(`Streak freeze used. Your ${appState.streak}-day streak is safe.`, 'success', 5000);
+        saveStats();
+        return true;
+    }
+    if (gap > 1) {
+        appState.streak = 0;
+    }
+    return false;
 }
 
 function resetAll() {
@@ -1882,9 +2062,11 @@ function generateRound() {
         id: w.ID,
         correctP1: false,
         correctP2: false,
+        skipped: false,
         prevLevel: getWordState(w.ID).l
     }));
     sessionXP = 0;
+    resetRoundControls();
 
     renderProgressTrack();
     renderWord();
@@ -1936,6 +2118,12 @@ function renderWord() {
     document.getElementById('advanceBtn').classList.add('hidden');
     document.getElementById('nextPhaseBtn').classList.add('hidden');
 
+    // Show round controls again on each new word
+    const rc = document.getElementById('roundControls');
+    if (rc) rc.classList.remove('hidden');
+    const showBtn = document.getElementById('showAnswerBtn');
+    if (showBtn) showBtn.disabled = false;
+
     setTimeout(() => inputEl.focus(), 50);
 }
 
@@ -1984,6 +2172,11 @@ function checkAnswer() {
     const isLastOfRound = currentWordIndex === roundWords.length - 1 && isPhase2;
     advanceBtn.textContent = isLastOfRound ? 'Finish round' : 'Continue';
     advanceBtn.focus();
+    // Hide skip/show-answer once an answer has been checked; keep End round visible
+    const skipBtn = document.getElementById('skipWordBtn');
+    const showBtn = document.getElementById('showAnswerBtn');
+    if (skipBtn) skipBtn.disabled = true;
+    if (showBtn) showBtn.disabled = true;
 }
 
 function escapeHtml(s) {
@@ -2014,6 +2207,79 @@ function startPhase2() {
     isPhase2 = true;
     currentWordIndex = 0;
     renderWord();
+}
+
+// ==========================================================================
+//  ROUND CONTROLS  (skip word, show answer, abandon round)
+// ==========================================================================
+let skipsUsedThisRound = 0;
+const MAX_SKIPS_PER_ROUND = 1;
+
+function resetRoundControls() {
+    skipsUsedThisRound = 0;
+    const skipBtn = document.getElementById('skipWordBtn');
+    const showBtn = document.getElementById('showAnswerBtn');
+    if (skipBtn) skipBtn.disabled = false;
+    if (showBtn) showBtn.disabled = false;
+}
+
+function skipWord() {
+    if (inputDisabled || answerChecked) return;
+    if (skipsUsedThisRound >= MAX_SKIPS_PER_ROUND) return;
+    skipsUsedThisRound++;
+    const skipBtn = document.getElementById('skipWordBtn');
+    if (skipBtn && skipsUsedThisRound >= MAX_SKIPS_PER_ROUND) skipBtn.disabled = true;
+    // Mark this attempt as skipped so SRS ignores it
+    if (roundResults[currentWordIndex]) roundResults[currentWordIndex].skipped = true;
+    showToast('Skipped. The word stays at its current level.', 'success', 2500);
+    advanceWord();
+}
+
+function showAnswer() {
+    if (inputDisabled || answerChecked) return;
+    const w = roundWords[currentWordIndex];
+    const correctAnswer = isPhase2 ? w.Hawaiian : w.English;
+    inputDisabled = true;
+    answerChecked = true;
+    const inputEl = document.getElementById('answerInput');
+    inputEl.disabled = true;
+    inputEl.className = 'wrong';
+    inputEl.value = '';
+    const fb = document.getElementById('feedback');
+    fb.innerHTML = `<span class="feedback-main">Answer revealed</span><span class="feedback-sub">${escapeHtml(correctAnswer)}</span>`;
+    fb.className = 'feedback wrong visible';
+    // Counts as wrong for this phase
+    if (!isPhase2) roundResults[currentWordIndex].correctP1 = false;
+    else roundResults[currentWordIndex].correctP2 = false;
+    const advanceBtn = document.getElementById('advanceBtn');
+    advanceBtn.classList.remove('hidden');
+    const isLastOfRound = currentWordIndex === roundWords.length - 1 && isPhase2;
+    advanceBtn.textContent = isLastOfRound ? 'Finish round' : 'Continue';
+    advanceBtn.focus();
+}
+
+function confirmAbandonRound() {
+    if (inputDisabled && document.getElementById('advanceBtn').classList.contains('hidden')) return;
+    document.getElementById('confirmTitle').textContent = 'End this round?';
+    document.getElementById('confirmMessage').textContent = 'Your work on these words won\'t be saved. Streak and XP for this round won\'t count either.';
+    document.getElementById('confirmYesBtn').textContent = 'End round';
+    document.getElementById('confirmYesBtn').onclick = () => {
+        abandonRound();
+        closeConfirm();
+    };
+    document.getElementById('confirmModal').classList.remove('hidden');
+}
+
+function abandonRound() {
+    // Reset round state and return to home/check-in
+    roundResults = [];
+    roundWords = [];
+    currentWordIndex = 0;
+    isPhase2 = false;
+    sessionXP = 0;
+    document.getElementById('gameContainer').classList.add('hidden');
+    showToast('Round ended. No progress was saved for those words.', 'success', 3500);
+    showCheckin();
 }
 
 // ==========================================================================
@@ -2098,6 +2364,7 @@ function endRound() {
     let missedCount = 0;
 
     roundResults.forEach(r => {
+        if (r.skipped) return; // Skipped words don't update SRS
         const both = r.correctP1 && r.correctP2;
         const either = r.correctP1 || r.correctP2;
         const prev = r.prevLevel;
@@ -2186,6 +2453,7 @@ function openStats() {
     document.getElementById('statLearning').textContent = learning;
     document.getElementById('statRounds').textContent = appState.totalRounds;
     document.getElementById('statTotalXP').textContent = appState.totalXP;
+    document.getElementById('statFreezes').textContent = appState.freezesAvailable || 0;
 
     // 2,000 word goal
     const goalPct = Math.min(100, Math.round((mastered / FLUENCY_GOAL) * 100));
@@ -2218,7 +2486,90 @@ function openStats() {
     }
     document.getElementById('masteryBars').innerHTML = html;
 
+    // Balance by category
+    renderBalanceBars();
+    updateReminderButton();
+
     m.classList.remove('hidden');
+}
+
+function renderBalanceBars() {
+    // Friendlier display labels for the dataset Type values
+    const TYPE_LABELS = {
+        'Kikino (Noun)': 'Nouns',
+        'Hamani (Transitive Verb)': 'Action verbs',
+        'Hehele (Intransitive Verb)': 'Movement verbs',
+        'ʻAʻano (Stative Verb)': 'Descriptors',
+        'Phrase': 'Phrases',
+        'Helu (Number)': 'Numbers',
+        'Papani (Pronoun)': 'Pronouns',
+        'Time Word': 'Time words',
+        'Demonstrative / Location': 'Demonstratives',
+        'Question Word': 'Questions',
+        'Cultural Concept': 'Cultural concepts',
+        'ʻŌlelo Noʻeau': 'Proverbs',
+        'Idiom': 'Idioms',
+        'Slang': 'Slang',
+        'Month': 'Months',
+        'Day of the Week': 'Weekdays'
+    };
+    // Compute mastered + total per type
+    const totals = {};
+    const mastered = {};
+    vocabulary.forEach(w => {
+        totals[w.Type] = (totals[w.Type] || 0) + 1;
+        const p = appState.progress[w.ID];
+        if (p && p.l === 5) mastered[w.Type] = (mastered[w.Type] || 0) + 1;
+    });
+    // Sort by total desc
+    const types = Object.keys(totals).sort((a, b) => totals[b] - totals[a]);
+    let html = '';
+    types.forEach(t => {
+        const m = mastered[t] || 0;
+        const tot = totals[t];
+        const pct = tot > 0 ? (m / tot * 100) : 0;
+        const label = TYPE_LABELS[t] || t;
+        html += `
+            <div class="balance-row">
+                <div class="balance-row-head">
+                    <span class="balance-label">${label}</span>
+                    <span class="balance-count">${m} / ${tot}</span>
+                </div>
+                <div class="balance-track">
+                    <div class="balance-fill" style="width: ${pct}%;"></div>
+                </div>
+            </div>`;
+    });
+    document.getElementById('balanceBars').innerHTML = html;
+}
+
+function requestNotifications() {
+    if (!('Notification' in window)) {
+        showToast('Your browser doesn\'t support notifications.', 'error', 4000);
+        return;
+    }
+    Notification.requestPermission().then(perm => {
+        updateReminderButton();
+        if (perm === 'granted') showToast('Daily reminders enabled.', 'success', 3500);
+        else if (perm === 'denied') showToast('Reminders are blocked. You can re-enable them in your browser settings.', 'error', 5000);
+    });
+}
+
+function updateReminderButton() {
+    const sec = document.getElementById('reminderSection');
+    const btn = document.getElementById('reminderBtn');
+    if (!sec || !btn) return;
+    if (!('Notification' in window)) { sec.style.display = 'none'; return; }
+    if (Notification.permission === 'granted') {
+        btn.textContent = 'Daily reminders enabled';
+        btn.disabled = true;
+    } else if (Notification.permission === 'denied') {
+        btn.textContent = 'Reminders blocked in browser settings';
+        btn.disabled = true;
+    } else {
+        btn.textContent = 'Enable daily reminders';
+        btn.disabled = false;
+    }
 }
 
 function streakMessage() {
@@ -2317,7 +2668,31 @@ function startSession() { generateRound(); }
 //  INIT
 // ==========================================================================
 
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    else document.documentElement.removeAttribute('data-theme');
+    try { localStorage.setItem('hl_theme', next); } catch (e) {}
+    updateThemeIcon();
+}
+
+function updateThemeIcon() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const btn = document.getElementById('themeBtn');
+    if (!btn) return;
+    btn.querySelector('.theme-icon-light').classList.toggle('hidden', isDark);
+    btn.querySelector('.theme-icon-dark').classList.toggle('hidden', !isDark);
+    btn.setAttribute('data-tip', isDark
+        ? 'Switch to light mode.'
+        : 'Switch to dark mode.');
+    // Update meta theme-color so iOS status bar matches
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', isDark ? '#15171c' : '#faf7f2');
+}
+
 function init() {
+    updateThemeIcon();
     loadFromCookies();
 
     if (typeof vocabularyData === 'undefined') {
@@ -2614,12 +2989,15 @@ function extractStats() {
         tr: appState.totalRounds,
         tx: appState.totalXP,
         dx: appState.dailyXP,
-        dd: appState.dailyXPDate
+        dd: appState.dailyXPDate,
+        fz: appState.freezesAvailable,
+        fw: appState.freezesGrantedWeek,
+        fu: appState.lastFreezeUsed
     };
 }
 
 function emptyStats() {
-    return { s: 0, lp: null, tr: 0, tx: 0, dx: 0, dd: null };
+    return { s: 0, lp: null, tr: 0, tx: 0, dx: 0, dd: null, fz: 0, fw: null, fu: null };
 }
 
 // ==========================================================================
@@ -2653,6 +3031,10 @@ function mergeStates(local, remote) {
         if ((ls.dd || '') > (rs.dd || '')) { out.stats.dx = ls.dx || 0; out.stats.dd = ls.dd; }
         else { out.stats.dx = rs.dx || 0; out.stats.dd = rs.dd || null; }
     }
+    // Freezes: take max so signing in doesn't lose any earned freezes
+    out.stats.fz = Math.max(ls.fz || 0, rs.fz || 0);
+    out.stats.fw = (ls.fw && (!rs.fw || ls.fw > rs.fw)) ? ls.fw : (rs.fw || null);
+    out.stats.fu = (ls.fu && (!rs.fu || ls.fu > rs.fu)) ? ls.fu : (rs.fu || null);
     return out;
 }
 
@@ -2680,6 +3062,9 @@ function applyMergedState(merged) {
         appState.totalXP = merged.stats.tx || 0;
         appState.dailyXP = merged.stats.dx || 0;
         appState.dailyXPDate = merged.stats.dd || null;
+        if (typeof merged.stats.fz === 'number') appState.freezesAvailable = merged.stats.fz;
+        if (merged.stats.fw) appState.freezesGrantedWeek = merged.stats.fw;
+        if (merged.stats.fu) appState.lastFreezeUsed = merged.stats.fu;
     }
     saveProgress();
     saveStats();
@@ -2762,6 +3147,36 @@ function cancelMerge() {
 
 // Init auth after main init runs
 window.addEventListener('load', () => setTimeout(initAuth, 100));
+
+// Register service worker for PWA install + offline support
+window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+});
+
+// Daily reminder: if the user has notification permission and hasn't played today,
+// fire one local notification when they reopen the page (or PWA).
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        try {
+            if (!('Notification' in window)) return;
+            if (Notification.permission !== 'granted') return;
+            const lastReminder = localStorage.getItem('hl_last_reminder');
+            const today = todayStr();
+            if (lastReminder === today) return;
+            if (appState.lastPlayedDate === today) return;
+            new Notification('Time for your daily round', {
+                body: appState.streak > 0
+                    ? `Keep your ${appState.streak}-day streak alive.`
+                    : 'A short round will earn your streak.',
+                icon: 'icon-192.png',
+                tag: 'daily-reminder'
+            });
+            localStorage.setItem('hl_last_reminder', today);
+        } catch (e) {}
+    }, 3000);
+});
 
 window.addEventListener('load', init);
 </script>
