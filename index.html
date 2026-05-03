@@ -1040,6 +1040,27 @@
             background: var(--accent-soft);
         }
 
+        .reminder-help {
+            margin-top: 0.85rem;
+            padding: 0.85rem 1rem;
+            background: var(--surface-warm);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+        }
+        .reminder-help p {
+            font-size: 0.82rem;
+            color: var(--ink-soft);
+            margin: 0 0 0.55rem;
+            line-height: 1.5;
+        }
+        .reminder-help p:last-child { margin-bottom: 0; }
+        .reminder-help code {
+            background: var(--surface);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.78rem;
+        }
+
         /* STATS MODAL */
         .stats-hero {
             padding: 2rem 1.5rem 1.5rem;
@@ -1644,8 +1665,16 @@
             <div id="balanceBars"></div>
         </div>
         <div class="reminder-section" id="reminderSection" style="padding: 0 1.5rem 1rem;">
-            <button class="btn btn-outline" id="reminderBtn" onclick="requestNotifications()" style="width: 100%;">Enable daily reminders</button>
+            <button class="btn btn-outline" id="reminderBtn" onclick="handleReminderClick()" style="width: 100%;">Enable daily reminders</button>
             <p style="font-size: 0.78rem; color: var(--ink-muted); text-align: center; margin: 0.5rem 0 0;">A gentle nudge once a day if you haven't played yet. Sent only when you have the page open or installed as an app.</p>
+            <div id="reminderHelp" class="reminder-help hidden">
+                <p><strong>How to re-enable notifications</strong></p>
+                <p><strong>Safari (Mac):</strong> Safari menu → Settings → Websites → Notifications → find <code>olelodaily.com</code> → change to Allow.</p>
+                <p><strong>Chrome / Edge:</strong> Click the lock or tune icon to the left of the URL → Site Settings → Notifications → set to Allow. Reload the page.</p>
+                <p><strong>Firefox:</strong> Click the lock icon to the left of the URL → Connection Secure → More Information → Permissions → uncheck Use Default for Send Notifications → Allow.</p>
+                <p><strong>iPhone / iPad:</strong> Settings → Notifications → Safari Websites → find olelodaily.com → toggle Allow.</p>
+                <p style="color: var(--ink-muted); font-size: 0.78rem;">After changing, hard refresh this page (Cmd-Shift-R or pull-to-refresh) and try again.</p>
+            </div>
         </div>
         <div style="padding: 0 1.5rem 1rem; text-align: center; font-size: 0.85rem; color: var(--ink-muted);">
             Found a translation error or have an idea? <a href="https://www.linkedin.com/in/olinlagon/" target="_blank" rel="noopener" style="color: var(--accent); text-decoration: none; border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);">Message Olin on LinkedIn</a>.
@@ -3036,33 +3065,48 @@ function renderBalanceBars() {
     document.getElementById('balanceBars').innerHTML = html;
 }
 
-function requestNotifications() {
+function handleReminderClick() {
     if (!('Notification' in window)) {
         showToast('Your browser doesn\'t support notifications.', 'error', 4000);
+        return;
+    }
+    if (Notification.permission === 'denied') {
+        // Toggle the help panel since we can't re-prompt programmatically
+        document.getElementById('reminderHelp').classList.toggle('hidden');
+        return;
+    }
+    if (Notification.permission === 'granted') {
+        // Already on; toggle help just in case they want to know how to disable
+        document.getElementById('reminderHelp').classList.toggle('hidden');
         return;
     }
     Notification.requestPermission().then(perm => {
         updateReminderButton();
         trackEvent('notifications_permission', { result: perm });
         if (perm === 'granted') showToast('Daily reminders enabled.', 'success', 3500);
-        else if (perm === 'denied') showToast('Reminders are blocked. You can re-enable them in your browser settings.', 'error', 5000);
+        else if (perm === 'denied') {
+            showToast('Reminders are blocked. Click the button again for instructions to re-enable.', 'error', 5000);
+        }
     });
 }
 
 function updateReminderButton() {
     const sec = document.getElementById('reminderSection');
     const btn = document.getElementById('reminderBtn');
+    const help = document.getElementById('reminderHelp');
     if (!sec || !btn) return;
     if (!('Notification' in window)) { sec.style.display = 'none'; return; }
     if (Notification.permission === 'granted') {
-        btn.textContent = 'Daily reminders enabled';
-        btn.disabled = true;
+        btn.textContent = 'Daily reminders enabled ✓';
+        btn.disabled = false; // Keep clickable so they can see the help if curious
+        if (help) help.classList.add('hidden');
     } else if (Notification.permission === 'denied') {
-        btn.textContent = 'Reminders blocked in browser settings';
-        btn.disabled = true;
+        btn.textContent = 'Reminders blocked — click for help';
+        btn.disabled = false; // Make it clickable to show help
     } else {
         btn.textContent = 'Enable daily reminders';
         btn.disabled = false;
+        if (help) help.classList.add('hidden');
     }
 }
 
@@ -3139,8 +3183,8 @@ function showCheckin() {
         btnEl.textContent = 'Start first round';
     } else if (goalMet && playedToday) {
         titleEl.textContent = 'Pau ka lā';
-        msgEl.innerHTML = `Daily goal already met. <strong>${appState.streak} day streak</strong> going strong. Keep practicing if you want.${progressBlurb}`;
-        btnEl.textContent = 'Practice anyway';
+        msgEl.innerHTML = `Daily goal met. <strong>${appState.streak} day streak</strong> going strong. Want to keep building?${progressBlurb}`;
+        btnEl.textContent = 'Another round';
     } else if (playedToday) {
         const remaining = DAILY_GOAL_XP - appState.dailyXP;
         titleEl.textContent = 'Hoʻomau ʻana';
