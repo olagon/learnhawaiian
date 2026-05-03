@@ -1419,10 +1419,11 @@
                     <span class="home-goal-label">Essentials</span>
                     <span class="home-goal-pct" id="homeEssentialsPct">0%</span>
                 </div>
-                <div class="goal-bar-track">
-                    <div class="goal-bar-fill" id="homeEssentialsFill" style="width: 0%;"></div>
+                <div class="goal-bar-track layered">
+                    <div class="goal-layer-mastered" id="homeEssentialsMasteredFill" style="width: 0%;"></div>
+                    <div class="goal-layer-learning" id="homeEssentialsSeenFill" style="width: 0%;"></div>
                 </div>
-                <div class="home-bar-foot"><span id="homeEssentialsCount">0</span> of <span id="homeEssentialsTotal">382</span> most useful words mastered</div>
+                <div class="home-bar-foot"><span id="homeEssentialsCount">0</span> of <span id="homeEssentialsTotal">382</span> mastered &middot; <span id="homeEssentialsSeen">0</span> seen</div>
             </div>
 
             <!-- Fluency bar (full 2,000) -->
@@ -1598,10 +1599,11 @@
                     <span class="home-goal-label">Essentials</span>
                     <span class="home-goal-pct" id="statsEssentialsPct">0%</span>
                 </div>
-                <div class="goal-bar-track">
-                    <div class="goal-bar-fill" id="statsEssentialsFill" style="width: 0%;"></div>
+                <div class="goal-bar-track layered">
+                    <div class="goal-layer-mastered" id="statsEssentialsMasteredFill" style="width: 0%;"></div>
+                    <div class="goal-layer-learning" id="statsEssentialsSeenFill" style="width: 0%;"></div>
                 </div>
-                <div class="home-bar-foot"><span id="statsEssentialsCount">0</span> of <span id="statsEssentialsTotal">382</span> most useful words mastered</div>
+                <div class="home-bar-foot"><span id="statsEssentialsCount">0</span> of <span id="statsEssentialsTotal">382</span> mastered &middot; <span id="statsEssentialsSeen">0</span> seen</div>
             </div>
 
             <!-- Fluency bar -->
@@ -2713,19 +2715,31 @@ function updateHomeGoal() {
         : (seen > 0 ? Math.round((seen / FLUENCY_GOAL) * 100) + '% seen' : '0%');
     document.getElementById('homeGoalPct').textContent = displayPct;
 
-    // Essentials bar (Tier 1 only)
+    // Essentials bar (Tier 1 only) — layered like Fluency
     const tier1Words = vocabulary.filter(w => (w.Tier || 3) === 1);
     const tier1Total = tier1Words.length || 382;
     const tier1Ids = new Set(tier1Words.map(w => w.ID));
     let tier1Mastered = 0;
+    let tier1Seen = 0;
     for (const id in appState.progress) {
-        if (tier1Ids.has(parseInt(id, 10)) && appState.progress[id].l === 5) tier1Mastered++;
+        if (tier1Ids.has(parseInt(id, 10))) {
+            const lvl = appState.progress[id].l;
+            if (lvl > 0) tier1Seen++;
+            if (lvl === 5) tier1Mastered++;
+        }
     }
-    const essPct = Math.min(100, Math.round((tier1Mastered / tier1Total) * 100));
-    document.getElementById('homeEssentialsFill').style.width = essPct + '%';
-    document.getElementById('homeEssentialsPct').textContent = essPct + '%';
+    const essMasteredPct = Math.min(100, (tier1Mastered / tier1Total) * 100);
+    const essSeenPct = Math.min(100, (tier1Seen / tier1Total) * 100);
+    document.getElementById('homeEssentialsMasteredFill').style.width = essMasteredPct + '%';
+    document.getElementById('homeEssentialsSeenFill').style.width = essSeenPct + '%';
+    // Show mastery percent if any mastered, else show seen percent so beginners see movement
+    const essDisplayPct = tier1Mastered > 0
+        ? Math.round((tier1Mastered / tier1Total) * 100) + '%'
+        : (tier1Seen > 0 ? Math.round((tier1Seen / tier1Total) * 100) + '% seen' : '0%');
+    document.getElementById('homeEssentialsPct').textContent = essDisplayPct;
     document.getElementById('homeEssentialsCount').textContent = tier1Mastered;
     document.getElementById('homeEssentialsTotal').textContent = tier1Total;
+    document.getElementById('homeEssentialsSeen').textContent = tier1Seen;
     document.getElementById('homeEssentialsBar').classList.toggle('complete', tier1Mastered >= tier1Total);
 }
 
@@ -2902,19 +2916,30 @@ function openStats() {
     document.getElementById('goalPct').textContent = goalPct + '%';
     document.getElementById('goalBarFill').style.width = goalPct + '%';
 
-    // Essentials (Tier 1) bar in stats
+    // Essentials (Tier 1) bar in stats — layered like Fluency
     const tier1Words = vocabulary.filter(w => (w.Tier || 3) === 1);
     const tier1Total = tier1Words.length || 382;
     const tier1Ids = new Set(tier1Words.map(w => w.ID));
     let tier1Mastered = 0;
+    let tier1Seen = 0;
     for (const id in appState.progress) {
-        if (tier1Ids.has(parseInt(id, 10)) && appState.progress[id].l === 5) tier1Mastered++;
+        if (tier1Ids.has(parseInt(id, 10))) {
+            const lvl = appState.progress[id].l;
+            if (lvl > 0) tier1Seen++;
+            if (lvl === 5) tier1Mastered++;
+        }
     }
-    const essPct = Math.min(100, Math.round((tier1Mastered / tier1Total) * 100));
-    document.getElementById('statsEssentialsFill').style.width = essPct + '%';
-    document.getElementById('statsEssentialsPct').textContent = essPct + '%';
+    const essMasteredPct = Math.min(100, (tier1Mastered / tier1Total) * 100);
+    const essSeenPct = Math.min(100, (tier1Seen / tier1Total) * 100);
+    document.getElementById('statsEssentialsMasteredFill').style.width = essMasteredPct + '%';
+    document.getElementById('statsEssentialsSeenFill').style.width = essSeenPct + '%';
+    const essDisplayPct = tier1Mastered > 0
+        ? Math.round((tier1Mastered / tier1Total) * 100) + '%'
+        : (tier1Seen > 0 ? Math.round((tier1Seen / tier1Total) * 100) + '% seen' : '0%');
+    document.getElementById('statsEssentialsPct').textContent = essDisplayPct;
     document.getElementById('statsEssentialsCount').textContent = tier1Mastered;
     document.getElementById('statsEssentialsTotal').textContent = tier1Total;
+    document.getElementById('statsEssentialsSeen').textContent = tier1Seen;
     document.getElementById('statsEssentialsBar').classList.toggle('complete', tier1Mastered >= tier1Total);
 
     // Mastery breakdown
