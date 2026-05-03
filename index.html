@@ -989,6 +989,24 @@
         .dot-learning { background: color-mix(in srgb, var(--accent) 50%, var(--line-soft)); }
         .dot-seen { background: var(--ink-muted); }
 
+        .home-bar { }
+        .home-bar-foot {
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+        }
+        .home-bar.complete .home-goal-pct {
+            color: var(--success);
+        }
+        .home-bar.complete .goal-bar-fill {
+            background: var(--success);
+        }
+        .home-bar.complete .home-bar-foot::after {
+            content: " ✓";
+            color: var(--success);
+            font-weight: 700;
+        }
+
         /* STATS MODAL */
         .stats-hero {
             padding: 2rem 1.5rem 1.5rem;
@@ -1300,20 +1318,36 @@
         <h2 style="font-family: var(--font-display); font-weight: 500; font-size: 1.8rem; margin: 0 0 0.5rem;" id="checkinTitle">Welina hou mai</h2>
         <p style="color: var(--ink-soft); margin: 0 0 1.25rem;" id="checkinMessage">Welcome back. Time for today's round.</p>
         <div class="home-goal" id="homeGoal">
-            <div class="home-goal-row">
-                <span class="home-goal-label">Your vocabulary</span>
-                <span class="home-goal-pct" id="homeGoalPct">0%</span>
+            <!-- Essentials bar (Tier 1) -->
+            <div class="home-bar" id="homeEssentialsBar">
+                <div class="home-goal-row">
+                    <span class="home-goal-label">Essentials</span>
+                    <span class="home-goal-pct" id="homeEssentialsPct">0%</span>
+                </div>
+                <div class="goal-bar-track">
+                    <div class="goal-bar-fill" id="homeEssentialsFill" style="width: 0%;"></div>
+                </div>
+                <div class="home-bar-foot"><span id="homeEssentialsCount">0</span> of <span id="homeEssentialsTotal">382</span> most useful words mastered</div>
             </div>
-            <div class="goal-bar-track layered">
-                <div class="goal-layer-mastered" id="homeLayerMastered" style="width: 0%;"></div>
-                <div class="goal-layer-learning" id="homeLayerLearning" style="width: 0%;"></div>
+
+            <!-- Fluency bar (full 2,000) -->
+            <div class="home-bar" style="margin-top: 0.85rem;">
+                <div class="home-goal-row">
+                    <span class="home-goal-label">Fluency</span>
+                    <span class="home-goal-pct" id="homeGoalPct">0%</span>
+                </div>
+                <div class="goal-bar-track layered">
+                    <div class="goal-layer-mastered" id="homeLayerMastered" style="width: 0%;"></div>
+                    <div class="goal-layer-learning" id="homeLayerLearning" style="width: 0%;"></div>
+                </div>
+                <div class="home-goal-stats">
+                    <span class="home-goal-stat"><span class="dot dot-mastered"></span><strong id="homeStatMastered">0</strong> mastered</span>
+                    <span class="home-goal-stat"><span class="dot dot-learning"></span><strong id="homeStatLearning">0</strong> learning</span>
+                    <span class="home-goal-stat"><span class="dot dot-seen"></span><strong id="homeStatSeen">0</strong> seen</span>
+                </div>
             </div>
-            <div class="home-goal-stats">
-                <span class="home-goal-stat"><span class="dot dot-mastered"></span><strong id="homeStatMastered">0</strong> mastered</span>
-                <span class="home-goal-stat"><span class="dot dot-learning"></span><strong id="homeStatLearning">0</strong> learning</span>
-                <span class="home-goal-stat"><span class="dot dot-seen"></span><strong id="homeStatSeen">0</strong> seen</span>
-            </div>
-            <div class="home-goal-foot">Goal: 2,000 mastered for working fluency. <a href="#" onclick="openStats(); return false;">Why 2,000</a>.</div>
+
+            <div class="home-goal-foot" style="margin-top: 0.65rem;">2,000 mastered = roughly 95% comprehension. <a href="#" onclick="openStats(); return false;">Why 2,000</a>.</div>
         </div>
         <button class="btn" onclick="startSession()" id="checkinBtn">Start today's round</button>
     </div>
@@ -2501,6 +2535,8 @@ function updateHomeGoal() {
     const seen = progressVals.filter(p => p.l > 0).length;
     const learning = progressVals.filter(p => p.l > 0 && p.l < 5).length;
     const mastered = progressVals.filter(p => p.l === 5).length;
+
+    // Fluency bar (all 2,000)
     const masteredPct = Math.min(100, (mastered / FLUENCY_GOAL) * 100);
     const seenPct = Math.min(100, (seen / FLUENCY_GOAL) * 100);
     layerMastered.style.width = masteredPct + '%';
@@ -2508,11 +2544,25 @@ function updateHomeGoal() {
     document.getElementById('homeStatSeen').textContent = seen;
     document.getElementById('homeStatLearning').textContent = learning;
     document.getElementById('homeStatMastered').textContent = mastered;
-    // Show mastery percent if any mastered, otherwise show seen percent so beginners see movement
     const displayPct = mastered > 0
         ? Math.round((mastered / FLUENCY_GOAL) * 100) + '%'
         : (seen > 0 ? Math.round((seen / FLUENCY_GOAL) * 100) + '% seen' : '0%');
     document.getElementById('homeGoalPct').textContent = displayPct;
+
+    // Essentials bar (Tier 1 only)
+    const tier1Words = vocabulary.filter(w => (w.Tier || 3) === 1);
+    const tier1Total = tier1Words.length || 382;
+    const tier1Ids = new Set(tier1Words.map(w => w.ID));
+    let tier1Mastered = 0;
+    for (const id in appState.progress) {
+        if (tier1Ids.has(parseInt(id, 10)) && appState.progress[id].l === 5) tier1Mastered++;
+    }
+    const essPct = Math.min(100, Math.round((tier1Mastered / tier1Total) * 100));
+    document.getElementById('homeEssentialsFill').style.width = essPct + '%';
+    document.getElementById('homeEssentialsPct').textContent = essPct + '%';
+    document.getElementById('homeEssentialsCount').textContent = tier1Mastered;
+    document.getElementById('homeEssentialsTotal').textContent = tier1Total;
+    document.getElementById('homeEssentialsBar').classList.toggle('complete', tier1Mastered >= tier1Total);
 }
 
 // ==========================================================================
