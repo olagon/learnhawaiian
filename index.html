@@ -216,41 +216,56 @@
             [data-tip]::after, [data-tip]::before { display: none; }
         }
 
-        /* ROUND CONTROLS */
+        /* ROUND CONTROLS — primary action prominent, secondary actions de-emphasized */
         .round-controls {
             display: flex;
-            gap: 0.6rem;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.65rem;
             margin-top: 1.25rem;
-            flex-wrap: wrap;
         }
-        .round-control-btn {
+        /* Primary: Show answer */
+        .round-control-primary {
             background: transparent;
-            border: 1px solid var(--line);
-            color: var(--ink-muted);
-            padding: 0.45rem 0.85rem;
+            border: 1.5px solid var(--accent);
+            color: var(--accent);
+            padding: 0.55rem 1.4rem;
             border-radius: 999px;
-            font-size: 0.82rem;
-            font-weight: 500;
+            font-size: 0.92rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.15s ease;
+            min-width: 160px;
         }
-        .round-control-btn:hover {
-            border-color: var(--accent);
-            color: var(--accent);
+        .round-control-primary:hover {
+            background: var(--accent-soft);
         }
-        .round-control-btn:disabled {
-            opacity: 0.4;
+        .round-control-primary:disabled {
+            opacity: 0.35;
             cursor: not-allowed;
         }
-        .round-control-btn:disabled:hover {
-            border-color: var(--line);
+        /* Secondary: Skip and End round */
+        .round-control-secondary-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .round-control-link {
+            background: transparent;
+            border: none;
             color: var(--ink-muted);
+            padding: 0.25rem 0.55rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: color 0.15s ease;
         }
-        .round-control-danger:hover {
-            border-color: var(--error);
-            color: var(--error);
-        }
+        .round-control-link:hover { color: var(--ink-soft); }
+        .round-control-link:disabled { opacity: 0.35; cursor: not-allowed; }
+        .round-control-link:disabled:hover { color: var(--ink-muted); }
+        .round-control-link.round-control-danger:hover { color: var(--error); }
+        .round-control-sep { color: var(--line); font-size: 0.78rem; user-select: none; }
 
         /* TOAST */
         .toast {
@@ -1371,9 +1386,12 @@
             <button class="btn btn-outline hidden" id="advanceBtn" onclick="advanceWord()">Continue</button>
             <button class="btn hidden" id="nextPhaseBtn" onclick="startPhase2()">Begin reverse direction</button>
             <div class="round-controls" id="roundControls">
-                <button class="round-control-btn" id="showAnswerBtn" onclick="showAnswer()" data-tip="Reveal the answer. The word will count as missed.">Show answer</button>
-                <button class="round-control-btn" id="skipWordBtn" onclick="skipWord()" data-tip="Skip this word with no penalty. One skip per round.">Skip word</button>
-                <button class="round-control-btn round-control-danger" onclick="confirmAbandonRound()" data-tip="End this round without saving any progress for these words.">End round</button>
+                <button class="round-control-primary" id="showAnswerBtn" onclick="showAnswer()" data-tip="Reveal the answer. The word will count as missed. Press Enter on an empty input as a shortcut.">Show answer</button>
+                <div class="round-control-secondary-row">
+                    <button class="round-control-link" id="skipWordBtn" onclick="skipWord()" data-tip="Skip this word with no penalty. One skip per round.">Skip word</button>
+                    <span class="round-control-sep">·</span>
+                    <button class="round-control-link round-control-danger" onclick="confirmAbandonRound()" data-tip="End this round without saving any progress for these words.">End round</button>
+                </div>
             </div>
         </div>
     </div>
@@ -2307,6 +2325,7 @@ function renderWord() {
     if (rc) rc.classList.remove('hidden');
     const showBtn = document.getElementById('showAnswerBtn');
     if (showBtn) showBtn.disabled = false;
+    if (typeof showAnswerArmed !== 'undefined') showAnswerArmed = false;
 
     setTimeout(() => inputEl.focus(), 50);
 }
@@ -3026,7 +3045,30 @@ document.addEventListener('keydown', function(e) {
 
     if (!answerChecked && !inputDisabled) {
         e.preventDefault();
-        checkAnswer();
+        const value = document.getElementById('answerInput').value.trim();
+        if (value === '') {
+            // Empty input + Enter = two-press shortcut to Show Answer
+            if (showAnswerArmed && (Date.now() - showAnswerArmedAt) < 4000) {
+                showAnswerArmed = false;
+                showAnswer();
+            } else {
+                showAnswerArmed = true;
+                showAnswerArmedAt = Date.now();
+                const fb = document.getElementById('feedback');
+                fb.innerHTML = `<span class="feedback-sub" style="color: var(--ink-muted);">Press Enter again to reveal the answer.</span>`;
+                fb.className = 'feedback visible';
+                setTimeout(() => {
+                    if (showAnswerArmed && (Date.now() - showAnswerArmedAt) >= 4000) {
+                        showAnswerArmed = false;
+                        const f = document.getElementById('feedback');
+                        if (f && !answerChecked) { f.innerHTML = ''; f.className = 'feedback'; }
+                    }
+                }, 4100);
+            }
+        } else {
+            showAnswerArmed = false;
+            checkAnswer();
+        }
     } else if (answerChecked && !document.getElementById('advanceBtn').classList.contains('hidden')) {
         e.preventDefault();
         advanceWord();
@@ -3035,6 +3077,9 @@ document.addEventListener('keydown', function(e) {
         startPhase2();
     }
 });
+
+let showAnswerArmed = false;
+let showAnswerArmedAt = 0;
 
 // Click on goal ring opens stats already; allow Esc to close modals
 document.addEventListener('keydown', function(e) {
