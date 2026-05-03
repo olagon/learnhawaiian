@@ -940,6 +940,55 @@
         }
         .home-goal-foot a:hover { border-bottom-color: var(--accent); }
 
+        /* LAYERED PROGRESS BAR */
+        .goal-bar-track.layered {
+            position: relative;
+        }
+        .goal-layer-mastered, .goal-layer-learning {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            border-radius: 7px;
+            transition: width 0.6s ease;
+        }
+        .goal-layer-learning {
+            background: color-mix(in srgb, var(--accent) 35%, var(--line-soft));
+            z-index: 1;
+        }
+        .goal-layer-mastered {
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            z-index: 2;
+        }
+        .home-goal-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.6rem;
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .home-goal-stat {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .home-goal-stat strong {
+            color: var(--ink-soft);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        .home-goal-stats .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot-mastered { background: var(--success); }
+        .dot-learning { background: color-mix(in srgb, var(--accent) 50%, var(--line-soft)); }
+        .dot-seen { background: var(--ink-muted); }
+
         /* STATS MODAL */
         .stats-hero {
             padding: 2rem 1.5rem 1.5rem;
@@ -1252,13 +1301,19 @@
         <p style="color: var(--ink-soft); margin: 0 0 1.25rem;" id="checkinMessage">Welcome back. Time for today's round.</p>
         <div class="home-goal" id="homeGoal">
             <div class="home-goal-row">
-                <span class="home-goal-label">Path to 2,000 mastered</span>
+                <span class="home-goal-label">Your vocabulary</span>
                 <span class="home-goal-pct" id="homeGoalPct">0%</span>
             </div>
-            <div class="goal-bar-track">
-                <div class="goal-bar-fill" id="homeGoalFill" style="width: 0%;"></div>
+            <div class="goal-bar-track layered">
+                <div class="goal-layer-mastered" id="homeLayerMastered" style="width: 0%;"></div>
+                <div class="goal-layer-learning" id="homeLayerLearning" style="width: 0%;"></div>
             </div>
-            <div class="home-goal-foot"><span id="homeGoalCount">0</span> of 2,000 words mastered. <a href="#" onclick="openStats(); return false;">See why 2,000</a>.</div>
+            <div class="home-goal-stats">
+                <span class="home-goal-stat"><span class="dot dot-mastered"></span><strong id="homeStatMastered">0</strong> mastered</span>
+                <span class="home-goal-stat"><span class="dot dot-learning"></span><strong id="homeStatLearning">0</strong> learning</span>
+                <span class="home-goal-stat"><span class="dot dot-seen"></span><strong id="homeStatSeen">0</strong> seen</span>
+            </div>
+            <div class="home-goal-foot">Goal: 2,000 mastered for working fluency. <a href="#" onclick="openStats(); return false;">Why 2,000</a>.</div>
         </div>
         <button class="btn" onclick="startSession()" id="checkinBtn">Start today's round</button>
     </div>
@@ -1415,13 +1470,17 @@
         </div>
 
         <div class="stats-grid">
-            <div class="stat-tile">
-                <div class="stat-tile-value" id="statMastered">0</div>
-                <div class="stat-tile-label">Words mastered</div>
+            <div class="stat-tile" data-tip="Total words you have encountered at least once.">
+                <div class="stat-tile-value" id="statSeen">0</div>
+                <div class="stat-tile-label">Words seen</div>
             </div>
-            <div class="stat-tile">
+            <div class="stat-tile" data-tip="Words at level 1 to 4. Working toward mastery.">
                 <div class="stat-tile-value" id="statLearning">0</div>
-                <div class="stat-tile-label">In progress</div>
+                <div class="stat-tile-label">Learning</div>
+            </div>
+            <div class="stat-tile" data-tip="Words you have answered correctly across all spaced reviews.">
+                <div class="stat-tile-value" id="statMastered">0</div>
+                <div class="stat-tile-label">Mastered</div>
             </div>
             <div class="stat-tile">
                 <div class="stat-tile-value" id="statRounds">0</div>
@@ -1567,6 +1626,8 @@
 
 const STREAK_MILESTONES = [1, 3, 7, 14, 30, 60, 100, 180, 365];
 const FLUENCY_MILESTONES = [10, 25, 50, 100, 250, 500, 750, 1000, 1500, 2000];
+const SEEN_MILESTONES = [5, 10, 25, 50, 100, 200, 500, 1000];
+const LEARNING_MILESTONES = [10, 25, 50, 100, 250];
 
 function trackEvent(name, params) {
     if (typeof gtag !== 'function') return;
@@ -1715,7 +1776,7 @@ function migrateFromCookies() {
 //  STATE
 // ==========================================================================
 
-const REVIEW_INTERVALS = [0, 1, 3, 7, 15, 30]; // rounds before next review per level
+const REVIEW_INTERVALS = [0, 1, 3, 7, 12, 21]; // rounds before next review per level
 const DAILY_GOAL_XP = 30;
 const XP_PER_CORRECT = 5;
 const XP_ROUND_BONUS = 10;
@@ -1900,15 +1961,29 @@ function validateStreakWithFreeze() {
     return false;
 }
 
-function resetAll() {
+async function resetAll() {
+    // Clear local
     clearStored('hl_stats');
     clearStored('hl_prog');
+    try { localStorage.removeItem('hl_migrated'); } catch (e) {}
+
+    // Clear cloud row if signed in (so reload doesn't restore old state)
+    if (sb && currentUser) {
+        try {
+            await sb.from('progress').delete().eq('user_id', currentUser.id);
+        } catch (e) { console.warn('Cloud reset failed', e); }
+        try { await sb.auth.signOut(); } catch (e) {}
+    }
+
     appState = {
         streak: 0, lastPlayedDate: null, totalRounds: 0, totalXP: 0,
-        dailyXP: 0, dailyXPDate: todayStr(), progress: {}
+        dailyXP: 0, dailyXPDate: todayStr(),
+        freezesAvailable: 1, freezesGrantedWeek: null, lastFreezeUsed: null,
+        progress: {}
     };
     saveStats();
     saveProgress();
+    showToast('Reset complete. Fresh start.', 'success', 3500);
 }
 
 // ==========================================================================
@@ -2420,13 +2495,24 @@ function updateStreakUI() {
 }
 
 function updateHomeGoal() {
-    const homeFill = document.getElementById('homeGoalFill');
-    if (!homeFill) return;
-    const mastered = Object.values(appState.progress).filter(p => p.l === 5).length;
-    const pct = Math.min(100, Math.round((mastered / FLUENCY_GOAL) * 100));
-    homeFill.style.width = pct + '%';
-    document.getElementById('homeGoalPct').textContent = pct + '%';
-    document.getElementById('homeGoalCount').textContent = mastered;
+    const layerMastered = document.getElementById('homeLayerMastered');
+    if (!layerMastered) return;
+    const progressVals = Object.values(appState.progress);
+    const seen = progressVals.filter(p => p.l > 0).length;
+    const learning = progressVals.filter(p => p.l > 0 && p.l < 5).length;
+    const mastered = progressVals.filter(p => p.l === 5).length;
+    const masteredPct = Math.min(100, (mastered / FLUENCY_GOAL) * 100);
+    const seenPct = Math.min(100, (seen / FLUENCY_GOAL) * 100);
+    layerMastered.style.width = masteredPct + '%';
+    document.getElementById('homeLayerLearning').style.width = seenPct + '%';
+    document.getElementById('homeStatSeen').textContent = seen;
+    document.getElementById('homeStatLearning').textContent = learning;
+    document.getElementById('homeStatMastered').textContent = mastered;
+    // Show mastery percent if any mastered, otherwise show seen percent so beginners see movement
+    const displayPct = mastered > 0
+        ? Math.round((mastered / FLUENCY_GOAL) * 100) + '%'
+        : (seen > 0 ? Math.round((seen / FLUENCY_GOAL) * 100) + '% seen' : '0%');
+    document.getElementById('homeGoalPct').textContent = displayPct;
 }
 
 // ==========================================================================
@@ -2438,7 +2524,9 @@ function endRound() {
     const cur = appState.totalRounds;
 
     // Snapshot pre-round state for milestone detection
-    const masteredBefore = Object.values(appState.progress).filter(p => p.l === 5).length;
+    const progBefore = Object.values(appState.progress);
+    const masteredBefore = progBefore.filter(p => p.l === 5).length;
+    const seenBefore = progBefore.filter(p => p.l > 0).length;
 
     // SRS update per word
     let correctCount = 0;
@@ -2513,8 +2601,10 @@ function endRound() {
         celebBox.classList.remove('hidden');
     }
 
-    // ---- Anonymous analytics ----
-    const totalMastered = masteredBefore + newlyMastered;
+    // ---- Anonymous analytics + celebration milestones ----
+    const progAfter = Object.values(appState.progress);
+    const totalMastered = progAfter.filter(p => p.l === 5).length;
+    const totalSeen = progAfter.filter(p => p.l > 0).length;
 
     trackEvent('round_complete', {
         correct: correctCount,
@@ -2523,23 +2613,40 @@ function endRound() {
         xp_earned: sessionXP,
         round_number: cur,
         streak: appState.streak,
+        total_seen: totalSeen,
         total_mastered: totalMastered,
         signed_in: !!currentUser
     });
 
-    // Streak milestone (only fires when crossing into a milestone)
+    // Streak milestone
     if (appState.streak > previousStreak) {
         const sm = milestoneCrossed(previousStreak, appState.streak, STREAK_MILESTONES);
         if (sm) trackEvent('streak_milestone', { streak_days: sm });
     }
 
-    // Fluency milestone (crossed mastered-word thresholds)
+    // Fluency milestone (mastered word thresholds)
     const fm = milestoneCrossed(masteredBefore, totalMastered, FLUENCY_MILESTONES);
     if (fm) trackEvent('fluency_milestone', { words_mastered: fm });
 
-    // Daily goal hit (only first time today)
-    if (justHitGoal) {
-        trackEvent('daily_goal_reached', { streak: appState.streak });
+    // Seen milestone (early progress wins so beginners feel movement)
+    const sm2 = milestoneCrossed(seenBefore, totalSeen, SEEN_MILESTONES);
+    if (sm2) trackEvent('seen_milestone', { words_seen: sm2 });
+
+    // Daily goal hit
+    if (justHitGoal) trackEvent('daily_goal_reached', { streak: appState.streak });
+
+    // Show a celebration in the summary if we crossed a milestone and no other celebration is showing
+    if (celebBox.classList.contains('hidden')) {
+        if (sm2 && sm2 >= 5) {
+            celebBox.innerHTML = `<strong>${sm2} words seen.</strong> You're building real vocabulary now.`;
+            celebBox.classList.remove('hidden');
+        } else if (fm) {
+            celebBox.innerHTML = `<strong>${fm} words mastered.</strong> Lock-in is working.`;
+            celebBox.classList.remove('hidden');
+        } else if (newlyMastered > 0) {
+            celebBox.innerHTML = `<strong>${newlyMastered} new word${newlyMastered === 1 ? '' : 's'} mastered</strong> this round.`;
+            celebBox.classList.remove('hidden');
+        }
     }
 }
 
@@ -2559,8 +2666,11 @@ function openStats() {
     document.getElementById('bigStreak').className = appState.streak === 0 ? 'big-streak cold' : 'big-streak';
     document.getElementById('streakMessage').textContent = streakMessage();
 
-    const mastered = Object.values(appState.progress).filter(p => p.l === 5).length;
-    const learning = Object.values(appState.progress).filter(p => p.l > 0 && p.l < 5).length;
+    const progressVals = Object.values(appState.progress);
+    const seen = progressVals.filter(p => p.l > 0).length;
+    const mastered = progressVals.filter(p => p.l === 5).length;
+    const learning = progressVals.filter(p => p.l > 0 && p.l < 5).length;
+    document.getElementById('statSeen').textContent = seen;
     document.getElementById('statMastered').textContent = mastered;
     document.getElementById('statLearning').textContent = learning;
     document.getElementById('statRounds').textContent = appState.totalRounds;
@@ -2745,32 +2855,39 @@ function showCheckin() {
     const msgEl = document.getElementById('checkinMessage');
     const btnEl = document.getElementById('checkinBtn');
 
+    const progVals = Object.values(appState.progress);
+    const seen = progVals.filter(p => p.l > 0).length;
+    const mastered = progVals.filter(p => p.l === 5).length;
+    const progressBlurb = seen > 0
+        ? ` <span style="display:block;margin-top:0.5rem;font-size:0.85rem;color:var(--ink-muted);">You have seen <strong>${seen}</strong> word${seen === 1 ? '' : 's'}${mastered > 0 ? `, mastered <strong>${mastered}</strong>` : ''}.</span>`
+        : '';
+
     if (!appState.lastPlayedDate) {
         titleEl.textContent = 'E hoʻomaka kākou';
         msgEl.textContent = 'Let us begin. One round to get going.';
         btnEl.textContent = 'Start first round';
     } else if (goalMet && playedToday) {
         titleEl.textContent = 'Pau ka lā';
-        msgEl.innerHTML = `Daily goal already met. <strong>${appState.streak} day streak</strong> going strong. Keep practicing if you want.`;
+        msgEl.innerHTML = `Daily goal already met. <strong>${appState.streak} day streak</strong> going strong. Keep practicing if you want.${progressBlurb}`;
         btnEl.textContent = 'Practice anyway';
     } else if (playedToday) {
         const remaining = DAILY_GOAL_XP - appState.dailyXP;
         titleEl.textContent = 'Hoʻomau ʻana';
-        msgEl.innerHTML = `${remaining} XP from today's goal. Streak <strong>${appState.streak}</strong>.`;
+        msgEl.innerHTML = `${remaining} XP from today's goal. Streak <strong>${appState.streak}</strong>.${progressBlurb}`;
         btnEl.textContent = 'Continue practicing';
     } else if (appState.streak > 0) {
         const gap = daysBetween(appState.lastPlayedDate, t);
         if (gap === 1) {
             titleEl.textContent = 'Welina hou mai';
-            msgEl.innerHTML = `Welcome back. <strong>${appState.streak} day streak</strong>. One round keeps it alive.`;
+            msgEl.innerHTML = `Welcome back. <strong>${appState.streak} day streak</strong>. One round keeps it alive.${progressBlurb}`;
         } else {
             titleEl.textContent = 'Welina hou mai';
-            msgEl.textContent = `It has been ${gap} days. Streak reset, but progress saved. Pick back up where you left off.`;
+            msgEl.innerHTML = `It has been ${gap} days. Streak reset, but progress saved.${progressBlurb}`;
         }
         btnEl.textContent = 'Start today\'s round';
     } else {
         titleEl.textContent = 'Welina hou mai';
-        msgEl.textContent = 'Welcome back. One round to start a new streak.';
+        msgEl.innerHTML = `Welcome back. One round to start a new streak.${progressBlurb}`;
         btnEl.textContent = 'Start round';
     }
 }
