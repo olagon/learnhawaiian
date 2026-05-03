@@ -1022,6 +1022,24 @@
             font-weight: 700;
         }
 
+        .btn-quick-round {
+            display: block;
+            margin: 0.85rem auto 0;
+            background: transparent;
+            border: none;
+            color: var(--ink-muted);
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 0.45rem 0.85rem;
+            cursor: pointer;
+            border-radius: 999px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+        .btn-quick-round:hover {
+            color: var(--accent);
+            background: var(--accent-soft);
+        }
+
         /* STATS MODAL */
         .stats-hero {
             padding: 2rem 1.5rem 1.5rem;
@@ -1109,6 +1127,47 @@
             border-radius: 3px;
             transition: width 0.6s ease;
         }
+        /* ACTIVITY HEATMAP */
+        #heatmapWrap {
+            width: 100%;
+        }
+        #heatmap {
+            display: grid;
+            grid-template-rows: repeat(7, 1fr);
+            grid-auto-flow: column;
+            grid-auto-columns: 1fr;
+            gap: 4px;
+            width: 100%;
+        }
+        .heat-cell {
+            aspect-ratio: 1;
+            min-height: 10px;
+            border-radius: 3px;
+            background: var(--line-soft);
+            position: relative;
+        }
+        .heatmap-legend .heat-cell {
+            aspect-ratio: 1;
+            min-height: 0;
+            width: 11px;
+            height: 11px;
+        }
+        .heat-cell.h-1 { background: color-mix(in srgb, var(--accent) 20%, var(--line-soft)); }
+        .heat-cell.h-2 { background: color-mix(in srgb, var(--accent) 45%, var(--line-soft)); }
+        .heat-cell.h-3 { background: color-mix(in srgb, var(--accent) 70%, var(--line-soft)); }
+        .heat-cell.h-4 { background: var(--accent); }
+        .heat-cell.h-5 { background: var(--success); }
+        .heatmap-legend {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.4rem;
+            margin-top: 0.6rem;
+            font-size: 0.72rem;
+            color: var(--ink-muted);
+        }
+        .heatmap-legend .heat-cell { width: 10px; height: 10px; }
+
         .balance-row { margin-bottom: 0.7rem; }
         .balance-row:last-child { margin-bottom: 0; }
         .balance-row-head {
@@ -1365,6 +1424,7 @@
             <div class="home-goal-foot" style="margin-top: 0.65rem;">2,000 mastered = roughly 95% comprehension. <a href="#" onclick="openStats(); return false;">Why 2,000</a>.</div>
         </div>
         <button class="btn" onclick="startSession()" id="checkinBtn">Start today's round</button>
+        <button class="btn-quick-round" onclick="startQuickSession()">Only 60 seconds? Quick round (5 words)</button>
     </div>
 
     <div id="gameContainer" class="hidden">
@@ -1424,6 +1484,7 @@
                 <button class="btn" onclick="generateRound()">Another round</button>
                 <button class="btn btn-outline" onclick="openStats()">View progress</button>
             </div>
+            <button class="btn-quick-round" onclick="startQuickSession()">Quick round (5 words)</button>
         </div>
     </div>
 </main>
@@ -1507,18 +1568,44 @@
         </div>
 
         <div class="goal-tracker">
-            <h3>Path to 2,000 mastered words</h3>
-            <p class="goal-sub">The proven threshold for understanding Hawaiian fluently</p>
-            <div class="goal-bar-track">
-                <div class="goal-bar-fill" id="goalBarFill" style="width: 0%;"></div>
+            <h3>Path to mastery</h3>
+            <p class="goal-sub">Two milestones. Essentials first, then full fluency.</p>
+
+            <!-- Essentials bar -->
+            <div class="home-bar" id="statsEssentialsBar" style="margin-bottom: 1rem;">
+                <div class="home-goal-row">
+                    <span class="home-goal-label">Essentials</span>
+                    <span class="home-goal-pct" id="statsEssentialsPct">0%</span>
+                </div>
+                <div class="goal-bar-track">
+                    <div class="goal-bar-fill" id="statsEssentialsFill" style="width: 0%;"></div>
+                </div>
+                <div class="home-bar-foot"><span id="statsEssentialsCount">0</span> of <span id="statsEssentialsTotal">382</span> most useful words mastered</div>
             </div>
-            <div class="goal-bar-row">
-                <span><span id="goalCount">0</span> of 2,000 mastered</span>
-                <span class="goal-pct" id="goalPct">0%</span>
+
+            <!-- Fluency bar -->
+            <div class="home-bar">
+                <div class="home-goal-row">
+                    <span class="home-goal-label">Fluency</span>
+                    <span class="home-goal-pct" id="goalPct">0%</span>
+                </div>
+                <div class="goal-bar-track">
+                    <div class="goal-bar-fill" id="goalBarFill" style="width: 0%;"></div>
+                </div>
+                <div class="goal-bar-row">
+                    <span><span id="goalCount">0</span> of 2,000 mastered</span>
+                </div>
             </div>
+
             <div class="goal-rationale">
-                <strong>Why 2,000?</strong> Linguistic research shows the 2,000 most common words cover roughly <strong>95% of everyday speech and writing</strong> in any language, including Hawaiian. The same core words appear over and over in conversation, mele, moʻolelo, and the news. Master those and you stop translating word by word. You start understanding.
+                <strong>Why 2,000?</strong> Linguistic research shows the 2,000 most common words cover roughly <strong>95% of everyday speech and writing</strong> in any language, including Hawaiian. The same core words appear over and over in conversation, mele, moʻolelo, and the news.
             </div>
+        </div>
+
+        <div class="mastery-section">
+            <h3>Activity, last 90 days</h3>
+            <p style="font-size: 0.85rem; color: var(--ink-muted); margin: -0.5rem 0 0.85rem;">Each square is a day. Darker means more rounds.</p>
+            <div id="heatmapWrap"><div id="heatmap"></div></div>
         </div>
 
         <div class="stats-grid">
@@ -1845,6 +1932,8 @@ let appState = {
     freezesAvailable: 1,    // streak freezes user can spend
     freezesGrantedWeek: null, // YYYY-Www string for tracking weekly free freeze
     lastFreezeUsed: null,   // YYYY-MM-DD when last applied
+    lastStreakWarning: null, // YYYY-MM-DD when last streak-in-danger notif fired
+    dailyHistory: {},       // { 'YYYY-MM-DD': roundsPlayed } for activity heatmap
     progress: {}             // { [id]: { l: level0to5, r: lastRoundSeen, t: timestamp } }
 };
 
@@ -1925,9 +2014,24 @@ function saveStats() {
         dd: appState.dailyXPDate,
         fz: appState.freezesAvailable,
         fw: appState.freezesGrantedWeek,
-        fu: appState.lastFreezeUsed
+        fu: appState.lastFreezeUsed,
+        sw: appState.lastStreakWarning,
+        dh: trimDailyHistory(appState.dailyHistory)
     };
     setStored('hl_stats', JSON.stringify(stats));
+}
+
+// Keep only last 120 days in history to bound storage
+function trimDailyHistory(hist) {
+    if (!hist) return {};
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - 120);
+    const cutoffStr = `${cutoff.getFullYear()}-${String(cutoff.getMonth()+1).padStart(2,'0')}-${String(cutoff.getDate()).padStart(2,'0')}`;
+    const out = {};
+    for (const k in hist) {
+        if (k >= cutoffStr) out[k] = hist[k];
+    }
+    return out;
 }
 
 function saveProgress() {
@@ -1951,6 +2055,8 @@ function loadFromCookies() {
             appState.freezesAvailable = (typeof s.fz === 'number') ? s.fz : 1;
             appState.freezesGrantedWeek = s.fw || null;
             appState.lastFreezeUsed = s.fu || null;
+            appState.lastStreakWarning = s.sw || null;
+            appState.dailyHistory = s.dh || {};
         } catch (e) { /* ignore */ }
     }
     const progRaw = getLargeStored('hl_prog');
@@ -2031,6 +2137,7 @@ async function resetAll() {
         streak: 0, lastPlayedDate: null, totalRounds: 0, totalXP: 0,
         dailyXP: 0, dailyXPDate: todayStr(),
         freezesAvailable: 1, freezesGrantedWeek: null, lastFreezeUsed: null,
+        lastStreakWarning: null, dailyHistory: {},
         progress: {}
     };
     saveStats();
@@ -2164,7 +2271,8 @@ function shuffle(arr) {
 }
 
 // Categorize words and pick a balanced round
-function buildRoundPool() {
+function buildRoundPool(size) {
+    const targetSize = size || ROUND_SIZE;
     const cur = appState.totalRounds;
     const buckets = {
         struggling: [], // level 1-2 due
@@ -2191,8 +2299,16 @@ function buildRoundPool() {
     // common (Tier 2) before less-common (Tier 3). Random within the same tier.
     buckets.new.sort((a, b) => (a.Tier || 3) - (b.Tier || 3));
 
-    // Round composition target: 4 struggling, 2 growing, 1 mastery check, 4 new
-    const target = { struggling: 4, growing: 2, mastered: 1, new: 4 };
+    // Round composition target scales with round size.
+    // Default 11-word round: 4 struggling, 2 growing, 1 mastery check, 4 new.
+    // For shorter rounds, scale down proportionally with rounding.
+    const ratio = targetSize / 11;
+    const target = {
+        struggling: Math.max(1, Math.round(4 * ratio)),
+        growing: Math.max(0, Math.round(2 * ratio)),
+        mastered: Math.max(0, Math.round(1 * ratio)),
+        new: Math.max(1, Math.round(4 * ratio))
+    };
     const selected = [];
     const used = new Set();
 
@@ -2212,10 +2328,10 @@ function buildRoundPool() {
     // Backfill from any remaining bucket
     const fillOrder = ['struggling', 'growing', 'new', 'mastered'];
     let safety = 0;
-    while (selected.length < ROUND_SIZE && safety < 50) {
+    while (selected.length < targetSize && safety < 50) {
         let added = false;
         for (const k of fillOrder) {
-            if (selected.length >= ROUND_SIZE) break;
+            if (selected.length >= targetSize) break;
             if (buckets[k].length > 0) {
                 if (take(k, 1) > 0) added = true;
             }
@@ -2225,10 +2341,10 @@ function buildRoundPool() {
     }
 
     // Last resort: pick any vocabulary word not yet used (still tier-biased)
-    if (selected.length < ROUND_SIZE) {
+    if (selected.length < targetSize) {
         const leftovers = shuffle(vocabulary.filter(w => !used.has(w.ID)));
         leftovers.sort((a, b) => (a.Tier || 3) - (b.Tier || 3));
-        while (selected.length < ROUND_SIZE && leftovers.length > 0) {
+        while (selected.length < targetSize && leftovers.length > 0) {
             selected.push(leftovers.shift());
         }
     }
@@ -2248,12 +2364,12 @@ function tagForWord(w) {
 //  GAME FLOW
 // ==========================================================================
 
-function generateRound() {
+function generateRound(size) {
     document.getElementById('summaryContainer').classList.add('hidden');
     document.getElementById('dailyCheckin').classList.add('hidden');
     document.getElementById('gameContainer').classList.remove('hidden');
 
-    roundWords = buildRoundPool();
+    roundWords = buildRoundPool(size);
     if (roundWords.length === 0) return;
 
     currentWordIndex = 0;
@@ -2268,7 +2384,7 @@ function generateRound() {
     sessionXP = 0;
     resetRoundControls();
 
-    trackEvent('round_start', { round_number: appState.totalRounds + 1 });
+    trackEvent('round_start', { round_number: appState.totalRounds + 1, round_size: roundWords.length });
 
     renderProgressTrack();
     renderWord();
@@ -2592,6 +2708,11 @@ function endRound() {
     appState.totalRounds++;
     const cur = appState.totalRounds;
 
+    // Track per-day round count for the activity heatmap
+    const today = todayStr();
+    appState.dailyHistory = appState.dailyHistory || {};
+    appState.dailyHistory[today] = (appState.dailyHistory[today] || 0) + 1;
+
     // Snapshot pre-round state for milestone detection
     const progBefore = Object.values(appState.progress);
     const masteredBefore = progBefore.filter(p => p.l === 5).length;
@@ -2746,11 +2867,26 @@ function openStats() {
     document.getElementById('statTotalXP').textContent = appState.totalXP;
     document.getElementById('statFreezes').textContent = appState.freezesAvailable || 0;
 
-    // 2,000 word goal
+    // 2,000 word goal (Fluency bar)
     const goalPct = Math.min(100, Math.round((mastered / FLUENCY_GOAL) * 100));
     document.getElementById('goalCount').textContent = mastered;
     document.getElementById('goalPct').textContent = goalPct + '%';
     document.getElementById('goalBarFill').style.width = goalPct + '%';
+
+    // Essentials (Tier 1) bar in stats
+    const tier1Words = vocabulary.filter(w => (w.Tier || 3) === 1);
+    const tier1Total = tier1Words.length || 382;
+    const tier1Ids = new Set(tier1Words.map(w => w.ID));
+    let tier1Mastered = 0;
+    for (const id in appState.progress) {
+        if (tier1Ids.has(parseInt(id, 10)) && appState.progress[id].l === 5) tier1Mastered++;
+    }
+    const essPct = Math.min(100, Math.round((tier1Mastered / tier1Total) * 100));
+    document.getElementById('statsEssentialsFill').style.width = essPct + '%';
+    document.getElementById('statsEssentialsPct').textContent = essPct + '%';
+    document.getElementById('statsEssentialsCount').textContent = tier1Mastered;
+    document.getElementById('statsEssentialsTotal').textContent = tier1Total;
+    document.getElementById('statsEssentialsBar').classList.toggle('complete', tier1Mastered >= tier1Total);
 
     // Mastery breakdown
     const counts = [0, 0, 0, 0, 0, 0]; // levels 0-5
@@ -2779,9 +2915,75 @@ function openStats() {
 
     // Balance by category
     renderBalanceBars();
+    renderHeatmap();
     updateReminderButton();
 
     m.classList.remove('hidden');
+}
+
+function renderHeatmap() {
+    const el = document.getElementById('heatmap');
+    if (!el) return;
+    const today = new Date();
+    // Anchor the grid so today is in the rightmost column.
+    // We'll show ~13 weeks (91 days) plus the partial start week.
+    const totalDays = 91;
+    const cells = [];
+    // Walk back totalDays - 1 from today
+    for (let i = totalDays - 1; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const ymd = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const count = (appState.dailyHistory && appState.dailyHistory[ymd]) || 0;
+        cells.push({ date: ymd, dayOfWeek: d.getDay(), count });
+    }
+    // Pad the start so the first column starts on Sunday (dayOfWeek 0).
+    // Cells render top-to-bottom in each column (Sun..Sat).
+    const firstDow = cells[0].dayOfWeek;
+    const padCells = [];
+    for (let i = 0; i < firstDow; i++) {
+        padCells.push({ pad: true });
+    }
+    const all = [...padCells, ...cells];
+
+    function intensity(c) {
+        if (c >= 6) return 5;
+        if (c >= 4) return 4;
+        if (c >= 3) return 3;
+        if (c >= 2) return 2;
+        if (c >= 1) return 1;
+        return 0;
+    }
+
+    let html = '';
+    all.forEach(cell => {
+        if (cell.pad) {
+            html += `<div class="heat-cell" style="visibility: hidden;"></div>`;
+        } else {
+            const lvl = intensity(cell.count);
+            const tip = `${cell.date}: ${cell.count} round${cell.count === 1 ? '' : 's'}`;
+            html += `<div class="heat-cell h-${lvl}" title="${tip}"></div>`;
+        }
+    });
+    el.innerHTML = html;
+
+    // Legend
+    let legend = el.parentElement.querySelector('.heatmap-legend');
+    if (!legend) {
+        legend = document.createElement('div');
+        legend.className = 'heatmap-legend';
+        legend.innerHTML = `
+            <span>less</span>
+            <div class="heat-cell h-0"></div>
+            <div class="heat-cell h-1"></div>
+            <div class="heat-cell h-2"></div>
+            <div class="heat-cell h-3"></div>
+            <div class="heat-cell h-4"></div>
+            <div class="heat-cell h-5"></div>
+            <span>more</span>
+        `;
+        el.parentElement.appendChild(legend);
+    }
 }
 
 function renderBalanceBars() {
@@ -2962,6 +3164,7 @@ function showCheckin() {
 }
 
 function startSession() { generateRound(); }
+function startQuickSession() { generateRound(5); }
 
 // ==========================================================================
 //  INIT
@@ -3320,12 +3523,14 @@ function extractStats() {
         dd: appState.dailyXPDate,
         fz: appState.freezesAvailable,
         fw: appState.freezesGrantedWeek,
-        fu: appState.lastFreezeUsed
+        fu: appState.lastFreezeUsed,
+        sw: appState.lastStreakWarning,
+        dh: trimDailyHistory(appState.dailyHistory)
     };
 }
 
 function emptyStats() {
-    return { s: 0, lp: null, tr: 0, tx: 0, dx: 0, dd: null, fz: 0, fw: null, fu: null };
+    return { s: 0, lp: null, tr: 0, tx: 0, dx: 0, dd: null, fz: 0, fw: null, fu: null, sw: null, dh: {} };
 }
 
 // ==========================================================================
@@ -3363,6 +3568,18 @@ function mergeStates(local, remote) {
     out.stats.fz = Math.max(ls.fz || 0, rs.fz || 0);
     out.stats.fw = (ls.fw && (!rs.fw || ls.fw > rs.fw)) ? ls.fw : (rs.fw || null);
     out.stats.fu = (ls.fu && (!rs.fu || ls.fu > rs.fu)) ? ls.fu : (rs.fu || null);
+    out.stats.sw = (ls.sw && (!rs.sw || ls.sw > rs.sw)) ? ls.sw : (rs.sw || null);
+    // Daily history: per-date max (avoids double-count if both devices played same day)
+    out.stats.dh = mergeDailyHistory(ls.dh, rs.dh);
+    return out;
+}
+
+function mergeDailyHistory(a, b) {
+    const out = {};
+    const keys = new Set([...Object.keys(a || {}), ...Object.keys(b || {})]);
+    keys.forEach(k => {
+        out[k] = Math.max((a && a[k]) || 0, (b && b[k]) || 0);
+    });
     return out;
 }
 
@@ -3393,6 +3610,8 @@ function applyMergedState(merged) {
         if (typeof merged.stats.fz === 'number') appState.freezesAvailable = merged.stats.fz;
         if (merged.stats.fw) appState.freezesGrantedWeek = merged.stats.fw;
         if (merged.stats.fu) appState.lastFreezeUsed = merged.stats.fu;
+        if (merged.stats.sw) appState.lastStreakWarning = merged.stats.sw;
+        if (merged.stats.dh) appState.dailyHistory = merged.stats.dh;
     }
     saveProgress();
     saveStats();
@@ -3509,7 +3728,40 @@ window.addEventListener('load', () => {
             localStorage.setItem('hl_last_reminder', today);
         } catch (e) {}
     }, 3000);
+
+    // Streak-in-danger check, runs on load and every 30 minutes after.
+    setTimeout(checkStreakInDanger, 5000);
+    setInterval(checkStreakInDanger, 30 * 60 * 1000);
 });
+
+// Fires one notification if:
+// - User has a streak >= 10 days
+// - It is after 8 PM local time
+// - User hasn't played today
+// - Notification permission is granted
+// - We haven't already fired this warning today (synced via Supabase)
+const STREAK_DANGER_MIN = 10;
+function checkStreakInDanger() {
+    try {
+        if (!('Notification' in window) || Notification.permission !== 'granted') return;
+        if (!appState.streak || appState.streak < STREAK_DANGER_MIN) return;
+        const today = todayStr();
+        if (appState.lastPlayedDate === today) return; // already played
+        if (appState.lastStreakWarning === today) return; // already warned today
+        const hour = new Date().getHours();
+        if (hour < 20) return; // wait until 8 PM local
+        // Hours remaining in their local day
+        const remaining = Math.max(1, 24 - hour);
+        new Notification('Your streak is on the line', {
+            body: `Your ${appState.streak}-day streak ends in about ${remaining} hour${remaining === 1 ? '' : 's'}. Quick round keeps it alive.`,
+            icon: 'icon-192.png',
+            tag: 'streak-danger'
+        });
+        appState.lastStreakWarning = today;
+        saveStats();
+        trackEvent('streak_danger_notified', { streak_days: appState.streak });
+    } catch (e) {}
+}
 
 window.addEventListener('load', init);
 </script>
