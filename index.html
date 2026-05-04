@@ -2222,20 +2222,9 @@ function validateStreakWithFreeze() {
     return false;
 }
 
-async function resetAll() {
-    // Clear local
-    clearStored('hl_stats');
-    clearStored('hl_prog');
-    try { localStorage.removeItem('hl_migrated'); } catch (e) {}
-
-    // Clear cloud row if signed in (so reload doesn't restore old state)
-    if (sb && currentUser) {
-        try {
-            await sb.from('progress').delete().eq('user_id', currentUser.id);
-        } catch (e) { console.warn('Cloud reset failed', e); }
-        try { await sb.auth.signOut(); } catch (e) {}
-    }
-
+function resetAll() {
+    // 1) Reset in-memory state IMMEDIATELY so any UI that runs after this
+    //    sees the fresh empty state, not the old one.
     appState = {
         streak: 0, lastPlayedDate: null, totalRounds: 0, totalXP: 0,
         dailyXP: 0, dailyXPDate: todayStr(),
@@ -2243,8 +2232,24 @@ async function resetAll() {
         lastStreakWarning: null, dailyHistory: {},
         progress: {}
     };
-    saveStats();
-    saveProgress();
+
+    // 2) Clear local storage and cookie fallback synchronously.
+    try { localStorage.removeItem('hl_stats'); } catch (e) {}
+    try { localStorage.removeItem('hl_prog'); } catch (e) {}
+    try { localStorage.removeItem('hl_last_reminder'); } catch (e) {}
+    // Keep hl_migrated set so the migration won't pull back any leftover
+    // cookies on next load. Keep hl_theme so dark mode preference survives.
+    clearCookieValue('hl_stats');
+    clearCookieValue('hl_prog');
+
+    // 3) Cloud cleanup, fire-and-forget (we don't block the UI on network).
+    if (sb && currentUser) {
+        const userId = currentUser.id;
+        sb.from('progress').delete().eq('user_id', userId)
+            .then(() => sb.auth.signOut())
+            .catch(e => console.warn('Cloud reset error', e));
+    }
+
     showToast('Reset complete. Fresh start.', 'success', 3500);
 }
 
