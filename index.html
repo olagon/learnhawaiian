@@ -2293,26 +2293,132 @@ function levenshtein(a, b) {
     return dp[b.length];
 }
 
-// Build alternative valid forms of an answer
+// ==========================================================================
+//  ANSWER MATCHING ENGINE  (very forgiving, prioritizes intent over exactness)
+// ==========================================================================
+
+// Common English stop words ignored when comparing as token sets
+const STOP_WORDS = new Set([
+    'a','an','the','of','in','on','at','to','for','from','with','by','as','about',
+    'and','or','but','if','than','then','so',
+    'is','are','was','were','be','been','being','am',
+    'have','has','had','having',
+    'do','does','did','doing',
+    'will','would','could','should','may','might','must','shall','can','cant',
+    'i','you','he','she','it','we','they','me','him','her','us','them',
+    'my','your','his','its','our','their','mine','yours','hers','ours','theirs',
+    'this','that','these','those',
+    'not','no'
+]);
+
+// Common English contractions expanded to canonical forms
+const CONTRACTIONS = {
+    "im": "i am", "ive": "i have", "ill": "i will", "id": "i would",
+    "youre": "you are", "youve": "you have", "youll": "you will", "youd": "you would",
+    "hes": "he is", "shes": "she is", "its": "it is",
+    "were": "we are", "weve": "we have", "well": "we will", "wed": "we would",
+    "theyre": "they are", "theyve": "they have", "theyll": "they will", "theyd": "they would",
+    "dont": "do not", "doesnt": "does not", "didnt": "did not",
+    "wont": "will not", "wouldnt": "would not", "shouldnt": "should not", "couldnt": "could not",
+    "isnt": "is not", "arent": "are not", "wasnt": "was not", "werent": "were not",
+    "hasnt": "has not", "havent": "have not", "hadnt": "had not",
+    "cant": "can not", "cannot": "can not",
+    "lets": "let us", "thats": "that is", "whats": "what is", "wheres": "where is", "whos": "who is", "hows": "how is"
+};
+
+function expandContractions(s) {
+    return s.split(' ').map(w => CONTRACTIONS[w] || w).join(' ');
+}
+
+// Very simple stemmer for English plurals and basic verb forms
+function simpleStem(word) {
+    if (word.length <= 3) return word;
+    if (word.endsWith('ies') && word.length > 4) return word.slice(0, -3) + 'y';
+    if (word.endsWith('sses')) return word.slice(0, -2);
+    if (word.endsWith('ing') && word.length > 5) {
+        let stem = word.slice(0, -3);
+        // Strip doubled consonant from -ing forms: 'running' -> 'runn' -> 'run'
+        if (stem.length >= 2 && stem[stem.length-1] === stem[stem.length-2] && !'aeiou'.includes(stem[stem.length-1])) {
+            stem = stem.slice(0, -1);
+        }
+        return stem;
+    }
+    if (word.endsWith('edly')) return word.slice(0, -4);
+    if (word.endsWith('ed') && word.length > 4) {
+        let stem = word.slice(0, -2);
+        if (stem.length >= 2 && stem[stem.length-1] === stem[stem.length-2] && !'aeiou'.includes(stem[stem.length-1])) {
+            stem = stem.slice(0, -1);
+        }
+        return stem;
+    }
+    if (word.endsWith('es') && word.length > 4) {
+        // For 'houses' -> 'house' (strip just s) instead of 'hous'
+        const minusS = word.slice(0, -1);
+        if (minusS.endsWith('e')) return minusS;
+        return word.slice(0, -2);
+    }
+    if (word.endsWith('s') && word.length > 3) return word.slice(0, -1);
+    return word;
+}
+
+function contentTokens(s) {
+    const expanded = expandContractions(normalize(s));
+    return expanded.split(' ')
+        .filter(t => t && !STOP_WORDS.has(t))
+        .map(simpleStem);
+}
+
+// Token sets match if one is fully contained in the other (after stemming + stop word removal)
+function tokenSetMatch(a, b) {
+    const ta = contentTokens(a);
+    const tb = contentTokens(b);
+    if (ta.length === 0 || tb.length === 0) return false;
+    const setA = new Set(ta);
+    const setB = new Set(tb);
+    const aInB = [...setA].every(t => setB.has(t));
+    const bInA = [...setB].every(t => setA.has(t));
+    return aInB || bInA;
+}
+
+// Token sets are "close" if at least 75% of either side's content tokens overlap
+function tokenSetClose(a, b) {
+    const ta = contentTokens(a);
+    const tb = contentTokens(b);
+    if (ta.length === 0 || tb.length === 0) return false;
+    const setA = new Set(ta);
+    const setB = new Set(tb);
+    let overlap = 0;
+    setA.forEach(t => { if (setB.has(t)) overlap++; });
+    const minSize = Math.min(setA.size, setB.size);
+    return overlap / minSize >= 0.75;
+}
+
+// Build all the alternate valid forms of an answer
 function expandEnglishAnswers(english) {
     const variants = new Set();
-    english.split('/').forEach(seg => {
+    // Split on both / and ; (some answers use semicolons)
+    const segments = english.split(/[\/;]/);
+    segments.forEach(seg => {
         const trimmed = seg.trim();
+        if (!trimmed) return;
         variants.add(trimmed);
-        // strip parentheticals
+        // Strip parentheticals
         const noParen = trimmed.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
         if (noParen) variants.add(noParen);
-        // drop leading articles for noun-style answers
+        // Drop leading articles or "to" (verbs)
         const noArticle = noParen.replace(/^(a |an |the |to )/i, '').trim();
         if (noArticle) variants.add(noArticle);
+        // For comma-separated lists inside a segment, each part is its own variant
+        noParen.split(',').forEach(p => { const t = p.trim(); if (t) variants.add(t); });
     });
     return [...variants].map(v => normalize(v)).filter(Boolean);
 }
 
 function expandHawaiianAnswers(hawaiian) {
     const variants = new Set();
-    hawaiian.split('/').forEach(seg => {
+    hawaiian.split(/[\/;]/).forEach(seg => {
         const trimmed = seg.trim();
+        if (!trimmed) return;
         variants.add(trimmed);
         const noParen = trimmed.replace(/\s*\([^)]*\)\s*/g, ' ').replace(/\s+/g, ' ').trim();
         if (noParen) variants.add(noParen);
@@ -2320,28 +2426,34 @@ function expandHawaiianAnswers(hawaiian) {
     return [...variants].map(v => normalize(v)).filter(Boolean);
 }
 
-// Tolerance scales with length
+// Generous Levenshtein tolerance — accepts more typos than before
 function exactTolerance(len) {
     if (len <= 3) return 0;
-    if (len <= 6) return 1;
-    if (len <= 10) return 2;
-    if (len <= 15) return 3;
-    return Math.floor(len / 5);
+    if (len <= 5) return 1;
+    if (len <= 9) return 2;
+    if (len <= 14) return 3;
+    return Math.floor(len / 4);
 }
 
 function closeTolerance(len) {
-    if (len <= 3) return 0; // very short words must be exact
-    return exactTolerance(len) + Math.max(1, Math.floor(len / 8));
+    if (len <= 3) return 0;
+    return exactTolerance(len) + Math.max(1, Math.floor(len / 6));
 }
 
-// Returns: { status: 'correct' | 'close' | 'wrong', distance, matchedVariant }
-function fuzzyCheck(input, validForms) {
+// fuzzyCheck returns: { status: 'correct' | 'close' | 'wrong', distance, matchedVariant }
+// 'close' is now treated as accepted (full credit) by checkAnswer, with friendly note.
+function fuzzyCheck(input, validForms, originalAnswer) {
     const inN = normalize(input);
     if (!inN) return { status: 'wrong', distance: Infinity };
 
     let best = { status: 'wrong', distance: Infinity, matchedVariant: null };
+    const inputForTokens = input;
 
+    // Pass 1: exact + Levenshtein on each form
     for (const form of validForms) {
+        if (inN === form) {
+            return { status: 'correct', distance: 0, matchedVariant: form };
+        }
         const dist = levenshtein(inN, form);
         if (dist < best.distance) {
             best.distance = dist;
@@ -2353,6 +2465,30 @@ function fuzzyCheck(input, validForms) {
         }
     }
 
+    // Pass 2: token-set match against the ORIGINAL answer string
+    // (handles word order differences, missing/added articles, contractions, plurals)
+    if (originalAnswer && tokenSetMatch(inputForTokens, originalAnswer)) {
+        return { status: 'correct', distance: 0, matchedVariant: best.matchedVariant || normalize(originalAnswer) };
+    }
+
+    // Pass 3: token-set match against each variant
+    for (const form of validForms) {
+        if (tokenSetMatch(inputForTokens, form)) {
+            return { status: 'correct', distance: 0, matchedVariant: form };
+        }
+    }
+
+    // Pass 4: token-set CLOSE match (75% overlap)
+    if (originalAnswer && tokenSetClose(inputForTokens, originalAnswer)) {
+        return { status: 'close', distance: best.distance, matchedVariant: best.matchedVariant || normalize(originalAnswer) };
+    }
+    for (const form of validForms) {
+        if (tokenSetClose(inputForTokens, form)) {
+            return { status: 'close', distance: best.distance, matchedVariant: form };
+        }
+    }
+
+    // Pass 5: Levenshtein close tolerance
     if (best.distance !== Infinity) {
         const refLen = Math.max(best.matchedVariant.length, inN.length);
         if (best.distance <= closeTolerance(refLen)) {
@@ -2567,21 +2703,23 @@ function checkAnswer() {
     if (!input) return;
 
     const w = roundWords[currentWordIndex];
+    const correctAnswerOriginal = isPhase2 ? w.Hawaiian : w.English;
     const validForms = isPhase2 ? expandHawaiianAnswers(w.Hawaiian) : expandEnglishAnswers(w.English);
-    const result = fuzzyCheck(input, validForms);
+    const result = fuzzyCheck(input, validForms, correctAnswerOriginal);
 
     inputDisabled = true;
     answerChecked = true;
     const inputEl = document.getElementById('answerInput');
     inputEl.disabled = true;
-    inputEl.className = result.status;
+    // 'close' now also visually shows as correct since we accept it
+    inputEl.className = (result.status === 'close') ? 'correct' : result.status;
 
-    const correctAnswer = isPhase2 ? w.Hawaiian : w.English;
+    const correctAnswer = correctAnswerOriginal;
     const fb = document.getElementById('feedback');
 
     let xpEarned = 0;
 
-    if (result.status === 'correct') {
+    if (result.status === 'correct' || result.status === 'close') {
         xpEarned = XP_PER_CORRECT;
         sessionXP += xpEarned;
         addDailyXP(xpEarned);
@@ -2589,13 +2727,12 @@ function checkAnswer() {
         if (!isPhase2) roundResults[currentWordIndex].correctP1 = true;
         else roundResults[currentWordIndex].correctP2 = true;
 
-        const ex = result.distance > 0 ? `<span class="feedback-sub">Accepted close to <strong>${escapeHtml(correctAnswer)}</strong></span>` : `<span class="feedback-sub"><strong>${escapeHtml(correctAnswer)}</strong></span>`;
+        const isClose = result.status === 'close' || result.distance > 0;
+        const ex = isClose
+            ? `<span class="feedback-sub">Accepted. The full answer is <strong>${escapeHtml(correctAnswer)}</strong></span>`
+            : `<span class="feedback-sub"><strong>${escapeHtml(correctAnswer)}</strong></span>`;
         fb.innerHTML = `<span class="feedback-main">Pololei <span class="xp-pop">+${xpEarned} XP</span></span>${ex}`;
         fb.className = 'feedback correct visible';
-    } else if (result.status === 'close') {
-        // Mark wrong but show close note
-        fb.innerHTML = `<span class="feedback-main">Kokoke loa, very close</span><span class="feedback-sub">Answer: <strong>${escapeHtml(correctAnswer)}</strong></span>`;
-        fb.className = 'feedback close visible';
     } else {
         fb.innerHTML = `<span class="feedback-main">ʻAʻole pololei</span><span class="feedback-sub">Answer: <strong>${escapeHtml(correctAnswer)}</strong></span>`;
         fb.className = 'feedback wrong visible';
