@@ -588,6 +588,27 @@
             .feedback-answer { font-size: 1.55rem; }
         }
 
+        .dispute-link {
+            background: transparent;
+            border: none;
+            color: var(--ink-soft);
+            font-size: 0.78rem;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+            padding: 0.4rem 0.6rem;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            transition: color 0.15s;
+        }
+        .dispute-link:hover { color: var(--ink); }
+        .dispute-link:disabled {
+            color: var(--ink-muted);
+            text-decoration: none;
+            cursor: default;
+            opacity: 0.7;
+        }
+
         .feedback.correct {
             background: var(--success-soft);
             border-color: var(--success);
@@ -2493,7 +2514,48 @@ const SYNONYM_GROUPS = [
     ['kind','gentle','compassionate'],
     ['brave','courageous'],
     ['strong','powerful','mighty'],
-    ['weak','feeble']
+    ['weak','feeble'],
+    // Mined from data.js — pairs that co-occur in slash-grouped translations
+    ['above','top','overhead'],
+    ['below','underneath','beneath'],
+    ['period','era','epoch','age'],
+    ['season','period'],
+    ['guest','visitor'],
+    ['road','street','avenue'],
+    ['marlin','swordfish','billfish'],
+    ['jail','prison','penitentiary'],
+    ['clinic','hospital','infirmary'],
+    ['channel','strait','passage'],
+    ['anxiety','worry','unease'],
+    ['nation','people','populace'],
+    ['alert','warn','notify'],
+    ['bless','congratulate'],
+    ['spacious','wide','broad','open'],
+    ['sightseeing','tour','tourism'],
+    ['gentle','soft','mild','tender'],
+    ['compassion','love','affection'],
+    ['stranger','foreigner','outsider'],
+    ['heritage','legacy','inheritance'],
+    ['proverb','saying'],
+    ['idiom','expression','saying'],
+    ['journey','trip','voyage','travel'],
+    ['meal','dinner','lunch','breakfast','food'],
+    ['shore','coast','beach'],
+    ['glance','look','glimpse'],
+    ['dance','hula'],
+    ['song','tune','melody'],
+    ['game','play'],
+    ['answer','reply','response'],
+    ['question','query'],
+    ['gift','present'],
+    ['way','path','route','road'],
+    ['choose','pick','select'],
+    ['cure','heal','treat'],
+    ['kill','slay','murder'],
+    ['fight','battle','combat'],
+    ['cry','weep','sob'],
+    ['shout','yell','scream','holler'],
+    ['boss','manager','leader','chief']
 ];
 const SYNONYM_MAP = {};
 SYNONYM_GROUPS.forEach(group => {
@@ -2957,7 +3019,15 @@ function checkAnswer() {
         fb.innerHTML = `<span class="feedback-main">Correct &middot; Pololei <span class="xp-pop">+${xpEarned} XP</span></span>${acceptedNote}`;
         fb.className = 'feedback correct visible';
     } else {
-        fb.innerHTML = `<span class="feedback-main">Incorrect &middot; ʻAʻole pololei</span><span class="feedback-sub">The answer is:</span><span class="feedback-answer">${escapeHtml(correctAnswer)}</span>`;
+        const userInput = input || '(no answer)';
+        const phaseLabel = isPhase2 ? 'en->haw' : 'haw->en';
+        const userInputAttr = escapeHtml(userInput).replace(/'/g, '&#39;');
+        const correctAnswerAttr = escapeHtml(correctAnswer).replace(/'/g, '&#39;');
+        const hawaiianAttr = escapeHtml(w.Hawaiian).replace(/'/g, '&#39;');
+        fb.innerHTML = `<span class="feedback-main">Incorrect &middot; ʻAʻole pololei</span>` +
+            `<span class="feedback-sub">The answer is:</span>` +
+            `<span class="feedback-answer">${escapeHtml(correctAnswer)}</span>` +
+            `<button type="button" class="dispute-link" onclick="disputeAnswer(this, '${userInputAttr}', '${correctAnswerAttr}', '${hawaiianAttr}', '${phaseLabel}')">Was my answer actually right?</button>`;
         fb.className = 'feedback wrong visible';
     }
 
@@ -2971,6 +3041,20 @@ function checkAnswer() {
     const showBtn = document.getElementById('showAnswerBtn');
     if (skipBtn) skipBtn.disabled = true;
     if (showBtn) showBtn.disabled = true;
+}
+
+// Fired when user clicks "Was my answer actually right?" on a wrong feedback.
+// Sends a GA event so we can review and grow the synonym list from real disputes.
+function disputeAnswer(btn, userInput, canonical, hawaiian, direction) {
+    trackEvent('answer_disputed', {
+        user_input: userInput.slice(0, 100),
+        canonical: canonical.slice(0, 100),
+        hawaiian: hawaiian.slice(0, 100),
+        direction: direction
+    });
+    btn.disabled = true;
+    btn.textContent = 'Thanks, we will review';
+    showToast('Thanks. We review these and update the matcher.', 'success', 3500);
 }
 
 function escapeHtml(s) {
