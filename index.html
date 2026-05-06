@@ -2260,9 +2260,16 @@ function resetAll() {
 function normalize(str) {
     return str
         .toLowerCase()
-        .replace(/[ʻ'`'ʼ]/g, '')
+        // Strip ʻokina variants (proper okina, straight apostrophe, backtick,
+        // curly right single quote, modifier letter apostrophe, curly left, low-9)
+        .replace(/[ʻ'`’ʼ‘‛]/g, '')
+        // Strip kahakō and other combining diacritics
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-        .replace(/[.,!?;:]/g, '')
+        // Convert ASCII punctuation, brackets, dashes, quotes, slashes to spaces
+        .replace(/[.,!?;:"()\[\]{}\-_\/\\]/g, ' ')
+        // Convert curly quotes, dashes, fullwidth marks to spaces
+        .replace(/[“”„«»‚–—…¿¡？！]/g, ' ')
+        // Collapse whitespace
         .replace(/\s+/g, ' ')
         .trim();
 }
