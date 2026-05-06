@@ -2397,6 +2397,113 @@ function expandContractions(s) {
     return s.split(' ').map(w => CONTRACTIONS[w] || w).join(' ');
 }
 
+// Synonym groups — first word in each group is the canonical form.
+// Conservative list focused on common Hawaiian translation contexts.
+const SYNONYM_GROUPS = [
+    // Wellbeing / states
+    ['good','fine','well','alright','ok','okay','nice'],
+    ['great','excellent','wonderful','awesome','fantastic','amazing'],
+    ['happy','glad','joyful','cheerful','pleased'],
+    ['sad','unhappy','sorrowful','down'],
+    ['angry','mad','furious'],
+    ['tired','exhausted','weary'],
+    ['hungry','starved','starving'],
+    ['thirsty','parched'],
+    ['sick','ill','unwell'],
+    ['scared','afraid','frightened','fearful'],
+    ['pleasant','pleasing','agreeable','enjoyable'],
+    // Sizes
+    ['big','large','huge','great'],
+    ['small','little','tiny','wee'],
+    ['tall','high'],
+    // Speeds
+    ['fast','quick','rapid','swift','speedy'],
+    ['slow','sluggish'],
+    // Beauty
+    ['beautiful','pretty','lovely','gorgeous','attractive'],
+    ['ugly','unattractive','hideous'],
+    // Intelligence
+    ['smart','clever','intelligent','bright'],
+    ['stupid','dumb','foolish'],
+    // Family
+    ['mother','mom','mama','mommy'],
+    ['father','dad','papa','daddy'],
+    ['child','kid'],
+    ['family','relatives','kin','kinfolk'],
+    ['friend','pal','buddy'],
+    // Communication
+    ['hello','hi','hey','greetings','aloha'],
+    ['goodbye','bye','farewell'],
+    ['thanks','mahalo'],
+    ['yes','yeah','yep'],
+    ['no','nope'],
+    // Common nouns
+    ['food','meal','sustenance','nourishment'],
+    ['water','wai'],
+    ['house','home','dwelling','residence'],
+    ['car','vehicle','automobile','auto'],
+    ['boat','vessel','craft'],
+    ['street','road','avenue','path','way'],
+    ['ocean','sea'],
+    ['mountain','peak'],
+    ['forest','woods','jungle'],
+    // Verbs
+    ['speak','talk','say','tell'],
+    ['look','see','watch','view'],
+    ['hear','listen'],
+    ['walk','stroll'],
+    ['run','jog','sprint'],
+    ['eat','consume'],
+    ['drink','sip'],
+    ['sleep','rest','slumber','doze'],
+    ['work','labor','toil'],
+    ['play'],
+    ['help','assist','aid'],
+    ['love','adore','cherish'],
+    ['like','enjoy','fancy'],
+    ['want','desire','wish'],
+    ['need','require'],
+    ['know','understand'],
+    ['think','believe','reckon'],
+    ['begin','start','commence'],
+    ['end','finish','complete','conclude'],
+    ['stop','cease','halt'],
+    ['go','leave','depart'],
+    ['come','arrive'],
+    ['make','create','build','construct','form'],
+    ['get','obtain','acquire','receive'],
+    ['give','offer','provide','grant'],
+    ['take','grab','seize'],
+    ['put','place','set'],
+    ['find','discover','locate'],
+    // Time
+    ['now','currently'],
+    ['then','afterwards','later'],
+    ['always','forever'],
+    ['never'],
+    // Common adjectives
+    ['old','aged','ancient','elderly'],
+    ['new','fresh','recent','novel'],
+    ['young','youthful','juvenile'],
+    ['hot','warm'],
+    ['cold','cool','chilly'],
+    ['easy','simple'],
+    ['hard','difficult','tough'],
+    ['important','crucial','vital','essential'],
+    ['kind','gentle','compassionate'],
+    ['brave','courageous'],
+    ['strong','powerful','mighty'],
+    ['weak','feeble']
+];
+const SYNONYM_MAP = {};
+SYNONYM_GROUPS.forEach(group => {
+    const canonical = group[0];
+    group.forEach(w => { SYNONYM_MAP[w] = canonical; });
+});
+function canonicalize(word) {
+    return SYNONYM_MAP[word] || word;
+}
+
 // Very simple stemmer for English plurals and basic verb forms
 function simpleStem(word) {
     if (word.length <= 3) return word;
@@ -2432,7 +2539,8 @@ function contentTokens(s) {
     const expanded = expandContractions(normalize(s));
     return expanded.split(' ')
         .filter(t => t && !STOP_WORDS.has(t))
-        .map(simpleStem);
+        .map(simpleStem)
+        .map(canonicalize);
 }
 
 // Token sets match if one is fully contained in the other (after stemming + stop word removal)
