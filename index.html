@@ -3027,7 +3027,7 @@ function checkAnswer() {
         fb.innerHTML = `<span class="feedback-main">Incorrect &middot; ʻAʻole pololei</span>` +
             `<span class="feedback-sub">The answer is:</span>` +
             `<span class="feedback-answer">${escapeHtml(correctAnswer)}</span>` +
-            `<button type="button" class="dispute-link" onclick="disputeAnswer(this, '${userInputAttr}', '${correctAnswerAttr}', '${hawaiianAttr}', '${phaseLabel}')">Was my answer actually right?</button>`;
+            `<button type="button" class="dispute-link" onclick="disputeAnswer(this, '${userInputAttr}', '${correctAnswerAttr}', '${hawaiianAttr}', '${phaseLabel}')">I think my answer was right &middot; please review</button>`;
         fb.className = 'feedback wrong visible';
     }
 
@@ -3053,8 +3053,8 @@ function disputeAnswer(btn, userInput, canonical, hawaiian, direction) {
         direction: direction
     });
     btn.disabled = true;
-    btn.textContent = 'Thanks, we will review';
-    showToast('Thanks. We review these and update the matcher.', 'success', 3500);
+    btn.textContent = 'Sent for review · mahalo';
+    showToast('Mahalo. Olin will review and update the matcher.', 'success', 3500);
 }
 
 function escapeHtml(s) {
