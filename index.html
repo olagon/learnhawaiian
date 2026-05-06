@@ -2414,6 +2414,36 @@ function expandEnglishAnswers(english) {
     return [...variants].map(v => normalize(v)).filter(Boolean);
 }
 
+// Collect every English translation across the dataset for a given Hawaiian form.
+// Handles homonyms like "Wai" which can mean both "Who" and "Fresh water".
+function collectAllEnglishFormsFor(hawaiian) {
+    const target = hawaiian.toLowerCase();
+    const allForms = new Set();
+    for (const w of vocabulary) {
+        if (w.Hawaiian.toLowerCase() === target) {
+            expandEnglishAnswers(w.English).forEach(f => allForms.add(f));
+        }
+    }
+    return [...allForms];
+}
+
+// Collect every Hawaiian form across the dataset whose English includes the given meaning.
+function collectAllHawaiianFormsFor(english) {
+    const allForms = new Set();
+    // Always include the original entry's Hawaiian (handled below by exact match too)
+    const targetSegments = english.toLowerCase().split('/').map(s => s.trim()).filter(Boolean);
+    for (const w of vocabulary) {
+        const wSegments = w.English.toLowerCase().split('/').map(s => s.trim());
+        // If any segment of this entry's English matches any segment of the target English,
+        // accept this entry's Hawaiian as a valid answer.
+        const overlap = targetSegments.some(t => wSegments.includes(t));
+        if (overlap) {
+            expandHawaiianAnswers(w.Hawaiian).forEach(f => allForms.add(f));
+        }
+    }
+    return [...allForms];
+}
+
 function expandHawaiianAnswers(hawaiian) {
     const variants = new Set();
     hawaiian.split(/[\/;]/).forEach(seg => {
@@ -2704,7 +2734,18 @@ function checkAnswer() {
 
     const w = roundWords[currentWordIndex];
     const correctAnswerOriginal = isPhase2 ? w.Hawaiian : w.English;
-    const validForms = isPhase2 ? expandHawaiianAnswers(w.Hawaiian) : expandEnglishAnswers(w.English);
+
+    // Collect ALL valid translations across the entire vocabulary for this word
+    // so homonyms like "Wai" (Who, Fresh water) accept either meaning.
+    let validForms;
+    if (isPhase2) {
+        // English -> Hawaiian: accept any Hawaiian form that maps to this English meaning
+        validForms = collectAllHawaiianFormsFor(w.English);
+    } else {
+        // Hawaiian -> English: accept any English meaning of this Hawaiian word
+        validForms = collectAllEnglishFormsFor(w.Hawaiian);
+    }
+
     const result = fuzzyCheck(input, validForms, correctAnswerOriginal);
 
     inputDisabled = true;
