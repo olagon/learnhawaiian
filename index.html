@@ -572,10 +572,21 @@
             line-height: 1;
         }
         .feedback-sub {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: var(--ink-soft);
         }
         .feedback-sub strong { color: var(--ink); font-weight: 700; }
+        .feedback-answer {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 1.4rem;
+            color: var(--ink);
+            line-height: 1.3;
+            margin-top: 0.15rem;
+        }
+        @media (max-width: 600px) {
+            .feedback-answer { font-size: 1.55rem; }
+        }
 
         .feedback.correct {
             background: var(--success-soft);
@@ -2763,6 +2774,7 @@ function renderWord() {
     inputEl.value = '';
     inputEl.disabled = false;
     inputEl.className = '';
+    inputEl.placeholder = 'Type your answer';
     inputDisabled = false;
     answerChecked = false;
 
@@ -2831,13 +2843,13 @@ function checkAnswer() {
         else roundResults[currentWordIndex].correctP2 = true;
 
         const isClose = result.status === 'close' || result.distance > 0;
-        const ex = isClose
-            ? `<span class="feedback-sub">Accepted. The full answer is <strong>${escapeHtml(correctAnswer)}</strong></span>`
-            : `<span class="feedback-sub"><strong>${escapeHtml(correctAnswer)}</strong></span>`;
-        fb.innerHTML = `<span class="feedback-main">Pololei <span class="xp-pop">+${xpEarned} XP</span></span>${ex}`;
+        const acceptedNote = isClose
+            ? `<span class="feedback-sub">Accepted close to:</span><span class="feedback-answer">${escapeHtml(correctAnswer)}</span>`
+            : `<span class="feedback-answer">${escapeHtml(correctAnswer)}</span>`;
+        fb.innerHTML = `<span class="feedback-main">Correct &middot; Pololei <span class="xp-pop">+${xpEarned} XP</span></span>${acceptedNote}`;
         fb.className = 'feedback correct visible';
     } else {
-        fb.innerHTML = `<span class="feedback-main">ʻAʻole pololei</span><span class="feedback-sub">Answer: <strong>${escapeHtml(correctAnswer)}</strong></span>`;
+        fb.innerHTML = `<span class="feedback-main">Incorrect &middot; ʻAʻole pololei</span><span class="feedback-sub">The answer is:</span><span class="feedback-answer">${escapeHtml(correctAnswer)}</span>`;
         fb.className = 'feedback wrong visible';
     }
 
@@ -2921,9 +2933,11 @@ function showAnswer() {
     const inputEl = document.getElementById('answerInput');
     inputEl.disabled = true;
     inputEl.className = 'wrong';
+    // Replace placeholder with explicit "(no answer)" so the empty input isn't confusing
     inputEl.value = '';
+    inputEl.placeholder = '(no answer submitted)';
     const fb = document.getElementById('feedback');
-    fb.innerHTML = `<span class="feedback-main">Answer revealed</span><span class="feedback-sub">${escapeHtml(correctAnswer)}</span>`;
+    fb.innerHTML = `<span class="feedback-main">Incorrect &middot; ʻAʻole pololei</span><span class="feedback-sub">The answer is:</span><span class="feedback-answer">${escapeHtml(correctAnswer)}</span>`;
     fb.className = 'feedback wrong visible';
     // Counts as wrong for this phase
     if (!isPhase2) roundResults[currentWordIndex].correctP1 = false;
