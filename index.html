@@ -602,11 +602,19 @@
             transition: color 0.15s;
         }
         .dispute-link:hover { color: var(--ink); }
+        .dispute-link.armed {
+            color: var(--accent);
+            background: var(--accent-soft);
+            font-weight: 600;
+            text-decoration: none;
+        }
         .dispute-link:disabled {
             color: var(--ink-muted);
+            background: transparent;
             text-decoration: none;
             cursor: default;
             opacity: 0.7;
+            font-weight: 500;
         }
 
         .feedback.correct {
@@ -3027,7 +3035,7 @@ function checkAnswer() {
         fb.innerHTML = `<span class="feedback-main">Incorrect &middot; ʻAʻole pololei</span>` +
             `<span class="feedback-sub">The answer is:</span>` +
             `<span class="feedback-answer">${escapeHtml(correctAnswer)}</span>` +
-            `<button type="button" class="dispute-link" onclick="disputeAnswer(this, '${userInputAttr}', '${correctAnswerAttr}', '${hawaiianAttr}', '${phaseLabel}')">I think my answer was right &middot; please review</button>`;
+            `<button type="button" class="dispute-link" data-armed="0" onclick="disputeAnswer(this, '${userInputAttr}', '${correctAnswerAttr}', '${hawaiianAttr}', '${phaseLabel}')">I think my answer was right. Flag for review.</button>`;
         fb.className = 'feedback wrong visible';
     }
 
@@ -3043,9 +3051,24 @@ function checkAnswer() {
     if (showBtn) showBtn.disabled = true;
 }
 
-// Fired when user clicks "Was my answer actually right?" on a wrong feedback.
-// Sends a GA event so we can review and grow the synonym list from real disputes.
+// Two-step confirm so an accidental tap doesn't fire a dispute.
+// First click arms the button, second click within 5 seconds actually sends.
 function disputeAnswer(btn, userInput, canonical, hawaiian, direction) {
+    if (btn.getAttribute('data-armed') !== '1') {
+        btn.setAttribute('data-armed', '1');
+        btn.classList.add('armed');
+        btn.textContent = 'Tap again to confirm flag for review';
+        // Disarm after 5 seconds if no second tap
+        setTimeout(() => {
+            if (btn.getAttribute('data-armed') === '1' && !btn.disabled) {
+                btn.setAttribute('data-armed', '0');
+                btn.classList.remove('armed');
+                btn.textContent = 'I think my answer was right. Flag for review.';
+            }
+        }, 5000);
+        return;
+    }
+    // Confirmed
     trackEvent('answer_disputed', {
         user_input: userInput.slice(0, 100),
         canonical: canonical.slice(0, 100),
@@ -3053,8 +3076,9 @@ function disputeAnswer(btn, userInput, canonical, hawaiian, direction) {
         direction: direction
     });
     btn.disabled = true;
-    btn.textContent = 'Sent for review · mahalo';
-    showToast('Mahalo. Olin will review and update the matcher.', 'success', 3500);
+    btn.classList.remove('armed');
+    btn.textContent = 'Flagged for review';
+    showToast('Mahalo. These get flagged on our Google account anonymously. We will review weekly.', 'success', 4500);
 }
 
 function escapeHtml(s) {
