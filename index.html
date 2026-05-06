@@ -533,34 +533,88 @@
             caret-color: var(--ink);
         }
 
-        /* FEEDBACK */
+        /* FEEDBACK — strong, unmistakable on mobile in any light */
         .feedback {
             min-height: 60px;
             margin-bottom: 1.25rem;
+            padding: 0.85rem 1rem;
+            border-radius: var(--radius-sm);
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
+            gap: 0.4rem;
             text-align: center;
             opacity: 0;
             transform: translateY(4px);
             transition: opacity 0.2s ease, transform 0.2s ease;
+            border: 2px solid transparent;
         }
         .feedback.visible { opacity: 1; transform: translateY(0); }
 
         .feedback-main {
             font-family: var(--font-display);
-            font-weight: 500;
-            font-size: 1.15rem;
+            font-weight: 600;
+            font-size: 1.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            line-height: 1.2;
+        }
+        .feedback-main::before {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            font-weight: 800;
+            line-height: 1;
         }
         .feedback-sub {
             font-size: 0.95rem;
             color: var(--ink-soft);
         }
-        .feedback-sub strong { color: var(--ink); font-weight: 600; }
+        .feedback-sub strong { color: var(--ink); font-weight: 700; }
 
+        .feedback.correct {
+            background: var(--success-soft);
+            border-color: var(--success);
+        }
         .feedback.correct .feedback-main { color: var(--success); }
+        .feedback.correct .feedback-main::before {
+            content: "✓";
+            background: var(--success);
+            color: #fff;
+        }
+
+        .feedback.close {
+            background: var(--warm-soft);
+            border-color: var(--warm);
+        }
         .feedback.close .feedback-main { color: var(--warm); }
+        .feedback.close .feedback-main::before {
+            content: "≈";
+            background: var(--warm);
+            color: #fff;
+        }
+
+        .feedback.wrong {
+            background: var(--error-soft);
+            border-color: var(--error);
+        }
         .feedback.wrong .feedback-main { color: var(--error); }
+        .feedback.wrong .feedback-main::before {
+            content: "✕";
+            background: var(--error);
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .feedback-main { font-size: 1.5rem; }
+            .feedback { padding: 1rem 0.85rem; }
+            .feedback-sub { font-size: 1rem; }
+        }
 
         .xp-pop {
             display: inline-block;
@@ -1498,12 +1552,14 @@
             <div class="input-wrap">
                 <input type="text" id="answerInput" placeholder="Type your answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
+            <button class="btn" id="checkBtn" onclick="checkAnswer()">Check answer</button>
             <div class="feedback" id="feedback"></div>
             <button class="btn btn-outline hidden" id="advanceBtn" onclick="advanceWord()">Continue</button>
             <button class="btn hidden" id="nextPhaseBtn" onclick="startPhase2()">Begin reverse direction</button>
             <div class="round-controls" id="roundControls">
-                <button class="round-control-primary" id="showAnswerBtn" onclick="showAnswer()" data-tip="Reveal the answer. The word will count as missed. Press Enter on an empty input as a shortcut.">Show answer</button>
                 <div class="round-control-secondary-row">
+                    <button class="round-control-link" id="showAnswerBtn" onclick="showAnswer()" data-tip="Reveal the answer. The word will count as missed.">Show answer</button>
+                    <span class="round-control-sep">·</span>
                     <button class="round-control-link" id="skipWordBtn" onclick="skipWord()" data-tip="Skip this word with no penalty. One skip per round.">Skip word</button>
                     <span class="round-control-sep">·</span>
                     <button class="round-control-link round-control-danger" onclick="confirmAbandonRound()" data-tip="End this round without saving any progress for these words.">End round</button>
@@ -2724,6 +2780,10 @@ function renderWord() {
     if (showBtn) showBtn.disabled = false;
     if (typeof showAnswerArmed !== 'undefined') showAnswerArmed = false;
 
+    // Show the Check answer button (primary submit)
+    const checkBtn = document.getElementById('checkBtn');
+    if (checkBtn) checkBtn.classList.remove('hidden');
+
     setTimeout(() => inputEl.focus(), 50);
 }
 
@@ -2754,6 +2814,8 @@ function checkAnswer() {
     inputEl.disabled = true;
     // 'close' now also visually shows as correct since we accept it
     inputEl.className = (result.status === 'close') ? 'correct' : result.status;
+    // Hide Check button now that the answer is in (Continue button will take over)
+    document.getElementById('checkBtn').classList.add('hidden');
 
     const correctAnswer = correctAnswerOriginal;
     const fb = document.getElementById('feedback');
@@ -2851,6 +2913,7 @@ function skipWord() {
 function showAnswer() {
     if (inputDisabled || answerChecked) return;
     trackEvent('answer_revealed', { phase: isPhase2 ? 2 : 1 });
+    document.getElementById('checkBtn').classList.add('hidden');
     const w = roundWords[currentWordIndex];
     const correctAnswer = isPhase2 ? w.Hawaiian : w.English;
     inputDisabled = true;
