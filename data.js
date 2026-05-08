@@ -3018,7 +3018,7 @@ const vocabularyData = [
  },
  {
    "ID": 432,
-   "Hawaiian": "Makuakāne",
+   "Hawaiian": "Makua kāne",
    "English": "Father",
    "Type": "Kikino (Noun)",
    "Tier": 1
@@ -3725,7 +3725,7 @@ const vocabularyData = [
  },
  {
    "ID": 533,
-   "Hawaiian": "Pukaihu",
+   "Hawaiian": "Puka ihu",
    "English": "Nostril",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -3823,14 +3823,14 @@ const vocabularyData = [
  },
  {
    "ID": 547,
-   "Hawaiian": "Kupunakāne",
+   "Hawaiian": "Kupuna kāne",
    "English": "Grandfather",
    "Type": "Kikino (Noun)",
    "Tier": 1
  },
  {
    "ID": 548,
-   "Hawaiian": "Kupunawahine",
+   "Hawaiian": "Kupuna wahine",
    "English": "Grandmother",
    "Type": "Kikino (Noun)",
    "Tier": 1
@@ -4131,7 +4131,7 @@ const vocabularyData = [
  },
  {
    "ID": 591,
-   "Hawaiian": "Samona",
+   "Hawaiian": "Kāmano",
    "English": "Salmon",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -4810,7 +4810,7 @@ const vocabularyData = [
  },
  {
    "ID": 688,
-   "Hawaiian": "Mākīkī",
+   "Hawaiian": "Mikini lima",
    "English": "Glove",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -5447,7 +5447,7 @@ const vocabularyData = [
  },
  {
    "ID": 779,
-   "Hawaiian": "Halekai",
+   "Hawaiian": "Hale kai",
    "English": "Boathouse",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -5748,7 +5748,7 @@ const vocabularyData = [
  },
  {
    "ID": 822,
-   "Hawaiian": "Mōʻīwahine",
+   "Hawaiian": "Mōʻī wahine",
    "English": "Queen",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -6980,14 +6980,14 @@ const vocabularyData = [
  },
  {
    "ID": 998,
-   "Hawaiian": "Heʻenalu",
+   "Hawaiian": "Heʻe nalu",
    "English": "To surf",
    "Type": "Hehele (Intransitive Verb)",
    "Tier": 3
  },
  {
    "ID": 999,
-   "Hawaiian": "Heʻeholua",
+   "Hawaiian": "Heʻe holua",
    "English": "To sled / To ride a wave (sled)",
    "Type": "Hehele (Intransitive Verb)",
    "Tier": 3
@@ -7379,7 +7379,7 @@ const vocabularyData = [
  },
  {
    "ID": 1055,
-   "Hawaiian": "Makewai",
+   "Hawaiian": "Make wai",
    "English": "Thirsty",
    "Type": "ʻAʻano (Stative Verb)",
    "Tier": 3
@@ -7597,7 +7597,7 @@ const vocabularyData = [
  {
    "ID": 1086,
    "Hawaiian": "Mākū",
-   "English": "Brown / Dark",
+   "English": "Firm, thick, jellied",
    "Type": "ʻAʻano (Stative Verb)",
    "Tier": 3
  },
@@ -8723,7 +8723,7 @@ const vocabularyData = [
  },
  {
    "ID": 1247,
-   "Hawaiian": "Aekai",
+   "Hawaiian": "ʻAe kai",
    "English": "Shoreline / Edge of the sea",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -9871,7 +9871,7 @@ const vocabularyData = [
  },
  {
    "ID": 1411,
-   "Hawaiian": "Hoaaloha",
+   "Hawaiian": "Hoa aloha",
    "English": "Friend / Companion",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -9899,7 +9899,7 @@ const vocabularyData = [
  },
  {
    "ID": 1415,
-   "Hawaiian": "Hoanoho",
+   "Hawaiian": "Hoa noho",
    "English": "Neighbor",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -13287,7 +13287,7 @@ const vocabularyData = [
  },
  {
    "ID": 1899,
-   "Hawaiian": "Hāwaʻe",
+   "Hawaiian": "ʻŌnohi maka",
    "English": "Pupil of the eye",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -13763,7 +13763,7 @@ const vocabularyData = [
  },
  {
    "ID": 1967,
-   "Hawaiian": "ʻOpaeʻula",
+   "Hawaiian": "ʻOpae ʻula",
    "English": "Red shrimp / Tiny shrimp",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -13840,14 +13840,14 @@ const vocabularyData = [
  },
  {
    "ID": 1978,
-   "Hawaiian": "ʻElemi",
+   "Hawaiian": "Lemi",
    "English": "Lemon",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
  {
    "ID": 1979,
-   "Hawaiian": "Painapala",
+   "Hawaiian": "Hala kahiki",
    "English": "Pineapple",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -13903,14 +13903,14 @@ const vocabularyData = [
  },
  {
    "ID": 1987,
-   "Hawaiian": "Kelimi",
+   "Hawaiian": "Kalima",
    "English": "Cream",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
  {
    "ID": 1988,
-   "Hawaiian": "Pata",
+   "Hawaiian": "Waiūpaka",
    "English": "Butter",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -15695,14 +15695,14 @@ const vocabularyData = [
  },
  {
    "ID": 2243,
-   "Hawaiian": "Lunakānāwai",
+   "Hawaiian": "Luna kānāwai",
    "English": "Judge / Magistrate",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
  {
    "ID": 2244,
-   "Hawaiian": "Lunakaiapuni",
+   "Hawaiian": "Kaiapuni",
    "English": "District officer",
    "Type": "Kikino (Noun)",
    "Tier": 3
@@ -18747,8 +18747,8 @@ const vocabularyData = [
  },
  {
    "ID": 2679,
-   "Hawaiian": "Mōhihi",
-   "English": "Stretching / Long and slim",
+   "Hawaiian": "Wīwī",
+   "English": "Slim",
    "Type": "ʻAʻano (Stative Verb)",
    "Tier": 3
  },
