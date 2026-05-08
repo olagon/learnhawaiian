@@ -28,6 +28,11 @@ secrets.local.txt
 *.secret.*
 secrets/
 
+# Validation outputs
+validation_report.csv
+.venv/
+__pycache__/
+
 # Old versions or experiments
 v1/
 v2/
@@ -37,3 +42,5 @@ backup/
 # Editor folders
 .vscode/
 .idea/
+review.csv
+validation_report*.csv
