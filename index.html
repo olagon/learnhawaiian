@@ -169,9 +169,33 @@
 
         .header-actions {
             display: flex;
-            align-items: center;
-            gap: 0.4rem;
+            align-items: flex-start;
+            gap: 0.5rem;
         }
+
+        /* Labeled header controls — icon on top, small word underneath */
+        .hdr-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+        .hdr-control {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hdr-label {
+            font-size: 0.64rem;
+            font-weight: 600;
+            color: var(--ink-muted);
+            line-height: 1;
+            letter-spacing: 0.01em;
+            white-space: nowrap;
+        }
+        /* Hide the whole stack (incl. label) when its control is hidden, e.g. Backup before sign-in is enabled */
+        .hdr-item:has(> .hdr-control > .hidden) { display: none; }
 
         /* HOVER TOOLTIPS */
         [data-tip] { position: relative; }
@@ -1443,6 +1467,9 @@
             .pill { padding: 0.35rem 0.6rem; font-size: 0.8rem; gap: 0.3rem; }
             .goal-ring { width: 34px; height: 34px; }
             .goal-ring-text { font-size: 0.65rem; }
+            .header-actions { gap: 0.35rem; }
+            .hdr-control { height: 34px; }
+            .hdr-label { font-size: 0.58rem; }
             main { padding: 1rem 1rem 2rem; }
             .card { padding: 1.75rem 1.25rem; }
             .summary-card { padding: 2rem 1.25rem; }
@@ -1450,10 +1477,12 @@
         }
         @media (max-width: 380px) {
             .brand-name { font-size: 0.88rem; }
-            .header-actions { gap: 0.2rem; }
+            .header-actions { gap: 0.25rem; }
             .icon-btn { width: 30px; height: 30px; }
             .icon-btn svg { width: 14px; height: 14px; }
             .goal-ring { width: 30px; height: 30px; }
+            .hdr-control { height: 30px; }
+            .hdr-label { font-size: 0.54rem; }
         }
 
         @media (max-width: 380px) {
@@ -1502,29 +1531,54 @@
         <span class="brand-name brand-name-short">ʻŌlelo Daily</span>
     </a>
     <div class="header-actions">
-        <button class="pill streak-pill cold" id="streakPill" onclick="openStats()" data-tip="Your daily streak. Click to see all your progress.">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
-            <span id="streakCount">0</span>
-        </button>
-        <div class="goal-ring" id="goalRing" onclick="openStats()" data-tip="Today's XP toward your daily goal. Click to see all your progress.">
-            <svg viewBox="0 0 38 38">
-                <circle class="goal-ring-bg" cx="19" cy="19" r="16"/>
-                <circle class="goal-ring-fill" id="goalRingFill" cx="19" cy="19" r="16" stroke-dasharray="100.5" stroke-dashoffset="100.5"/>
-            </svg>
-            <div class="goal-ring-text" id="goalRingText">0</div>
-        </div>
-        <button class="icon-btn hidden" id="authBtn" onclick="openAuth()" data-tip="Sign in to back up your progress and sync across devices. Optional." aria-label="Save progress">
-            <svg class="auth-icon-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
-            <svg class="auth-icon-in hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 0 1 .5 8.972"/><path d="m9 15 2 2 4-4"/></svg>
-            <span class="auth-dot hidden" id="authDot"></span>
-        </button>
-        <button class="icon-btn" onclick="openGrammar()" data-tip="Open the grammar guide. Quick reference for nouns, verbs, and Hawaiian sentence structure." aria-label="Grammar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        </button>
-        <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" data-tip="Switch between light and dark mode." aria-label="Toggle theme">
-            <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-            <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-        </button>
+        <span class="hdr-item">
+            <span class="hdr-control">
+                <button class="pill streak-pill cold" id="streakPill" onclick="openStats()" data-tip="Your daily streak. Click to see all your progress.">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+                    <span id="streakCount">0</span>
+                </button>
+            </span>
+            <span class="hdr-label">Streak</span>
+        </span>
+        <span class="hdr-item">
+            <span class="hdr-control">
+                <div class="goal-ring" id="goalRing" onclick="openStats()" data-tip="Your learning progress. Click to see your path to mastery.">
+                    <svg viewBox="0 0 38 38">
+                        <circle class="goal-ring-bg" cx="19" cy="19" r="16"/>
+                        <circle class="goal-ring-fill" id="goalRingFill" cx="19" cy="19" r="16" stroke-dasharray="100.5" stroke-dashoffset="100.5"/>
+                    </svg>
+                    <div class="goal-ring-text" id="goalRingText">0</div>
+                </div>
+            </span>
+            <span class="hdr-label">Progress</span>
+        </span>
+        <span class="hdr-item">
+            <span class="hdr-control">
+                <button class="icon-btn hidden" id="authBtn" onclick="openAuth()" data-tip="Sign in to back up your progress and sync across devices. Optional." aria-label="Save progress">
+                    <svg class="auth-icon-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/></svg>
+                    <svg class="auth-icon-in hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 0 1 .5 8.972"/><path d="m9 15 2 2 4-4"/></svg>
+                    <span class="auth-dot hidden" id="authDot"></span>
+                </button>
+            </span>
+            <span class="hdr-label">Backup</span>
+        </span>
+        <span class="hdr-item">
+            <span class="hdr-control">
+                <button class="icon-btn" onclick="openGrammar()" data-tip="Open the grammar guide. Quick reference for nouns, verbs, and Hawaiian sentence structure." aria-label="Grammar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                </button>
+            </span>
+            <span class="hdr-label">Grammar</span>
+        </span>
+        <span class="hdr-item">
+            <span class="hdr-control">
+                <button class="icon-btn" id="themeBtn" onclick="toggleTheme()" data-tip="Switch between light and dark mode." aria-label="Toggle theme">
+                    <svg class="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <svg class="theme-icon-dark hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                </button>
+            </span>
+            <span class="hdr-label">Theme</span>
+        </span>
     </div>
 </header>
 
