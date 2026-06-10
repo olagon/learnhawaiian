@@ -18,42 +18,42 @@ const vocabularyData = [
    "Hawaiian": "Aloha awakea",
    "English": "Good day / Good noontime",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 4,
    "Hawaiian": "Aloha ʻauinalā",
    "English": "Good afternoon",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 5,
    "Hawaiian": "Aloha ahiahi",
    "English": "Good evening",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 6,
    "Hawaiian": "Aloha pō",
    "English": "Good night",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 7,
    "Hawaiian": "Aloha kākou",
    "English": "Greetings to all of us (three or more)",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 8,
    "Hawaiian": "Aloha kāua",
    "English": "Greetings to both of us (you and me)",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 9,
@@ -88,7 +88,7 @@ const vocabularyData = [
    "Hawaiian": "He mea iki",
    "English": "It is a small thing / You're welcome",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 14,
@@ -116,7 +116,7 @@ const vocabularyData = [
    "Hawaiian": "ʻO ia mau nō",
    "English": "Same as always / Same as ever",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 18,
@@ -130,35 +130,35 @@ const vocabularyData = [
    "Hawaiian": "ʻO ___ koʻu inoa",
    "English": "My name is ___",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 20,
    "Hawaiian": "No hea mai ʻoe?",
    "English": "Where are you from?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 21,
    "Hawaiian": "No ___ mai au",
    "English": "I am from ___",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 22,
    "Hawaiian": "Noho ʻoe ma hea?",
    "English": "Where do you live?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 23,
    "Hawaiian": "Noho au ma ___",
    "English": "I live in ___",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 24,
@@ -179,140 +179,140 @@ const vocabularyData = [
    "Hawaiian": "He aha kēia?",
    "English": "What is this?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 27,
    "Hawaiian": "Aia i hea...?",
    "English": "Where is...?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 28,
    "Hawaiian": "E ʻai kākou",
    "English": "Let's eat (inclusive)",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 29,
    "Hawaiian": "E ʻai a pau",
    "English": "Eat all of it / Finish your food",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 30,
    "Hawaiian": "Hūi!",
    "English": "Hey! / Excuse me! (Calling out to someone)",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 31,
    "Hawaiian": "ʻAʻole maopopo iaʻu",
    "English": "I don't understand / I don't know",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 32,
    "Hawaiian": "Hana hou",
    "English": "Do it again / Encore",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 33,
    "Hawaiian": "ʻO wau pū",
    "English": "Me too / Me as well",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 34,
    "Hawaiian": "ʻO wau kekahi",
    "English": "Me too / I am also",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 35,
    "Hawaiian": "Pōmaikaʻi",
    "English": "Good luck / Blessing",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 36,
    "Hawaiian": "I lā maikaʻi",
    "English": "Have a good day",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 37,
    "Hawaiian": "I hopena pule maikaʻi",
    "English": "Have a good weekend",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 38,
    "Hawaiian": "ʻA ʻoia!",
    "English": "That's it! / Exactly!",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 39,
    "Hawaiian": "Hele aku",
    "English": "Go away",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 40,
    "Hawaiian": "Hele mai",
    "English": "Come here",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 41,
    "Hawaiian": "E kūlia i ka nuʻu",
    "English": "Strive for excellence / Do your best",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 42,
    "Hawaiian": "Kōkua mai",
    "English": "Help me",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 43,
    "Hawaiian": "Naʻu ka hauʻoli",
    "English": "The pleasure is mine",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 44,
    "Hawaiian": "Ua leʻaleʻa akula",
    "English": "That was fun / That was awesome",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 45,
    "Hawaiian": "ʻOi loa",
    "English": "The very best / Excellent",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 46,
@@ -333,14 +333,14 @@ const vocabularyData = [
    "Hawaiian": "ʻAe paha",
    "English": "Maybe / Perhaps yes",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 49,
    "Hawaiian": "ʻAʻole paha",
    "English": "Maybe not",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 50,
@@ -1677,70 +1677,70 @@ const vocabularyData = [
    "Hawaiian": "ʻEkahi",
    "English": "One (used in counting)",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 241,
    "Hawaiian": "ʻElua",
    "English": "Two",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 242,
    "Hawaiian": "ʻEkolu",
    "English": "Three",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 243,
    "Hawaiian": "ʻEhā",
    "English": "Four",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 244,
    "Hawaiian": "ʻElima",
    "English": "Five",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 245,
    "Hawaiian": "ʻEono",
    "English": "Six",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 246,
    "Hawaiian": "ʻEhiku",
    "English": "Seven",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 247,
    "Hawaiian": "ʻEwalu",
    "English": "Eight",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 248,
    "Hawaiian": "ʻEiwa",
    "English": "Nine",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 249,
    "Hawaiian": "ʻUmi",
    "English": "Ten",
    "Type": "Helu (Number)",
-   "Tier": 2
+   "Tier": 1
  },
  {
    "ID": 250,
@@ -1964,7 +1964,7 @@ const vocabularyData = [
    "Hawaiian": "Wau",
    "English": "I / Me (used at start, after ʻo)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 282,
@@ -1985,168 +1985,168 @@ const vocabularyData = [
    "Hawaiian": "Kāua",
    "English": "We two (you and me)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 285,
    "Hawaiian": "Māua",
    "English": "We two (he/she and me, not you)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 286,
    "Hawaiian": "ʻOlua",
    "English": "You two",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 287,
    "Hawaiian": "Lāua",
    "English": "Those two / Them two",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 288,
    "Hawaiian": "Kākou",
    "English": "All of us (including you)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 289,
    "Hawaiian": "Mākou",
    "English": "All of us (not including you)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 290,
    "Hawaiian": "ʻOukou",
    "English": "All of you",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 291,
    "Hawaiian": "Lākou",
    "English": "They / Them (three or more)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 292,
    "Hawaiian": "Koʻu",
    "English": "My (close, given things like body, family, home)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 293,
    "Hawaiian": "Kaʻu",
    "English": "My (things acquired or made)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 294,
    "Hawaiian": "Kou",
    "English": "Your (close, given things)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 295,
    "Hawaiian": "Kāu",
    "English": "Your (acquired things)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 296,
    "Hawaiian": "Kona",
    "English": "His / Her (close, given things)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 297,
    "Hawaiian": "Kāna",
    "English": "His / Her (acquired things)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 298,
    "Hawaiian": "Ko kāua",
    "English": "Our (you and me, close)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 299,
    "Hawaiian": "Kā kāua",
    "English": "Our (you and me, acquired)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 300,
    "Hawaiian": "Ko kākou",
    "English": "Our (all of us, close)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 301,
    "Hawaiian": "Kā kākou",
    "English": "Our (all of us, acquired)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 302,
    "Hawaiian": "Ko mākou",
    "English": "Our (not you, close)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 303,
    "Hawaiian": "Kā mākou",
    "English": "Our (not you, acquired)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 304,
    "Hawaiian": "Ko ʻoukou",
    "English": "Your (all of you, close)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 305,
    "Hawaiian": "Kā ʻoukou",
    "English": "Your (all of you, acquired)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 306,
    "Hawaiian": "Ko lākou",
    "English": "Their (close)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 307,
    "Hawaiian": "Kā lākou",
    "English": "Their (acquired)",
    "Type": "Papani (Pronoun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 308,
@@ -2160,21 +2160,21 @@ const vocabularyData = [
    "Hawaiian": "He aha",
    "English": "What is",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 310,
    "Hawaiian": "Wai",
    "English": "Who",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 311,
    "Hawaiian": "ʻO wai",
    "English": "Who is",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 312,
@@ -2188,28 +2188,28 @@ const vocabularyData = [
    "Hawaiian": "I hea",
    "English": "Where (location at)",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 314,
    "Hawaiian": "Ma hea",
    "English": "Where (place at / through)",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 315,
    "Hawaiian": "No hea",
    "English": "From where",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 316,
    "Hawaiian": "I ka manawa hea",
    "English": "When (at what time)",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 317,
@@ -2223,196 +2223,196 @@ const vocabularyData = [
    "Hawaiian": "ʻEhia",
    "English": "How many",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 319,
    "Hawaiian": "No ke aha",
    "English": "Why",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 320,
    "Hawaiian": "E like me ke aha",
    "English": "Like what",
    "Type": "Question Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 321,
    "Hawaiian": "Kēia",
    "English": "This (near speaker)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 322,
    "Hawaiian": "Kēnā",
    "English": "That (near listener)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 323,
    "Hawaiian": "Kēlā",
    "English": "That (far from both)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 324,
    "Hawaiian": "Nēia",
    "English": "These (near speaker)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 325,
    "Hawaiian": "Nēnā",
    "English": "Those (near listener)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 326,
    "Hawaiian": "Nēlā",
    "English": "Those (far from both)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 327,
    "Hawaiian": "Eia",
    "English": "Here is / Behold",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 328,
    "Hawaiian": "Aia",
    "English": "There is (located at)",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 329,
    "Hawaiian": "ʻAneʻi",
    "English": "Here / This place",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 330,
    "Hawaiian": "Laila",
    "English": "There / That place",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 331,
    "Hawaiian": "ʻŌ",
    "English": "Yonder / Over there",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 332,
    "Hawaiian": "Loko",
    "English": "Inside",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 333,
    "Hawaiian": "Waho",
    "English": "Outside",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 334,
    "Hawaiian": "Luna",
    "English": "Up / Above / On top",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 335,
    "Hawaiian": "Lalo",
    "English": "Down / Below / Underneath",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 336,
    "Hawaiian": "Mua",
    "English": "Front / Before",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 337,
    "Hawaiian": "Hope",
    "English": "Back / Behind / After",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 338,
    "Hawaiian": "Waena",
    "English": "Middle / Between",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 339,
    "Hawaiian": "ʻAoʻao",
    "English": "Side",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 340,
    "Hawaiian": "Kokoke",
    "English": "Near",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 341,
    "Hawaiian": "Mamao",
    "English": "Far",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 342,
    "Hawaiian": "Hikina",
    "English": "East",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 343,
    "Hawaiian": "Komohana",
    "English": "West",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 344,
    "Hawaiian": "ʻĀkau",
    "English": "North / Right",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 345,
    "Hawaiian": "Hema",
    "English": "South / Left",
    "Type": "Demonstrative / Location",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 346,
@@ -2468,91 +2468,91 @@ const vocabularyData = [
    "Hawaiian": "Ianuali",
    "English": "January",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 354,
    "Hawaiian": "Pepeluali",
    "English": "February",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 355,
    "Hawaiian": "Malaki",
    "English": "March",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 356,
    "Hawaiian": "ʻApelila",
    "English": "April",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 357,
    "Hawaiian": "Mei",
    "English": "May",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 358,
    "Hawaiian": "Iune",
    "English": "June",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 359,
    "Hawaiian": "Iulai",
    "English": "July",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 360,
    "Hawaiian": "ʻAukake",
    "English": "August",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 361,
    "Hawaiian": "Kepakemapa",
    "English": "September",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 362,
    "Hawaiian": "ʻOkakopa",
    "English": "October",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 363,
    "Hawaiian": "Nowemapa",
    "English": "November",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 364,
    "Hawaiian": "Kekemapa",
    "English": "December",
    "Type": "Month",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 365,
    "Hawaiian": "Hola",
    "English": "Hour / Clock time",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 366,
@@ -2573,35 +2573,35 @@ const vocabularyData = [
    "Hawaiian": "Lā",
    "English": "Day / Sun",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 369,
    "Hawaiian": "Pule",
    "English": "Week",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 370,
    "Hawaiian": "Mahina",
    "English": "Month / Moon",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 371,
    "Hawaiian": "Makahiki",
    "English": "Year",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 372,
    "Hawaiian": "Manawa",
    "English": "Time / Period / Season",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 373,
@@ -2615,7 +2615,7 @@ const vocabularyData = [
    "Hawaiian": "Wā",
    "English": "Time / Era / Period",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 375,
@@ -2671,7 +2671,7 @@ const vocabularyData = [
    "Hawaiian": "ʻApōpō",
    "English": "Tomorrow",
    "Type": "Time Word",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 383,
@@ -2741,28 +2741,28 @@ const vocabularyData = [
    "Hawaiian": "ʻĀina",
    "English": "Land / Earth",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 393,
    "Hawaiian": "Kai",
    "English": "Ocean / Sea water / Tide",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 394,
    "Hawaiian": "Moana",
    "English": "Open ocean / Deep sea",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 395,
    "Hawaiian": "Mauna",
    "English": "Mountain",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 396,
@@ -2790,21 +2790,21 @@ const vocabularyData = [
    "Hawaiian": "Kahakai",
    "English": "Beach / Seashore",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 400,
    "Hawaiian": "Lani",
    "English": "Sky / Heaven",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 401,
    "Hawaiian": "Honua",
    "English": "Earth / World / Foundation",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 402,
@@ -2818,7 +2818,7 @@ const vocabularyData = [
    "Hawaiian": "Mahina",
    "English": "Moon / Month",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 404,
@@ -2832,7 +2832,7 @@ const vocabularyData = [
    "Hawaiian": "Ao",
    "English": "Cloud / Light / Dawn",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 406,
@@ -2867,7 +2867,7 @@ const vocabularyData = [
    "Hawaiian": "Kahawai",
    "English": "Stream / River",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 411,
@@ -2909,7 +2909,7 @@ const vocabularyData = [
    "Hawaiian": "Kula",
    "English": "Plain / Open field / Pasture / School",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 417,
@@ -2930,28 +2930,28 @@ const vocabularyData = [
    "Hawaiian": "Kalo",
    "English": "Taro (A culturally vital plant)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 420,
    "Hawaiian": "Niu",
    "English": "Coconut",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 421,
    "Hawaiian": "ʻUlu",
    "English": "Breadfruit",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 422,
    "Hawaiian": "Maiʻa",
    "English": "Banana",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 423,
@@ -2979,14 +2979,14 @@ const vocabularyData = [
    "Hawaiian": "Kāne",
    "English": "Man / Male / Husband",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 427,
    "Hawaiian": "Wahine",
    "English": "Woman / Female / Wife",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 428,
@@ -3007,28 +3007,28 @@ const vocabularyData = [
    "Hawaiian": "Makua",
    "English": "Parent",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 431,
    "Hawaiian": "Makua kāne",
    "English": "Father",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 432,
    "Hawaiian": "Makuahine",
    "English": "Mother",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 433,
    "Hawaiian": "Kupuna",
    "English": "Grandparent / Elder / Ancestor",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 434,
@@ -3042,7 +3042,7 @@ const vocabularyData = [
    "Hawaiian": "Hoahānau",
    "English": "Cousin",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 436,
@@ -3056,28 +3056,28 @@ const vocabularyData = [
    "Hawaiian": "Kaikuaʻana",
    "English": "Older sibling (same sex)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 438,
    "Hawaiian": "Kaikaina",
    "English": "Younger sibling (same sex)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 439,
    "Hawaiian": "Kaikunāne",
    "English": "Brother (of a sister)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 440,
    "Hawaiian": "Kaikuahine",
    "English": "Sister (of a brother)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 441,
@@ -3091,7 +3091,7 @@ const vocabularyData = [
    "Hawaiian": "Hoaloha",
    "English": "Friend / Beloved companion",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 443,
@@ -3161,35 +3161,35 @@ const vocabularyData = [
    "Hawaiian": "Poʻo",
    "English": "Head",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 453,
    "Hawaiian": "Maka",
    "English": "Eye / Face",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 454,
    "Hawaiian": "Waha",
    "English": "Mouth",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 455,
    "Hawaiian": "Ihu",
    "English": "Nose",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 456,
    "Hawaiian": "Pepeiao",
    "English": "Ear",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 457,
@@ -3203,21 +3203,21 @@ const vocabularyData = [
    "Hawaiian": "Niho",
    "English": "Tooth",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 459,
    "Hawaiian": "Lima",
    "English": "Hand / Arm",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 460,
    "Hawaiian": "Wāwae",
    "English": "Foot / Leg",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 461,
@@ -3238,28 +3238,28 @@ const vocabularyData = [
    "Hawaiian": "Iwi",
    "English": "Bone",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 464,
    "Hawaiian": "Puʻuwai",
    "English": "Heart",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 465,
    "Hawaiian": "ʻIli",
    "English": "Skin / Surface",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 466,
    "Hawaiian": "Lauoho",
    "English": "Hair",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 467,
@@ -3273,21 +3273,21 @@ const vocabularyData = [
    "Hawaiian": "Pōpoki",
    "English": "Cat",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 469,
    "Hawaiian": "Puaʻa",
    "English": "Pig / Pork",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 470,
    "Hawaiian": "Moa",
    "English": "Chicken",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 471,
@@ -3315,7 +3315,7 @@ const vocabularyData = [
    "Hawaiian": "Manu",
    "English": "Bird",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 475,
@@ -3343,7 +3343,7 @@ const vocabularyData = [
    "Hawaiian": "Manō",
    "English": "Shark",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 479,
@@ -3406,7 +3406,7 @@ const vocabularyData = [
    "Hawaiian": "Alanui",
    "English": "Street / Road / Highway",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 488,
@@ -3420,7 +3420,7 @@ const vocabularyData = [
    "Hawaiian": "Kaʻa",
    "English": "Car / Vehicle",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 490,
@@ -3441,7 +3441,7 @@ const vocabularyData = [
    "Hawaiian": "Waʻa",
    "English": "Canoe",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 493,
@@ -3455,21 +3455,21 @@ const vocabularyData = [
    "Hawaiian": "Lole",
    "English": "Clothes / Clothing",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 495,
    "Hawaiian": "Kāmaʻa",
    "English": "Shoe",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 496,
    "Hawaiian": "Pāpale",
    "English": "Hat",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 497,
@@ -3483,14 +3483,14 @@ const vocabularyData = [
    "Hawaiian": "Kālā",
    "English": "Money / Dollar",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 499,
    "Hawaiian": "Puke",
    "English": "Book",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 500,
@@ -3504,7 +3504,7 @@ const vocabularyData = [
    "Hawaiian": "Kiʻi",
    "English": "Picture / Image / Statue",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 502,
@@ -3518,7 +3518,7 @@ const vocabularyData = [
    "Hawaiian": "Kelepona",
    "English": "Telephone",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 504,
@@ -3532,7 +3532,7 @@ const vocabularyData = [
    "Hawaiian": "Hula",
    "English": "Traditional dance",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 506,
@@ -3595,7 +3595,7 @@ const vocabularyData = [
    "Hawaiian": "Hana",
    "English": "Work / Activity / Labor",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 515,
@@ -3644,7 +3644,7 @@ const vocabularyData = [
    "Hawaiian": "ʻĀʻī",
    "English": "Neck",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 522,
@@ -3672,7 +3672,7 @@ const vocabularyData = [
    "Hawaiian": "Lehelehe",
    "English": "Lips",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 526,
@@ -3707,7 +3707,7 @@ const vocabularyData = [
    "Hawaiian": "Naʻau",
    "English": "Gut / Intestines / Mind / Heart (figurative)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 531,
@@ -3819,14 +3819,14 @@ const vocabularyData = [
    "Hawaiian": "Kupuna kāne",
    "English": "Grandfather",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 547,
    "Hawaiian": "Kupuna wahine",
    "English": "Grandmother",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 548,
@@ -3840,7 +3840,7 @@ const vocabularyData = [
    "Hawaiian": "Poi",
    "English": "Pounded taro paste",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 550,
@@ -3924,7 +3924,7 @@ const vocabularyData = [
    "Hawaiian": "Limu",
    "English": "Seaweed",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 562,
@@ -3973,7 +3973,7 @@ const vocabularyData = [
    "Hawaiian": "Ono",
    "English": "Wahoo (a fish)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 569,
@@ -4022,7 +4022,7 @@ const vocabularyData = [
    "Hawaiian": "Kope",
    "English": "Coffee",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 576,
@@ -4043,7 +4043,7 @@ const vocabularyData = [
    "Hawaiian": "Berena",
    "English": "Bread",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 579,
@@ -4057,14 +4057,14 @@ const vocabularyData = [
    "Hawaiian": "Hua moa",
    "English": "Egg",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 581,
    "Hawaiian": "Kō",
    "English": "Sugar cane",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 582,
@@ -4078,7 +4078,7 @@ const vocabularyData = [
    "Hawaiian": "Paʻakai",
    "English": "Salt",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 584,
@@ -4099,7 +4099,7 @@ const vocabularyData = [
    "Hawaiian": "ʻAlani",
    "English": "Orange (fruit)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 587,
@@ -4183,7 +4183,7 @@ const vocabularyData = [
    "Hawaiian": "Pākaukau",
    "English": "Table",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 599,
@@ -4204,7 +4204,7 @@ const vocabularyData = [
    "Hawaiian": "Kīʻaha",
    "English": "Cup / Glass",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 602,
@@ -4218,7 +4218,7 @@ const vocabularyData = [
    "Hawaiian": "Pā",
    "English": "Plate / Dish",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 604,
@@ -4232,14 +4232,14 @@ const vocabularyData = [
    "Hawaiian": "Pahi",
    "English": "Knife",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 606,
    "Hawaiian": "Puna",
    "English": "Spoon",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 607,
@@ -4638,7 +4638,7 @@ const vocabularyData = [
    "Hawaiian": "Lawaiʻa",
    "English": "Fisherman",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 664,
@@ -4694,7 +4694,7 @@ const vocabularyData = [
    "Hawaiian": "Mākau",
    "English": "Fishhook",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 672,
@@ -4862,7 +4862,7 @@ const vocabularyData = [
    "Hawaiian": "Hīmeni",
    "English": "Hymn / Song",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 696,
@@ -4995,7 +4995,7 @@ const vocabularyData = [
    "Hawaiian": "ʻIno",
    "English": "Storm / Bad weather",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 715,
@@ -5233,7 +5233,7 @@ const vocabularyData = [
    "Hawaiian": "Iole",
    "English": "Rat / Mouse",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 749,
@@ -5443,14 +5443,14 @@ const vocabularyData = [
    "Hawaiian": "Kelepona lima",
    "English": "Cell phone",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 779,
    "Hawaiian": "Lolouila",
    "English": "Computer (modern coined term)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 780,
@@ -5562,7 +5562,7 @@ const vocabularyData = [
    "Hawaiian": "ʻŌlelo",
    "English": "Language / Speech",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 796,
@@ -5611,7 +5611,7 @@ const vocabularyData = [
    "Hawaiian": "Pono",
    "English": "Right / Goodness / Need",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 803,
@@ -5625,7 +5625,7 @@ const vocabularyData = [
    "Hawaiian": "Naʻauao",
    "English": "Wisdom / Enlightenment",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 805,
@@ -5639,21 +5639,21 @@ const vocabularyData = [
    "Hawaiian": "Aloha",
    "English": "Love / Compassion / Greeting (also a common noun)",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 807,
    "Hawaiian": "Hauʻoli",
    "English": "Joy / Happiness",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 808,
    "Hawaiian": "Kaumaha",
    "English": "Sadness / Heaviness",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 809,
@@ -5667,14 +5667,14 @@ const vocabularyData = [
    "Hawaiian": "Mākaʻu",
    "English": "Fear",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 811,
    "Hawaiian": "Hopo",
    "English": "Worry / Anxiety",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 812,
@@ -5688,14 +5688,14 @@ const vocabularyData = [
    "Hawaiian": "ʻOluʻolu",
    "English": "Pleasantness / Comfort",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 814,
    "Hawaiian": "Maluhia",
    "English": "Peace / Tranquility",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 815,
@@ -5856,7 +5856,7 @@ const vocabularyData = [
    "Hawaiian": "Hana",
    "English": "To do / To work / To make",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 838,
@@ -5884,28 +5884,28 @@ const vocabularyData = [
    "Hawaiian": "Lohe",
    "English": "To hear / To listen",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 842,
    "Hawaiian": "Nānā",
    "English": "To look at / To observe",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 843,
    "Hawaiian": "Kākau",
    "English": "To write",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 844,
    "Hawaiian": "Heluhelu",
    "English": "To read",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 845,
@@ -5919,7 +5919,7 @@ const vocabularyData = [
    "Hawaiian": "ʻŌlelo",
    "English": "To speak / To say",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 847,
@@ -5954,7 +5954,7 @@ const vocabularyData = [
    "Hawaiian": "Aʻo",
    "English": "To teach / To learn",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 852,
@@ -5968,35 +5968,35 @@ const vocabularyData = [
    "Hawaiian": "Hāʻawi",
    "English": "To give / To grant",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 854,
    "Hawaiian": "Lawe",
    "English": "To take / To bring / To carry",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 855,
    "Hawaiian": "Kiʻi",
    "English": "To fetch / To procure / To get",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 856,
    "Hawaiian": "Kūʻai",
    "English": "To buy / To sell / To barter",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 857,
    "Hawaiian": "Mālama",
    "English": "To take care of / To preserve",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 858,
@@ -6010,7 +6010,7 @@ const vocabularyData = [
    "Hawaiian": "Wehe",
    "English": "To open / To untie",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 860,
@@ -6024,7 +6024,7 @@ const vocabularyData = [
    "Hawaiian": "Pani",
    "English": "To close / To shut",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 862,
@@ -6038,14 +6038,14 @@ const vocabularyData = [
    "Hawaiian": "ʻImi",
    "English": "To seek / To hunt for",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 864,
    "Hawaiian": "Loaʻa",
    "English": "To find / To obtain / To get",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 865,
@@ -6059,14 +6059,14 @@ const vocabularyData = [
    "Hawaiian": "Hoʻomaka",
    "English": "To begin / To start",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 867,
    "Hawaiian": "Hoʻopau",
    "English": "To finish / To put an end to",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 868,
@@ -6087,7 +6087,7 @@ const vocabularyData = [
    "Hawaiian": "Pāʻani",
    "English": "To play (a game or sport)",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 871,
@@ -6101,7 +6101,7 @@ const vocabularyData = [
    "Hawaiian": "Kāhea",
    "English": "To call / To cry out",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 873,
@@ -6136,7 +6136,7 @@ const vocabularyData = [
    "Hawaiian": "Kuke",
    "English": "To cook",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 878,
@@ -6150,7 +6150,7 @@ const vocabularyData = [
    "Hawaiian": "Kanu",
    "English": "To plant / To bury",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 880,
@@ -6164,7 +6164,7 @@ const vocabularyData = [
    "Hawaiian": "Hoʻokomo",
    "English": "To put in / To insert",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 882,
@@ -6199,7 +6199,7 @@ const vocabularyData = [
    "Hawaiian": "Mahi",
    "English": "To cultivate / To till",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 887,
@@ -6276,7 +6276,7 @@ const vocabularyData = [
    "Hawaiian": "Hoʻomanaʻo",
    "English": "To remember / To remind",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 898,
@@ -6318,21 +6318,21 @@ const vocabularyData = [
    "Hawaiian": "Kala",
    "English": "To forgive / To untie / To release",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 904,
    "Hawaiian": "Hoʻomaikaʻi",
    "English": "To bless / To congratulate",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 905,
    "Hawaiian": "Hoʻolauleʻa",
    "English": "To celebrate",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 906,
@@ -6381,35 +6381,35 @@ const vocabularyData = [
    "Hawaiian": "Aloha",
    "English": "To love / To greet",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 913,
    "Hawaiian": "Mahalo",
    "English": "To thank / To admire",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 914,
    "Hawaiian": "Honi",
    "English": "To kiss / To smell / To greet by touching noses",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 915,
    "Hawaiian": "Pūliki",
    "English": "To embrace / To hug",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 916,
    "Hawaiian": "Hoʻopaʻa",
    "English": "To fasten / To memorize / To secure",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 917,
@@ -6479,7 +6479,7 @@ const vocabularyData = [
    "Hawaiian": "Pono",
    "English": "To make right / To set right",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 927,
@@ -6500,7 +6500,7 @@ const vocabularyData = [
    "Hawaiian": "Hoʻā",
    "English": "To light / To kindle / To ignite",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 930,
@@ -6556,14 +6556,14 @@ const vocabularyData = [
    "Hawaiian": "Hīmeni",
    "English": "To sing",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 938,
    "Hawaiian": "Hula",
    "English": "To dance hula",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 939,
@@ -6591,7 +6591,7 @@ const vocabularyData = [
    "Hawaiian": "Kāmaʻa",
    "English": "To shoe / To put on shoes (rare verbal use)",
    "Type": "Hamani (Transitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 943,
@@ -6738,7 +6738,7 @@ const vocabularyData = [
    "Hawaiian": "Moe",
    "English": "To lie down / To rest",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 964,
@@ -6752,7 +6752,7 @@ const vocabularyData = [
    "Hawaiian": "Ala",
    "English": "To wake up / To rise",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 966,
@@ -6808,7 +6808,7 @@ const vocabularyData = [
    "Hawaiian": "Hānau",
    "English": "To be born / To give birth",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 974,
@@ -6843,7 +6843,7 @@ const vocabularyData = [
    "Hawaiian": "Hoʻi",
    "English": "To return / To go back",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 979,
@@ -7039,7 +7039,7 @@ const vocabularyData = [
    "Hawaiian": "Loaʻa",
    "English": "To be obtained / To be found",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1007,
@@ -7053,7 +7053,7 @@ const vocabularyData = [
    "Hawaiian": "Pani",
    "English": "To close (intransitive use)",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1009,
@@ -7193,21 +7193,21 @@ const vocabularyData = [
    "Hawaiian": "Liʻiliʻi",
    "English": "Small / Little",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1029,
    "Hawaiian": "Lōʻihi",
    "English": "Long / Tall / Far",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1030,
    "Hawaiian": "Pōkole",
    "English": "Short / Brief",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1031,
@@ -7228,35 +7228,35 @@ const vocabularyData = [
    "Hawaiian": "Hou",
    "English": "New / Fresh / Again",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1034,
    "Hawaiian": "Kahiko",
    "English": "Old / Ancient",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1035,
    "Hawaiian": "Wela",
    "English": "Hot / Burned",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1036,
    "Hawaiian": "Anuanu",
    "English": "Cold / Chilly",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1037,
    "Hawaiian": "Pumehana",
    "English": "Warm / Affectionate",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1038,
@@ -7277,21 +7277,21 @@ const vocabularyData = [
    "Hawaiian": "Wikiwiki",
    "English": "Quick / Fast / Speedy",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1041,
    "Hawaiian": "Lohi",
    "English": "Slow / Tardy / Late",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1042,
    "Hawaiian": "Kaumaha",
    "English": "Heavy / Sad / Depressed",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1043,
@@ -7312,7 +7312,7 @@ const vocabularyData = [
    "Hawaiian": "Luhi",
    "English": "Tired / Exhausted / Weary",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1046,
@@ -7333,14 +7333,14 @@ const vocabularyData = [
    "Hawaiian": "Ola",
    "English": "Alive / Healthy / Healed",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1049,
    "Hawaiian": "Make",
    "English": "Dead / To die / Defeated",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1050,
@@ -7354,21 +7354,21 @@ const vocabularyData = [
    "Hawaiian": "Make wai",
    "English": "Thirsty (lit. dying for water)",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1052,
    "Hawaiian": "Māʻona",
    "English": "Full / Satisfied (after eating)",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1053,
    "Hawaiian": "ʻOno",
    "English": "Delicious / Tasty / Craving",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1054,
@@ -7382,7 +7382,7 @@ const vocabularyData = [
    "Hawaiian": "Akamai",
    "English": "Smart / Clever / Intelligent",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1056,
@@ -7417,7 +7417,7 @@ const vocabularyData = [
    "Hawaiian": "Pono",
    "English": "Righteous / Just / Proper",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1061,
@@ -7431,7 +7431,7 @@ const vocabularyData = [
    "Hawaiian": "Kaulana",
    "English": "Famous / Well-known",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1063,
@@ -7515,7 +7515,7 @@ const vocabularyData = [
    "Hawaiian": "Ākea",
    "English": "Broad / Wide / Spacious",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1075,
@@ -7564,7 +7564,7 @@ const vocabularyData = [
    "Hawaiian": "Poni",
    "English": "Purple",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1082,
@@ -7578,7 +7578,7 @@ const vocabularyData = [
    "Hawaiian": "ʻAlani",
    "English": "Orange",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1084,
@@ -7592,14 +7592,14 @@ const vocabularyData = [
    "Hawaiian": "ʻOluʻolu",
    "English": "Pleasant / Comfortable / Kind",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1086,
    "Hawaiian": "Mākaʻu",
    "English": "Afraid / Fearful",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1087,
@@ -7613,7 +7613,7 @@ const vocabularyData = [
    "Hawaiian": "Hopo",
    "English": "Worried / Anxious",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1089,
@@ -7655,7 +7655,7 @@ const vocabularyData = [
    "Hawaiian": "ʻAwaʻawa",
    "English": "Bitter (taste)",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1095,
@@ -7683,14 +7683,14 @@ const vocabularyData = [
    "Hawaiian": "ʻŌpiopio",
    "English": "Young / Youthful",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1099,
    "Hawaiian": "Maluhia",
    "English": "Peaceful / Quiet",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1100,
@@ -7711,7 +7711,7 @@ const vocabularyData = [
    "Hawaiian": "Mahalo",
    "English": "Grateful / Thankful (as a state)",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1103,
@@ -7725,7 +7725,7 @@ const vocabularyData = [
    "Hawaiian": "Naʻauao",
    "English": "Wise / Enlightened",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1105,
@@ -7760,14 +7760,14 @@ const vocabularyData = [
    "Hawaiian": "Maʻalahi",
    "English": "Easy / Simple",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1110,
    "Hawaiian": "Paʻakikī",
    "English": "Hard / Difficult / Stubborn",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1111,
@@ -7907,7 +7907,7 @@ const vocabularyData = [
    "Hawaiian": "Pō",
    "English": "Dark",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1131,
@@ -7928,14 +7928,14 @@ const vocabularyData = [
    "Hawaiian": "ʻĀkala",
    "English": "Pink",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1134,
    "Hawaiian": "Kala",
    "English": "Loose / Forgiven",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1135,
@@ -7970,7 +7970,7 @@ const vocabularyData = [
    "Hawaiian": "Pono",
    "English": "Righteousness / Balance / Doing what is morally and socially correct",
    "Type": "Cultural Concept",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1140,
@@ -8012,7 +8012,7 @@ const vocabularyData = [
    "Hawaiian": "ʻOhana",
    "English": "Family (extended kin group, nuclear family, those who eat poi from the same calabash)",
    "Type": "Cultural Concept",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1146,
@@ -8040,7 +8040,7 @@ const vocabularyData = [
    "Hawaiian": "Naʻau",
    "English": "Gut / Heart / The seat of feeling and intuition",
    "Type": "Cultural Concept",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1150,
@@ -8089,7 +8089,7 @@ const vocabularyData = [
    "Hawaiian": "Kūpuna",
    "English": "Elders / Ancestors (sources of wisdom and guidance)",
    "Type": "Cultural Concept",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1157,
@@ -8313,7 +8313,7 @@ const vocabularyData = [
    "Hawaiian": "ʻAʻole pilikia",
    "English": "No problem / It's nothing",
    "Type": "Idiom",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1189,
@@ -9643,14 +9643,14 @@ const vocabularyData = [
    "Hawaiian": "Kaikamahine",
    "English": "Daughter / Girl",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1379,
    "Hawaiian": "Keiki kāne",
    "English": "Son / Boy",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1380,
@@ -9685,7 +9685,7 @@ const vocabularyData = [
    "Hawaiian": "Mākua",
    "English": "Parents",
    "Type": "Kikino (Noun)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1385,
@@ -12415,7 +12415,7 @@ const vocabularyData = [
    "Hawaiian": "Hoʻomaha",
    "English": "To rest / To take a break",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1775,
@@ -12450,7 +12450,7 @@ const vocabularyData = [
    "Hawaiian": "Ulu",
    "English": "To grow / To increase",
    "Type": "Hehele (Intransitive Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 1780,
@@ -18414,7 +18414,7 @@ const vocabularyData = [
    "Hawaiian": "Akea",
    "English": "Spacious / Open / Wide",
    "Type": "ʻAʻano (Stative Verb)",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2632,
@@ -18540,216 +18540,216 @@ const vocabularyData = [
    "Hawaiian": "Ke ʻoluʻolu",
    "English": "Please (formal request)",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2650,
    "Hawaiian": "Pēlā paha",
    "English": "Maybe / Perhaps",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2651,
    "Hawaiian": "Hiki nō",
    "English": "Yes it can / Sure / Okay",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2652,
    "Hawaiian": "ʻŌlelo lou",
    "English": "Say it again / Repeat please",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2653,
    "Hawaiian": "E ʻōlelo lou",
    "English": "Please say it again",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2654,
    "Hawaiian": "ʻO ____ koʻu inoa",
    "English": "My name is ____",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2655,
    "Hawaiian": "No hea ʻoe?",
    "English": "Where are you from?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2656,
    "Hawaiian": "No Hawaiʻi au",
    "English": "I am from Hawaiʻi",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2657,
    "Hawaiian": "He aha kēlā?",
    "English": "What is that?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2658,
    "Hawaiian": "He aha ka manaʻo o ____?",
    "English": "What does ____ mean?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2659,
    "Hawaiian": "Makemake au i ____",
    "English": "I want ____",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2660,
    "Hawaiian": "ʻAʻole au makemake",
    "English": "I do not want",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2661,
    "Hawaiian": "Pono au i ____",
    "English": "I need ____",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2662,
    "Hawaiian": "Hiki iaʻu ke kōkua?",
    "English": "Can I help?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2663,
    "Hawaiian": "Hiki iā ʻoe ke kōkua iaʻu?",
    "English": "Can you help me?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2664,
    "Hawaiian": "Make wai au",
    "English": "I am thirsty",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2665,
    "Hawaiian": "Luhi au",
    "English": "I am tired",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2666,
    "Hawaiian": "Hauʻoli au",
    "English": "I am happy",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2667,
    "Hawaiian": "Kaumaha au",
    "English": "I am sad",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2668,
    "Hawaiian": "Maʻi au",
    "English": "I am sick",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2669,
    "Hawaiian": "Aia i hea?",
    "English": "Where is it?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2670,
    "Hawaiian": "Aia ma ʻaneʻi",
    "English": "It is here",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2671,
    "Hawaiian": "Aia ma laila",
    "English": "It is there",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2672,
    "Hawaiian": "ʻO hea kēia wahi?",
    "English": "What is this place?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2673,
    "Hawaiian": "He aha ka hola?",
    "English": "What time is it?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2674,
    "Hawaiian": "I kēia manawa",
    "English": "Right now",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2675,
    "Hawaiian": "Aloha nui",
    "English": "Much love",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2676,
    "Hawaiian": "Aloha ʻoe",
    "English": "Love to you / Farewell to you",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2677,
    "Hawaiian": "ʻEhia?",
    "English": "How many? / How much?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2678,
    "Hawaiian": "ʻEhia ka makahiki?",
    "English": "How many years? / How old?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  },
  {
    "ID": 2679,
    "Hawaiian": "ʻEhia kālā?",
    "English": "How much money?",
    "Type": "Phrase",
-   "Tier": 1
+   "Tier": 2
  }
 ];
