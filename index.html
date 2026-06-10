@@ -2371,22 +2371,29 @@ function normalize(str) {
 }
 
 function levenshtein(a, b) {
+    // Damerau / OSA distance: adjacent transpositions ("wia" vs "wai",
+    // "rde" vs "red") count as a single edit, which matches how people
+    // actually mistype. Substitutions, insertions, deletions cost 1 as usual.
     if (a === b) return 0;
     if (!a.length) return b.length;
     if (!b.length) return a.length;
-    const dp = new Array(b.length + 1);
-    for (let j = 0; j <= b.length; j++) dp[j] = j;
-    for (let i = 1; i <= a.length; i++) {
-        let prev = dp[0];
-        dp[0] = i;
-        for (let j = 1; j <= b.length; j++) {
-            const tmp = dp[j];
+    const al = a.length, bl = b.length;
+    const dp = [];
+    for (let i = 0; i <= al; i++) { dp.push(new Array(bl + 1)); dp[i][0] = i; }
+    for (let j = 0; j <= bl; j++) dp[0][j] = j;
+    for (let i = 1; i <= al; i++) {
+        for (let j = 1; j <= bl; j++) {
             const cost = a.charCodeAt(i-1) === b.charCodeAt(j-1) ? 0 : 1;
-            dp[j] = Math.min(dp[j] + 1, dp[j-1] + 1, prev + cost);
-            prev = tmp;
+            let v = Math.min(dp[i-1][j] + 1, dp[i][j-1] + 1, dp[i-1][j-1] + cost);
+            if (i > 1 && j > 1 &&
+                a.charCodeAt(i-1) === b.charCodeAt(j-2) &&
+                a.charCodeAt(i-2) === b.charCodeAt(j-1)) {
+                v = Math.min(v, dp[i-2][j-2] + 1);
+            }
+            dp[i][j] = v;
         }
     }
-    return dp[b.length];
+    return dp[al][bl];
 }
 
 // ==========================================================================
@@ -2701,18 +2708,25 @@ function expandHawaiianAnswers(hawaiian) {
     return [...variants].map(v => normalize(v)).filter(Boolean);
 }
 
-// Generous Levenshtein tolerance — accepts more typos than before
+// Generous edit-distance tolerance — forgives ordinary typos. Short Hawaiian
+// words (moe, inu, wai, hale) now allow a single slip instead of demanding a
+// perfect match, which is where learners felt unfairly marked wrong.
 function exactTolerance(len) {
-    if (len <= 3) return 0;
+    if (len <= 2) return 0;
     if (len <= 5) return 1;
     if (len <= 9) return 2;
-    if (len <= 14) return 3;
+    if (len <= 13) return 3;
     return Math.floor(len / 4);
 }
 
+// "close" still earns full credit (with a friendly note). Kept tight on very
+// short words so genuinely different words (nine/five, hale/hana) stay wrong.
 function closeTolerance(len) {
-    if (len <= 3) return 0;
-    return exactTolerance(len) + Math.max(1, Math.floor(len / 6));
+    if (len <= 2) return 0;
+    if (len <= 4) return 1;
+    if (len <= 7) return 2;
+    if (len <= 12) return 3;
+    return Math.floor(len / 4) + 1;
 }
 
 // fuzzyCheck returns: { status: 'correct' | 'close' | 'wrong', distance, matchedVariant }
