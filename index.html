@@ -1395,6 +1395,23 @@
             font-style: normal;
             font-weight: 600;
         }
+        .grammar-item .ex {
+            display: block;
+            margin-top: 0.5rem;
+            color: var(--ink);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+        .grammar-item .ex + .ex { margin-top: 0.25rem; }
+        .grammar-section-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-muted);
+            margin: 0.5rem 0 1rem;
+        }
+        .grammar-section-label:not(:first-of-type) { margin-top: 1.75rem; }
 
         /* DANGER ZONE */
         .danger-zone {
@@ -1884,26 +1901,63 @@
             </button>
         </div>
         <div class="modal-body">
-            <p style="margin-bottom: 1.5rem;">A few building blocks for sentence structure.</p>
+            <p style="margin-bottom: 1.5rem;">A few building blocks to help the words you are learning click into sentences. Not a full course, just enough to get you talking.</p>
+
+            <p class="grammar-section-label">Making sentences</p>
+            <div class="grammar-item">
+                <h3>The action comes first</h3>
+                <p>Hawaiian usually starts with the verb, then who, then what.</p>
+                <span class="ex"><em>Hele au</em> — go I — I go.</span>
+                <span class="ex"><em>Makemake au i ka wai</em> — want I the water — I want water.</span>
+            </div>
+            <div class="grammar-item">
+                <h3>There is no word for "is" or "are"</h3>
+                <p>To describe something, just put the quality first. No "to be" needed.</p>
+                <span class="ex"><em>Maikaʻi au</em> — good I — I am good.</span>
+                <span class="ex"><em>Nui ka hale</em> — big the house — The house is big.</span>
+            </div>
+            <div class="grammar-item">
+                <h3>Saying who someone is</h3>
+                <p>Use <em>ʻo</em> before a name or before <em>ia</em> (he/she) to say what something is.</p>
+                <span class="ex"><em>ʻO wai kou inoa?</em> — What is your name?</span>
+                <span class="ex"><em>ʻO Pua koʻu inoa</em> — My name is Pua.</span>
+            </div>
+            <div class="grammar-item">
+                <h3>Asking a question</h3>
+                <p>Put the question word at the front of the sentence.</p>
+                <span class="ex"><em>Pehea ʻoe?</em> — How are you?</span>
+                <span class="ex"><em>ʻEhia?</em> — How many? &nbsp; <em>Aha?</em> — What?</span>
+            </div>
+            <div class="grammar-item">
+                <h3>Two words for "the"</h3>
+                <p>Use <em>ke</em> before words starting with k, e, a, or o (remember <em>KEAO</em>). Use <em>ka</em> for everything else.</p>
+                <span class="ex"><em>ke keiki</em> — the child &nbsp; <em>ka hale</em> — the house</span>
+            </div>
+            <div class="grammar-item">
+                <h3>"My" and "your" come in two flavors</h3>
+                <p>Use <em>koʻu / kou</em> for things close to you like family, body, and home. Use <em>kaʻu / kāu</em> for things you make or get. Starting with <em>koʻu</em> and <em>kou</em> is just fine.</p>
+            </div>
+
+            <p class="grammar-section-label">Word types (the tags you see on each card)</p>
             <div class="grammar-item">
                 <h3>Kikino (noun)</h3>
-                <p>People, places, and things. Often preceded by markers like <em>ka</em> or <em>ke</em>.</p>
+                <p>People, places, and things, like <em>hale</em> (house) or <em>keiki</em> (child). Often takes <em>ka</em> or <em>ke</em> in front.</p>
             </div>
             <div class="grammar-item">
                 <h3>Hamani (transitive verb)</h3>
-                <p>Actions that do something to a direct object, like <em>ʻai</em> (to eat).</p>
+                <p>An action done to something, like <em>ʻai</em> (to eat) or <em>makemake</em> (to want).</p>
             </div>
             <div class="grammar-item">
                 <h3>Hehele (intransitive verb)</h3>
-                <p>Actions of movement or state that do not take a direct object, like <em>hele</em> (to go).</p>
+                <p>An action or motion with no direct object, like <em>hele</em> (to go) or <em>noho</em> (to sit, to live).</p>
             </div>
             <div class="grammar-item">
                 <h3>ʻAʻano (stative verb / adjective)</h3>
-                <p>Words describing a state, condition, or quality, like <em>maikaʻi</em> (good) or <em>nui</em> (big).</p>
+                <p>A state, condition, or quality, like <em>maikaʻi</em> (good), <em>nui</em> (big), or <em>hauʻoli</em> (happy). These act as both the adjective and the "to be."</p>
             </div>
             <div class="grammar-item">
                 <h3>Special characters</h3>
-                <p>The <em>ʻokina (ʻ)</em> is a glottal stop and acts as a consonant. The <em>kahakō (ā)</em> is a macron that elongates a vowel. Typing without them still counts.</p>
+                <p>The <em>ʻokina (ʻ)</em> is a glottal stop and acts as a consonant, like the catch in "uh-oh." The <em>kahakō (ā)</em> is a macron that holds a vowel longer. They can change meaning, so they matter, but typing without them still counts here.</p>
             </div>
         </div>
     </div>
