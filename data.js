@@ -18755,7 +18755,7 @@ const vocabularyData = [
  {
    "ID": 2680,
    "Hawaiian": "ʻAha",
-   "English": "Gathering / Assembly / Meeting / Council",
+   "English": "Gathering / Assembly / Meeting / Council / Sennit cord / Ceremony",
    "Type": "Kikino (Noun)",
    "Tier": 2
  }
