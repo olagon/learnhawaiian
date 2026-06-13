@@ -5329,7 +5329,7 @@ const vocabularyData = [
  {
    "ID": 762,
    "Hawaiian": "Ahu",
-   "English": "Altar / Cairn / Pile",
+   "English": "Altar / Cairn / Mound / Heap / Pile",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -12610,7 +12610,7 @@ const vocabularyData = [
    "ID": 1802,
    "Hawaiian": "Pā ka makani",
    "English": "The wind blows",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
@@ -17699,35 +17699,35 @@ const vocabularyData = [
    "ID": 2529,
    "Hawaiian": "Pau ka pule",
    "English": "The week ends / Prayer ends",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2530,
    "Hawaiian": "Pau ka makahiki",
    "English": "The year ends",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2531,
    "Hawaiian": "Pau ka mahina",
    "English": "The month ends",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2532,
    "Hawaiian": "Pau ka lā",
    "English": "The day ends",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2533,
    "Hawaiian": "Pau ka manawa",
    "English": "Time runs out",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
@@ -17895,7 +17895,7 @@ const vocabularyData = [
    "ID": 2557,
    "Hawaiian": "Pā ka ua",
    "English": "It rains / Rain strikes",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
@@ -17916,7 +17916,7 @@ const vocabularyData = [
    "ID": 2560,
    "Hawaiian": "Lana ka manaʻolana",
    "English": "Hope rises",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
@@ -17930,35 +17930,35 @@ const vocabularyData = [
    "ID": 2562,
    "Hawaiian": "Pā ka pū",
    "English": "The gun fires",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2563,
    "Hawaiian": "Kani ka pila",
    "English": "The instrument sounds / Music plays",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2564,
    "Hawaiian": "Kani ka pahu",
    "English": "The drum sounds",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2565,
    "Hawaiian": "Kani ka uaki",
    "English": "The clock chimes",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
    "ID": 2566,
    "Hawaiian": "Kani ka pī",
    "English": "The bell rings",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
@@ -18021,7 +18021,7 @@ const vocabularyData = [
    "ID": 2575,
    "Hawaiian": "Lana ka manaʻo",
    "English": "Hopeful / Spirits rise",
-   "Type": "Hehele (Intransitive Verb)",
+   "Type": "Phrase",
    "Tier": 3
  },
  {
@@ -18750,6 +18750,13 @@ const vocabularyData = [
    "Hawaiian": "ʻEhia kālā?",
    "English": "How much money?",
    "Type": "Phrase",
+   "Tier": 2
+ },
+ {
+   "ID": 2680,
+   "Hawaiian": "ʻAha",
+   "English": "Gathering / Assembly / Meeting / Council",
+   "Type": "Kikino (Noun)",
    "Tier": 2
  }
 ];

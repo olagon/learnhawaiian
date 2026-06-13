@@ -2222,6 +2222,13 @@ function migrateFromCookies() {
 //  STATE
 // ==========================================================================
 
+// Friendlier on-screen names for a few part-of-speech tags. Hawaiian has no
+// separate adjective class, so stative verbs cover colors and qualities too —
+// spelling that out on the card avoids the "green is a verb?" confusion.
+const TYPE_LABELS = {
+    'ʻAʻano (Stative Verb)': 'ʻAʻano (Stative verb / adjective)'
+};
+
 const REVIEW_INTERVALS = [0, 1, 3, 7, 12, 21]; // rounds before next review per level
 const DAILY_GOAL_XP = 30;
 const XP_PER_CORRECT = 5;
@@ -3060,7 +3067,7 @@ function renderWord() {
     const tag = tagForWord(w);
 
     document.getElementById('wordDisplay').textContent = display;
-    document.getElementById('wordType').textContent = w.Type;
+    document.getElementById('wordType').textContent = TYPE_LABELS[w.Type] || w.Type;
     const tagBadge = document.getElementById('wordTagBadge');
     tagBadge.textContent = tag.label;
 
