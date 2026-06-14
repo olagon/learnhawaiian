@@ -1,0 +1,28 @@
+name: Keep Supabase awake
+
+# Supabase pauses free projects after ~7 days with no database activity.
+# This job makes a tiny real query Mon/Wed/Fri so the idle timer never runs out.
+# You never have to manually restore the project again.
+
+on:
+  schedule:
+    - cron: '0 14 * * 1,3,5'   # 14:00 UTC, Monday / Wednesday / Friday
+  workflow_dispatch: {}          # lets you run it by hand from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Query the database so it stays awake
+        run: |
+          # Publishable (public) key — the same one already shipped in index.html.
+          KEY="sb_publishable_pEI36RyqAK0RxsxcChQqbw_7hNnqIYj"
+          URL="https://quorikvqfcktvuanwssd.supabase.co/rest/v1/progress?select=user_id&limit=1"
+          CODE=$(curl -sS -o /dev/null -w "%{http_code}" "$URL" \
+            -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "Supabase responded with HTTP $CODE"
+          if [ "$CODE" -lt 200 ] || [ "$CODE" -ge 400 ]; then
+            echo "Project looks paused or unreachable — check the Supabase dashboard."
+            exit 1
+          fi
+          echo "Project is awake."
