@@ -4428,15 +4428,26 @@ saveStats = function() {
 // ==========================================================================
 //  MERGE PREVIEW UI
 // ==========================================================================
+function mergeCounts(state) {
+    const vals = Object.values(state.progress || {});
+    return {
+        learning: vals.filter(p => p && p.l >= 1 && p.l <= 4).length,
+        mastered: vals.filter(p => p && p.l === 5).length
+    };
+}
 function showMergePreview(local, remote) {
-    const localMastered = Object.values(local.progress || {}).filter(p => p && p.l === 5).length;
-    const remoteMastered = Object.values(remote.progress || {}).filter(p => p && p.l === 5).length;
-    const merged = mergeStates(local, remote);
-    const mergedMastered = Object.values(merged.progress || {}).filter(p => p && p.l === 5).length;
+    const L = mergeCounts(local);
+    const R = mergeCounts(remote);
+    const M = mergeCounts(mergeStates(local, remote));
+    const line = (label, c) =>
+        `<div style="display:flex; justify-content:space-between; gap:0.75rem; align-items:baseline; padding:0.25rem 0;">` +
+            `<span style="color:var(--ink-soft);">${label}</span>` +
+            `<span style="white-space:nowrap; text-align:right;"><strong>${c.learning}</strong> learning &middot; <strong>${c.mastered}</strong> mastered</span>` +
+        `</div>`;
     document.getElementById('mergePreview').innerHTML =
-        `<div>This device has <strong>${localMastered}</strong> mastered words.</div>` +
-        `<div>Your account has <strong>${remoteMastered}</strong> mastered words.</div>` +
-        `<div style="margin-top: 0.5rem;">After combining: <strong>${mergedMastered}</strong> mastered words.</div>`;
+        line('This device', L) +
+        line('Your account', R) +
+        `<div style="border-top:1px solid var(--line); margin-top:0.45rem; padding-top:0.45rem;">${line('After combining', M)}</div>`;
     document.getElementById('mergeModal').classList.remove('hidden');
 }
 
