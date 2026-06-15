@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ʻŌlelo Daily — Data Editor</title>
+<style>
+  :root{
+    --bg:#faf7f2; --surface:#fff; --warm:#f5f0e8; --ink:#1a1614; --soft:#4a4540; --muted:#8a8580;
+    --line:#e8e1d6; --accent:#5e3a9e; --accent-soft:#ede7f7; --success:#5a7a3c; --success-soft:#eef3e6;
+    --error:#b8312a; --error-soft:#f9e9e7; --warmc:#c4602b; --warm-soft:#f9ede4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5}
+  h1{font-family:Georgia,serif;font-weight:600;font-size:1.25rem;margin:0;color:var(--accent)}
+  button{font-family:inherit;font-size:inherit;cursor:pointer}
+  .topbar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);padding:.7rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+  .grow{flex:1}
+  .counts{display:flex;gap:.5rem;flex-wrap:wrap;font-size:.8rem}
+  .chip{padding:.2rem .55rem;border-radius:999px;background:var(--warm);color:var(--soft);font-weight:600;white-space:nowrap}
+  .chip.e{background:var(--warm-soft);color:var(--warmc)}
+  .chip.d{background:var(--error-soft);color:var(--error)}
+  .chip.n{background:var(--success-soft);color:var(--success)}
+  .btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:.5rem .9rem;border-radius:8px;font-weight:600}
+  .btn:hover{border-color:var(--accent);color:var(--accent)}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.primary:hover{background:var(--accent);filter:brightness(1.08);color:#fff}
+  .btn.danger:hover{border-color:var(--error);color:var(--error)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn.sm{padding:.35rem .6rem;font-size:.85rem}
+
+  .wrap{max-width:1100px;margin:0 auto;padding:1rem}
+  .toolbar{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:.8rem}
+  input[type=text],input[type=search],select,textarea{font-family:inherit;font-size:15px;padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  #search{min-width:240px;flex:1}
+  .muted{color:var(--muted)}
+  .resultcount{font-size:.82rem;color:var(--muted);margin-left:auto}
+
+  table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  thead th{position:sticky;top:54px;background:var(--warm);text-align:left;padding:.55rem .7rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap}
+  thead th .arrow{color:var(--accent)}
+  tbody td{padding:.5rem .7rem;border-top:1px solid var(--line);vertical-align:top}
+  tbody tr{cursor:pointer}
+  tbody tr:hover{background:var(--warm)}
+  tr.s-edited{background:var(--warm-soft)}
+  tr.s-delete{background:var(--error-soft)}
+  tr.s-delete td.haw,tr.s-delete td.eng{text-decoration:line-through;color:var(--muted)}
+  tr.s-new{background:var(--success-soft)}
+  td.id{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.85rem;white-space:nowrap}
+  td.haw{font-weight:600}
+  td.tier{text-align:center}
+  .badge{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:.1rem .4rem;border-radius:5px}
+  .badge.edited{background:var(--warm-soft);color:var(--warmc)}
+  .badge.delete{background:var(--error-soft);color:var(--error)}
+  .badge.new{background:var(--success-soft);color:var(--success)}
+  .badge.note{background:var(--accent-soft);color:var(--accent)}
+  .note-snip{display:block;font-size:.78rem;color:var(--muted);font-style:italic;margin-top:.2rem}
+
+  /* load screen */
+  #loader{max-width:560px;margin:4rem auto;text-align:center;padding:2rem;border:2px dashed var(--line);border-radius:14px;background:var(--surface)}
+  #loader.drag{border-color:var(--accent);background:var(--accent-soft)}
+  #loader h2{font-family:Georgia,serif;font-weight:500}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(26,22,20,.45);display:flex;align-items:center;justify-content:center;padding:1rem;z-index:50}
+  .modal{background:var(--surface);border-radius:14px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 12px 40px rgba(0,0,0,.2)}
+  .modal h2{font-family:Georgia,serif;font-weight:500;font-size:1.25rem;margin:0}
+  .modal .hd{display:flex;justify-content:space-between;align-items:center;padding:1.1rem 1.2rem .4rem}
+  .modal .bd{padding:.4rem 1.2rem 1.2rem}
+  .field{margin-bottom:.85rem}
+  .field label{display:block;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.3rem}
+  .field input,.field select,.field textarea{width:100%}
+  .field .orig{font-size:.78rem;color:var(--muted);margin-top:.25rem}
+  .field .orig b{color:var(--soft)}
+  .row2{display:flex;gap:.7rem}
+  .row2>div{flex:1}
+  .modal-actions{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+  .modal-actions .grow{flex:1}
+  .hint{font-size:.8rem;color:var(--muted);background:var(--warm);padding:.6rem .7rem;border-radius:8px;margin-bottom:.8rem}
+  details.help{margin:.4rem 0 1rem}
+  details.help summary{cursor:pointer;color:var(--accent);font-weight:600}
+  details.help div{font-size:.88rem;color:var(--soft);padding:.6rem 0}
+  code{background:var(--warm);padding:1px 5px;border-radius:4px;font-size:.85em}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>ʻŌlelo Daily · Data Editor</h1>
+  <div class="counts" id="counts"></div>
+  <div class="grow"></div>
+  <button class="btn sm" id="reloadBtn" title="Load a different data.js">Load data.js</button>
+  <button class="btn sm" id="importBtn" title="Resume from a previously exported changes file">Import changes</button>
+  <button class="btn sm danger" id="resetBtn">Reset</button>
+  <button class="btn primary sm" id="exportBtn">Export changes</button>
+</div>
+
+<div class="wrap">
+
+  <div id="loader">
+    <h2>Load the word list</h2>
+    <p class="muted">Drop your <code>data.js</code> file here, or choose it below. If this page is hosted next to data.js it loads automatically.</p>
+    <p><button class="btn primary" id="chooseBtn">Choose data.js</button></p>
+    <input type="file" id="fileInput" accept=".js,.json,.txt" style="display:none">
+  </div>
+
+  <div id="app" style="display:none">
+    <details class="help">
+      <summary>How to use this tool</summary>
+      <div>
+        Search or sort to find words. Click any row to fix the Hawaiian or English, change the type or tier, or add a note explaining the fix.
+        Use <b>Mark for deletion</b> on bad entries, and <b>Add entry</b> for new words. Your work auto-saves in this browser.
+        When done, click <b>Export changes</b> and send the downloaded file back. Nothing here touches the live app until those changes are merged.
+      </div>
+    </details>
+
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search Hawaiian, English, or ID…">
+      <select id="typeFilter"><option value="">All types</option></select>
+      <select id="tierFilter">
+        <option value="">All tiers</option>
+        <option value="1">Tier 1 · Essentials</option>
+        <option value="2">Tier 2 · Common</option>
+        <option value="3">Tier 3 · Less common</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="changed">Has changes</option>
+        <option value="edited">Edited</option>
+        <option value="delete">For deletion</option>
+        <option value="new">New</option>
+        <option value="note">Has note</option>
+      </select>
+      <button class="btn primary sm" id="addBtn">+ Add entry</button>
+      <span class="resultcount" id="resultCount"></span>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th data-k="ID">ID <span class="arrow"></span></th>
+          <th data-k="Hawaiian">Hawaiian <span class="arrow"></span></th>
+          <th data-k="English">English <span class="arrow"></span></th>
+          <th data-k="Type">Type <span class="arrow"></span></th>
+          <th data-k="Tier">Tier <span class="arrow"></span></th>
+          <th data-k="status">Status <span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<datalist id="typeList"></datalist>
+
+<script>
+"use strict";
+const LS_KEY = "olelo_editor_v1";
+let ORIGINAL = [], byId = {}, TYPES = [];
+let edits = {};        // id -> {Hawaiian,English,Type,Tier,note,del}
+let additions = [];    // [{tempId,Hawaiian,English,Type,Tier,note}]
+let addCounter = 0;
+let sortKey = "ID", sortDir = 1;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- load + parse ---------- */
+function parseDataJs(text){
+  const a = text.indexOf("["), b = text.lastIndexOf("]");
+  if(a<0||b<0) throw new Error("Could not find the data array.");
+  const arr = JSON.parse(text.slice(a,b+1));
+  if(!Array.isArray(arr)) throw new Error("Parsed data is not a list.");
+  return arr;
+}
+function loadData(arr){
+  ORIGINAL = arr.map(w=>({ID:w.ID, Hawaiian:w.Hawaiian, English:w.English, Type:w.Type, Tier:w.Tier}));
+  byId = {}; ORIGINAL.forEach(w=>byId[w.ID]=w);
+  TYPES = [...new Set(ORIGINAL.map(w=>w.Type).filter(Boolean))].sort();
+  const tf = $("#typeFilter"); tf.innerHTML='<option value="">All types</option>'+TYPES.map(t=>`<option>${esc(t)}</option>`).join("");
+  $("#typeList").innerHTML = TYPES.map(t=>`<option value="${esc(t)}">`).join("");
+  $("#loader").style.display="none"; $("#app").style.display="block";
+  restore(); render();
+}
+function tryAutoFetch(){
+  fetch("data.js",{cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.text(); })
+    .then(t=>loadData(parseDataJs(t))).catch(()=>{ /* show loader */ });
+}
+function handleFile(file){
+  const fr = new FileReader();
+  fr.onload = () => { try{ loadData(parseDataJs(fr.result)); }catch(e){ alert("Could not read that file: "+e.message); } };
+  fr.readAsText(file);
+}
+
+/* ---------- persistence ---------- */
+function persist(){ localStorage.setItem(LS_KEY, JSON.stringify({edits,additions,addCounter})); }
+function restore(){
+  try{ const s=JSON.parse(localStorage.getItem(LS_KEY)||"{}"); edits=s.edits||{}; additions=s.additions||[]; addCounter=s.addCounter||0; }
+  catch(e){ edits={}; additions=[]; addCounter=0; }
+}
+
+/* ---------- derive rows ---------- */
+function proposed(o){
+  const e = edits[o.ID];
+  const cur = {ID:o.ID, Hawaiian:o.Hawaiian, English:o.English, Type:o.Type, Tier:o.Tier, note:"", status:"unchanged", isNew:false};
+  if(e){
+    if(e.Hawaiian!=null) cur.Hawaiian=e.Hawaiian;
+    if(e.English!=null) cur.English=e.English;
+    if(e.Type!=null) cur.Type=e.Type;
+    if(e.Tier!=null) cur.Tier=e.Tier;
+    cur.note = e.note||"";
+    const changed = e.Hawaiian!=null&&e.Hawaiian!==o.Hawaiian || e.English!=null&&e.English!==o.English || e.Type!=null&&e.Type!==o.Type || (e.Tier!=null&&e.Tier!==o.Tier);
+    if(e.del) cur.status="delete";
+    else if(changed) cur.status="edited";
+    else if(cur.note) cur.status="note";
+  }
+  return cur;
+}
+function allRows(){
+  const rows = ORIGINAL.map(proposed);
+  additions.forEach(a=>rows.push({ID:a.tempId, Hawaiian:a.Hawaiian, English:a.English, Type:a.Type, Tier:a.Tier, note:a.note||"", status:"new", isNew:true}));
+  return rows;
+}
+const STATUS_RANK = {new:0,delete:1,edited:2,note:3,unchanged:4};
+
+/* ---------- render ---------- */
+function render(){
+  const q = $("#search").value.trim().toLowerCase();
+  const tf = $("#typeFilter").value, tr = $("#tierFilter").value, sf = $("#statusFilter").value;
+  let rows = allRows();
+  if(q) rows = rows.filter(r => String(r.Hawaiian).toLowerCase().includes(q) || String(r.English).toLowerCase().includes(q) || String(r.ID).includes(q));
+  if(tf) rows = rows.filter(r => r.Type===tf);
+  if(tr) rows = rows.filter(r => String(r.Tier)===tr);
+  if(sf==="changed") rows = rows.filter(r => r.status!=="unchanged");
+  else if(sf) rows = rows.filter(r => r.status===sf);
+
+  rows.sort((a,b)=>{
+    let x,y;
+    if(sortKey==="status"){ x=STATUS_RANK[a.status]; y=STATUS_RANK[b.status]; }
+    else if(sortKey==="ID"||sortKey==="Tier"){ x=Number(a[sortKey])||0; y=Number(b[sortKey])||0; }
+    else { x=String(a[sortKey]||"").toLowerCase(); y=String(b[sortKey]||"").toLowerCase(); }
+    if(x<y) return -1*sortDir; if(x>y) return 1*sortDir; return 0;
+  });
+
+  const html = rows.map(r=>{
+    const badge = r.status!=="unchanged" ? `<span class="badge ${r.status}">${r.status}</span>` : "";
+    const note = r.note ? `<span class="note-snip">📝 ${esc(r.note)}</span>` : "";
+    const idCell = r.isNew ? "new" : r.ID;
+    return `<tr class="s-${r.status}" data-id="${esc(r.ID)}">
+      <td class="id">${esc(idCell)}</td>
+      <td class="haw">${esc(r.Hawaiian)}</td>
+      <td class="eng">${esc(r.English)}${note}</td>
+      <td>${esc(r.Type)}</td>
+      <td class="tier">${esc(r.Tier)}</td>
+      <td>${badge||'<span class="muted">—</span>'}</td>
+    </tr>`;
+  }).join("");
+  $("#tbody").innerHTML = html;
+  $("#resultCount").textContent = rows.length + " shown · " + ORIGINAL.length + " total";
+  renderCounts();
+  document.querySelectorAll("thead th").forEach(th=>{
+    const a = th.querySelector(".arrow"); if(!a) return;
+    a.textContent = th.dataset.k===sortKey ? (sortDir>0?"▲":"▼") : "";
+  });
+}
+function renderCounts(){
+  let nEdit=0,nDel=0; for(const id in edits){ const e=edits[id]; if(e.del) nDel++; else { const o=byId[id]; if(o && (e.Hawaiian!=null&&e.Hawaiian!==o.Hawaiian||e.English!=null&&e.English!==o.English||e.Type!=null&&e.Type!==o.Type||(e.Tier!=null&&e.Tier!==o.Tier))) nEdit++; } }
+  $("#counts").innerHTML =
+    `<span class="chip e">${nEdit} edited</span>`+
+    `<span class="chip d">${nDel} to delete</span>`+
+    `<span class="chip n">${additions.length} new</span>`;
+  $("#exportBtn").disabled = (nEdit+nDel+additions.length)===0;
+}
+
+/* ---------- edit modal ---------- */
+let modalEl=null;
+function openEditor(id){
+  const isNew = String(id).startsWith("A");
+  let orig, cur, addObj=null;
+  if(isNew){ addObj = additions.find(a=>a.tempId===id); cur={...addObj}; orig=null; }
+  else { orig = byId[id]; cur = proposed(orig); }
+  const typeOptions = TYPES;
+  const ov = (label,val)=> orig && String(orig[label])!==String(val) ? `<div class="orig">was: <b>${esc(orig[label])}</b></div>` : "";
+
+  const wrap = document.createElement("div");
+  wrap.className="overlay";
+  wrap.innerHTML = `<div class="modal">
+    <div class="hd"><h2>${isNew?"New entry":"Edit #"+id}</h2><button class="btn sm" data-x>✕</button></div>
+    <div class="bd">
+      <div class="field"><label>Hawaiian</label><input type="text" id="f_haw" value="${esc(cur.Hawaiian||"")}">${isNew?"":`<div class="orig">was: <b>${esc(orig.Hawaiian)}</b></div>`}</div>
+      <div class="field"><label>English (separate meanings with /)</label><input type="text" id="f_eng" value="${esc(cur.English||"")}">${isNew?"":`<div class="orig">was: <b>${esc(orig.English)}</b></div>`}</div>
+      <div class="row2">
+        <div class="field"><label>Type</label><input type="text" id="f_type" list="typeList" value="${esc(cur.Type||"Kikino (Noun)")}"></div>
+        <div class="field"><label>Tier</label><select id="f_tier">
+          <option value="1">1 · Essentials</option><option value="2">2 · Common</option><option value="3">3 · Less common</option>
+        </select></div>
+      </div>
+      <div class="field"><label>Note for the merge (optional)</label><textarea id="f_note" rows="2" placeholder="Why this change? Source? Anything for review.">${esc(cur.note||"")}</textarea></div>
+      <div class="modal-actions">
+        <button class="btn primary grow" data-save>Save</button>
+        ${isNew? `<button class="btn danger" data-discard>Discard</button>` :
+          (cur.status==="delete"
+            ? `<button class="btn" data-undelete>Unmark deletion</button>`
+            : `<button class="btn danger" data-delete>Mark for deletion</button>`)}
+        ${isNew?"":`<button class="btn" data-revert>Revert all</button>`}
+      </div>
+    </div></div>`;
+  document.body.appendChild(wrap); modalEl=wrap;
+  wrap.querySelector("#f_tier").value = String(cur.Tier||3);
+
+  const close=()=>{ wrap.remove(); modalEl=null; };
+  wrap.addEventListener("click",e=>{ if(e.target===wrap) close(); });
+  wrap.querySelector("[data-x]").onclick=close;
+
+  const readFields=()=>({
+    Hawaiian: wrap.querySelector("#f_haw").value.trim(),
+    English: wrap.querySelector("#f_eng").value.trim(),
+    Type: wrap.querySelector("#f_type").value.trim(),
+    Tier: parseInt(wrap.querySelector("#f_tier").value,10)
+  });
+
+  const saveBtn = wrap.querySelector("[data-save]");
+  saveBtn.onclick=()=>{
+    const f = readFields();
+    if(!f.Hawaiian || !f.English){ alert("Hawaiian and English are both required."); return; }
+    const note = wrap.querySelector("#f_note").value.trim();
+    if(isNew){
+      Object.assign(addObj,{Hawaiian:f.Hawaiian,English:f.English,Type:f.Type||"Kikino (Noun)",Tier:f.Tier||3,note});
+    }else{
+      const e = edits[id] || {};
+      e.Hawaiian=f.Hawaiian; e.English=f.English; e.Type=f.Type; e.Tier=f.Tier; e.note=note;
+      if(!e.del) delete e.del;
+      edits[id]=e;
+    }
+    persist(); render(); close();
+  };
+  if(!isNew){
+    const del=wrap.querySelector("[data-delete]"); if(del) del.onclick=()=>{ const e=edits[id]||{}; e.del=true; e.note=wrap.querySelector("#f_note").value.trim(); edits[id]=e; persist(); render(); close(); };
+    const und=wrap.querySelector("[data-undelete]"); if(und) und.onclick=()=>{ const e=edits[id]; if(e){ delete e.del; if(!hasAny(e,id)) delete edits[id]; } persist(); render(); close(); };
+    wrap.querySelector("[data-revert]").onclick=()=>{ delete edits[id]; persist(); render(); close(); };
+  }else{
+    wrap.querySelector("[data-discard]").onclick=()=>{ additions=additions.filter(a=>a.tempId!==id); persist(); render(); close(); };
+  }
+}
+function hasAny(e,id){ const o=byId[id]; return (e.Hawaiian!=null&&e.Hawaiian!==o.Hawaiian)||(e.English!=null&&e.English!==o.English)||(e.Type!=null&&e.Type!==o.Type)||(e.Tier!=null&&e.Tier!==o.Tier)||!!e.note||!!e.del; }
+
+function addEntry(){
+  const tempId = "A"+(++addCounter);
+  additions.push({tempId,Hawaiian:"",English:"",Type:"Kikino (Noun)",Tier:3,note:""});
+  persist(); openEditor(tempId);
+}
+
+/* ---------- export ---------- */
+function buildExport(){
+  const changes=[];
+  for(const id in edits){
+    const e=edits[id], o=byId[id]; if(!o) continue;
+    if(e.del){ changes.push({action:"delete",id:Number(id),original:{Hawaiian:o.Hawaiian,English:o.English,Type:o.Type,Tier:o.Tier},note:e.note||""}); continue; }
+    const updated={Hawaiian:e.Hawaiian??o.Hawaiian,English:e.English??o.English,Type:e.Type??o.Type,Tier:e.Tier??o.Tier};
+    const changed = updated.Hawaiian!==o.Hawaiian||updated.English!==o.English||updated.Type!==o.Type||updated.Tier!==o.Tier;
+    if(changed || e.note) changes.push({action:"edit",id:Number(id),original:{Hawaiian:o.Hawaiian,English:o.English,Type:o.Type,Tier:o.Tier},updated,note:e.note||""});
+  }
+  additions.forEach(a=>{ if(a.Hawaiian&&a.English) changes.push({action:"add",entry:{Hawaiian:a.Hawaiian,English:a.English,Type:a.Type||"Kikino (Noun)",Tier:a.Tier||3},note:a.note||""}); });
+  return {tool:"olelo-editor",version:1,exportedAt:new Date().toISOString(),sourceCount:ORIGINAL.length,
+    summary:{edits:changes.filter(c=>c.action==="edit").length,deletions:changes.filter(c=>c.action==="delete").length,additions:changes.filter(c=>c.action==="add").length},
+    changes};
+}
+function doExport(){
+  const data=buildExport();
+  if(data.changes.length===0){ alert("No changes to export yet."); return; }
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const d=new Date(), pad=n=>String(n).padStart(2,"0");
+  const name=`olelo-changes-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.json`;
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.click();
+}
+function doImport(file){
+  const fr=new FileReader();
+  fr.onload=()=>{ try{
+    const data=JSON.parse(fr.result);
+    if(!data.changes) throw new Error("Not a changes file.");
+    if(!confirm("Load "+data.changes.length+" changes from this file? This replaces your current unsaved work.")) return;
+    edits={}; additions=[]; addCounter=0;
+    data.changes.forEach(c=>{
+      if(c.action==="edit"){ edits[c.id]={Hawaiian:c.updated.Hawaiian,English:c.updated.English,Type:c.updated.Type,Tier:c.updated.Tier,note:c.note||""}; }
+      else if(c.action==="delete"){ edits[c.id]={del:true,note:c.note||""}; }
+      else if(c.action==="add"){ additions.push({tempId:"A"+(++addCounter),Hawaiian:c.entry.Hawaiian,English:c.entry.English,Type:c.entry.Type,Tier:c.entry.Tier,note:c.note||""}); }
+    });
+    persist(); render();
+  }catch(e){ alert("Could not read changes file: "+e.message); } };
+  fr.readAsText(file);
+}
+
+/* ---------- wire up ---------- */
+$("#search").addEventListener("input", debounce(render,150));
+$("#typeFilter").addEventListener("change",render);
+$("#tierFilter").addEventListener("change",render);
+$("#statusFilter").addEventListener("change",render);
+$("#addBtn").addEventListener("click",addEntry);
+$("#exportBtn").addEventListener("click",doExport);
+document.querySelectorAll("thead th").forEach(th=>th.addEventListener("click",()=>{
+  const k=th.dataset.k; if(k===sortKey) sortDir*=-1; else { sortKey=k; sortDir=1; } render();
+}));
+$("#tbody").addEventListener("click",e=>{ const tr=e.target.closest("tr"); if(tr) openEditor(tr.dataset.id); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&modalEl){ modalEl.remove(); modalEl=null; } });
+
+$("#chooseBtn").addEventListener("click",()=>$("#fileInput").click());
+$("#reloadBtn").addEventListener("click",()=>$("#fileInput").click());
+$("#fileInput").addEventListener("change",e=>{ if(e.target.files[0]) handleFile(e.target.files[0]); });
+$("#importBtn").addEventListener("click",()=>{ const i=document.createElement("input"); i.type="file"; i.accept=".json"; i.onchange=e=>{ if(e.target.files[0]) doImport(e.target.files[0]); }; i.click(); });
+$("#resetBtn").addEventListener("click",()=>{ if(confirm("Clear all your edits, deletions, and new entries? This cannot be undone.")){ edits={};additions=[];addCounter=0; persist(); render(); } });
+
+const loader=$("#loader");
+["dragover","dragenter"].forEach(ev=>loader.addEventListener(ev,e=>{e.preventDefault();loader.classList.add("drag");}));
+["dragleave","drop"].forEach(ev=>loader.addEventListener(ev,e=>{e.preventDefault();loader.classList.remove("drag");}));
+loader.addEventListener("drop",e=>{ const f=e.dataTransfer.files[0]; if(f) handleFile(f); });
+
+window.addEventListener("beforeunload",e=>{ const d=buildExport&&ORIGINAL.length?buildExport():{changes:[]}; if(d.changes&&d.changes.length){ e.preventDefault(); e.returnValue=""; } });
+
+function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
+
+tryAutoFetch();
+</script>
+</body>
+</html>
