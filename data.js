@@ -8617,13 +8617,6 @@ const vocabularyData = [
    "Tier": 2
  },
  {
-   "ID": 1232,
-   "Hawaiian": "Maile",
-   "English": "Maile vine",
-   "Type": "Kikino (Noun)",
-   "Tier": 2
- },
- {
    "ID": 1233,
    "Hawaiian": "Wauke",
    "English": "Paper mulberry",
@@ -8634,13 +8627,6 @@ const vocabularyData = [
    "ID": 1234,
    "Hawaiian": "Olonā",
    "English": "Olonā plant (cordage fiber)",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1235,
-   "Hawaiian": "ʻIeʻie",
-   "English": "ʻIeʻie vine",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -8659,51 +8645,9 @@ const vocabularyData = [
    "Tier": 3
  },
  {
-   "ID": 1238,
-   "Hawaiian": "Palapalai",
-   "English": "Palapalai fern",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
    "ID": 1239,
    "Hawaiian": "Lāʻī",
    "English": "Ti leaf",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1240,
-   "Hawaiian": "Naupaka",
-   "English": "Naupaka plant",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1241,
-   "Hawaiian": "Milo",
-   "English": "Milo tree",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1242,
-   "Hawaiian": "Wiliwili",
-   "English": "Wiliwili tree",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1243,
-   "Hawaiian": "Naio",
-   "English": "Naio tree",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1244,
-   "Hawaiian": "Koaiʻa",
-   "English": "Koaiʻa tree",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -8715,30 +8659,9 @@ const vocabularyData = [
    "Tier": 3
  },
  {
-   "ID": 1246,
-   "Hawaiian": "Mokihana",
-   "English": "Mokihana berry",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1247,
-   "Hawaiian": "Pua kenikeni",
-   "English": "Pua kenikeni flower",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
    "ID": 1248,
    "Hawaiian": "Ipu pū",
    "English": "Bottle gourd",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1249,
-   "Hawaiian": "Aʻaliʻi",
-   "English": "Aʻaliʻi shrub",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -8781,13 +8704,6 @@ const vocabularyData = [
    "ID": 1255,
    "Hawaiian": "Hīnano",
    "English": "Male pandanus blossom",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1256,
-   "Hawaiian": "Hala pepe",
-   "English": "Hala pepe tree",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -8897,13 +8813,6 @@ const vocabularyData = [
    "Tier": 3
  },
  {
-   "ID": 1272,
-   "Hawaiian": "Hilu",
-   "English": "Hilu fish",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
    "ID": 1273,
    "Hawaiian": "ʻIliopiʻi",
    "English": "Mongoose",
@@ -8921,20 +8830,6 @@ const vocabularyData = [
    "ID": 1275,
    "Hawaiian": "ʻIʻiwi",
    "English": "ʻIʻiwi (scarlet honeycreeper)",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1276,
-   "Hawaiian": "ʻApapane",
-   "English": "ʻApapane bird",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1277,
-   "Hawaiian": "ʻAmakihi",
-   "English": "ʻAmakihi bird",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -9523,20 +9418,6 @@ const vocabularyData = [
    "ID": 1361,
    "Hawaiian": "Pia maoli",
    "English": "Native arrowroot",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 1362,
-   "Hawaiian": "Limu kohu",
-   "English": "Limu kohu seaweed",
-   "Type": "Kikino (Noun)",
-   "Tier": 2
- },
- {
-   "ID": 1363,
-   "Hawaiian": "Limu līpoa",
-   "English": "Līpoa seaweed",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -13629,13 +13510,6 @@ const vocabularyData = [
    "Tier": 3
  },
  {
-   "ID": 1948,
-   "Hawaiian": "Limu kala",
-   "English": "Limu kala seaweed",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
    "ID": 1949,
    "Hawaiian": "Limu wāwaeʻiole",
    "English": "ʻIole foot seaweed",
@@ -14000,20 +13874,6 @@ const vocabularyData = [
    "Tier": 3
  },
  {
-   "ID": 2001,
-   "Hawaiian": "Pua hau",
-   "English": "Hau flower",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 2002,
-   "Hawaiian": "Pua maile",
-   "English": "Maile blossom",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
    "ID": 2003,
    "Hawaiian": "Pua liko",
    "English": "New leaf bud / Tender shoot",
@@ -14045,13 +13905,6 @@ const vocabularyData = [
    "ID": 2007,
    "Hawaiian": "Lau niu",
    "English": "Coconut leaf / Frond",
-   "Type": "Kikino (Noun)",
-   "Tier": 3
- },
- {
-   "ID": 2008,
-   "Hawaiian": "Lau pālai",
-   "English": "Palai fern leaf",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
