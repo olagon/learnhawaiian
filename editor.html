@@ -14,7 +14,7 @@
   html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5}
   h1{font-family:Georgia,serif;font-weight:600;font-size:1.25rem;margin:0;color:var(--accent)}
   button{font-family:inherit;font-size:inherit;cursor:pointer}
-  .topbar{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line);padding:.7rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+  .topbar{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line);padding:.7rem 1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
   .grow{flex:1}
   .counts{display:flex;gap:.5rem;flex-wrap:wrap;font-size:.8rem}
   .chip{padding:.2rem .55rem;border-radius:999px;background:var(--warm);color:var(--soft);font-weight:600;white-space:nowrap}
@@ -38,7 +38,7 @@
   .resultcount{font-size:.82rem;color:var(--muted);margin-left:auto}
 
   table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  thead th{position:sticky;top:54px;background:var(--warm);text-align:left;padding:.55rem .7rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap}
+  thead th{position:sticky;top:var(--topbar-h,60px);z-index:10;background:var(--warm);text-align:left;padding:.55rem .7rem;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);cursor:pointer;user-select:none;white-space:nowrap;box-shadow:0 1px 0 var(--line)}
   thead th .arrow{color:var(--accent)}
   tbody td{padding:.5rem .7rem;border-top:1px solid var(--line);vertical-align:top}
   tbody tr{cursor:pointer}
@@ -181,7 +181,7 @@ function loadData(arr){
   const tf = $("#typeFilter"); tf.innerHTML='<option value="">All types</option>'+TYPES.map(t=>`<option>${esc(t)}</option>`).join("");
   $("#typeList").innerHTML = TYPES.map(t=>`<option value="${esc(t)}">`).join("");
   $("#loader").style.display="none"; $("#app").style.display="block";
-  restore(); render();
+  restore(); render(); setTopbarH();
 }
 function tryAutoFetch(){
   fetch("data.js",{cache:"no-store"}).then(r=>{ if(!r.ok) throw 0; return r.text(); })
@@ -418,6 +418,10 @@ loader.addEventListener("drop",e=>{ const f=e.dataTransfer.files[0]; if(f) handl
 window.addEventListener("beforeunload",e=>{ const d=buildExport&&ORIGINAL.length?buildExport():{changes:[]}; if(d.changes&&d.changes.length){ e.preventDefault(); e.returnValue=""; } });
 
 function debounce(fn,ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a),ms); }; }
+
+function setTopbarH(){ const tb=document.querySelector(".topbar"); if(tb) document.documentElement.style.setProperty("--topbar-h", tb.offsetHeight+"px"); }
+window.addEventListener("resize", debounce(setTopbarH,100));
+setTopbarH();
 
 tryAutoFetch();
 </script>
