@@ -2,7 +2,7 @@
 // Caches the app shell and data file for offline use.
 // Network-first for HTML so users get fresh content; cache-first for static assets.
 
-const CACHE_NAME = 'olelo-daily-v6';
+const CACHE_NAME = 'olelo-daily-v7';
 const ASSETS = [
     './',
     './index.html',

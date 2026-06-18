@@ -5091,7 +5091,7 @@ const vocabularyData = [
  {
    "ID": 728,
    "Hawaiian": "ʻŌhiʻa",
-   "English": "ʻōhiʻa lehua tree",
+   "English": "Native hardwood tree with red flowers",
    "Type": "Kikino (Noun)",
    "Tier": 2
  },
@@ -6559,17 +6559,10 @@ const vocabularyData = [
    "Tier": 2
  },
  {
-   "ID": 938,
-   "Hawaiian": "Hula",
-   "English": "To dance hula",
-   "Type": "Hamani (Transitive Verb)",
-   "Tier": 2
- },
- {
    "ID": 939,
    "Hawaiian": "Hula kahiko",
-   "English": "To dance ancient hula",
-   "Type": "Hamani (Transitive Verb)",
+   "English": "Ancient hula / Traditional hula style",
+   "Type": "Kikino (Noun)",
    "Tier": 3
  },
  {
@@ -8598,7 +8591,7 @@ const vocabularyData = [
  {
    "ID": 1229,
    "Hawaiian": "Lehua",
-   "English": "Lehua flower / Blossom of the ʻōhiʻa",
+   "English": "Red blossom of the ʻōhiʻa tree",
    "Type": "Kikino (Noun)",
    "Tier": 2
  },
@@ -8626,7 +8619,7 @@ const vocabularyData = [
  {
    "ID": 1234,
    "Hawaiian": "Olonā",
-   "English": "Olonā plant (cordage fiber)",
+   "English": "Native plant used for strong cordage",
    "Type": "Kikino (Noun)",
    "Tier": 3
  },
@@ -8675,7 +8668,7 @@ const vocabularyData = [
  {
    "ID": 1251,
    "Hawaiian": "Loulu",
-   "English": "Loulu palm",
+   "English": "Native fan palm",
    "Type": "Kikino (Noun)",
    "Tier": 2
  },
