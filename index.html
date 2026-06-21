@@ -1268,6 +1268,18 @@
             margin-top: 0.4rem;
         }
 
+        .freeze-explainer {
+            margin: 0 1.5rem 1.5rem;
+            padding: 0.9rem 1rem;
+            background: var(--surface-warm);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+            font-size: 0.85rem;
+            color: var(--ink-soft);
+            line-height: 1.55;
+        }
+        .freeze-explainer strong { color: var(--ink); font-weight: 600; }
+
         /* MASTERY BREAKDOWN */
         .mastery-section {
             padding: 0 1.5rem 1.5rem;
@@ -1856,10 +1868,13 @@
                 <div class="stat-tile-value" id="statTotalXP">0</div>
                 <div class="stat-tile-label">Total XP</div>
             </div>
-            <div class="stat-tile" data-tip="Freezes auto-protect your streak when you miss a day. You earn one per week, up to three saved.">
+            <div class="stat-tile" data-tip="Freezes protect your streak when you miss a day. Earn one each week you play, plus a bonus at streak milestones. Save up to five.">
                 <div class="stat-tile-value" id="statFreezes">0</div>
                 <div class="stat-tile-label">Streak freezes</div>
             </div>
+        </div>
+        <div class="freeze-explainer">
+            <strong>How streak freezes work.</strong> You earn one every week you play, plus a bonus each time your streak reaches <strong>7, 14, 30, 60, 100, 180, or 365 days</strong>. You can save up to <strong>5</strong>. If you miss a day, a freeze is spent automatically to keep your streak alive.
         </div>
         <div class="mastery-section">
             <h3>Mastery breakdown</h3>
@@ -2235,6 +2250,10 @@ const XP_PER_CORRECT = 5;
 const XP_ROUND_BONUS = 10;
 const ROUND_SIZE = 11;
 const FLUENCY_GOAL = 2000; // 2,000 mastered words ≈ 95% comprehension
+const MAX_FREEZES = 5; // most streak freezes you can bank at once
+const FREEZE_STREAK_MILESTONES = [7, 14, 30, 60, 100, 180, 365]; // streak days that grant a bonus freeze
+
+let weeklyFreezeGranted = false; // set when this week's freeze was just earned, so we can announce it
 
 let appState = {
     streak: 0,
@@ -2402,9 +2421,12 @@ function isoWeek(d) {
 function grantWeeklyFreezeIfDue() {
     const thisWeek = isoWeek(new Date());
     if (appState.freezesGrantedWeek !== thisWeek) {
+        const firstEver = !appState.freezesGrantedWeek;
         appState.freezesGrantedWeek = thisWeek;
-        // Cap freezes at 3 to prevent stockpiling forever
-        appState.freezesAvailable = Math.min(3, (appState.freezesAvailable || 0) + 1);
+        const before = appState.freezesAvailable || 0;
+        appState.freezesAvailable = Math.min(MAX_FREEZES, before + 1);
+        // Announce a real weekly grant (not the silent first-run seed, not a no-op at cap)
+        if (!firstEver && appState.freezesAvailable > before) weeklyFreezeGranted = true;
     }
 }
 
@@ -3535,10 +3557,17 @@ function endRound() {
         signed_in: !!currentUser
     });
 
-    // Streak milestone
+    // Streak milestone (+ a bonus freeze at the bigger milestones)
+    let freezeEarnedAt = 0;
     if (appState.streak > previousStreak) {
         const sm = milestoneCrossed(previousStreak, appState.streak, STREAK_MILESTONES);
         if (sm) trackEvent('streak_milestone', { streak_days: sm });
+        if (sm && FREEZE_STREAK_MILESTONES.includes(sm)) {
+            const before = appState.freezesAvailable || 0;
+            appState.freezesAvailable = Math.min(MAX_FREEZES, before + 1);
+            if (appState.freezesAvailable > before) { freezeEarnedAt = sm; saveStats(); }
+            trackEvent('streak_freeze_earned', { streak_days: sm });
+        }
     }
 
     // Fluency milestone (mastered word thresholds)
@@ -3564,6 +3593,12 @@ function endRound() {
             celebBox.innerHTML = `<strong>${newlyMastered} new word${newlyMastered === 1 ? '' : 's'} mastered</strong> this round.`;
             celebBox.classList.remove('hidden');
         }
+    }
+
+    // A bonus freeze is worth announcing over any other celebration
+    if (freezeEarnedAt) {
+        celebBox.innerHTML = `<strong>${freezeEarnedAt}-day streak!</strong> You earned a bonus streak freeze. ${appState.freezesAvailable} now saved.`;
+        celebBox.classList.remove('hidden');
     }
 }
 
@@ -3976,6 +4011,11 @@ function init() {
         document.getElementById('welcomeModal').classList.remove('hidden');
     } else {
         showCheckin();
+    }
+
+    // Announce this week's freeze once the home screen is up
+    if (weeklyFreezeGranted && !isFirstTime) {
+        setTimeout(() => showToast(`New streak freeze earned this week. You have ${appState.freezesAvailable} saved.`, 'success', 4500), 900);
     }
 }
 
